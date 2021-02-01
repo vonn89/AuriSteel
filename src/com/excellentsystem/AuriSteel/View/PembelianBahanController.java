@@ -248,7 +248,7 @@ public class PembelianBahanController {
                                 rm.getItems().add(detail);
                             }
                             if (o.getJenis().equals("Detail Pemesanan Pembelian Bahan") && o.isStatus()) {
-                                rm.getItems().add(detail);
+                                rm.getItems().add(detailPemesanan);
                             }
                             if (o.getJenis().equals("Batal Pembelian Bahan") && o.isStatus()) {
                                 rm.getItems().add(batal);
