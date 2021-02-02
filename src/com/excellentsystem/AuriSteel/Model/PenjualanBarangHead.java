@@ -7,7 +7,9 @@
 package com.excellentsystem.AuriSteel.Model;
 
 import java.util.List;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -43,6 +45,19 @@ public class PenjualanBarangHead {
     private List<PenjualanBarangDetail> listPenjualanBarangDetail;
     private PemesananBarangHead pemesananBarangHead;
     private Customer customerInvoice;
+    private final BooleanProperty isChecked = new SimpleBooleanProperty();
+
+    public boolean isIsChecked() {
+        return isChecked.get();
+    }
+
+    public void setIsChecked(boolean value) {
+        isChecked.set(value);
+    }
+
+    public BooleanProperty isCheckedProperty() {
+        return isChecked;
+    }
 
     public String getUserPengiriman() {
         return userPengiriman.get();

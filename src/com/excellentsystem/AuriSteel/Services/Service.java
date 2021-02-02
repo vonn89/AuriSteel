@@ -2470,7 +2470,7 @@ public class Service {
             for(PemesananPembelianBahanDetail d : listPemesananPembelianBahanDetail){
                 qtyBelumDikirim = qtyBelumDikirim + d.getQty()-d.getQtyDiterima();
             }
-            if (qtyBelumDikirim == 0) {
+            if (qtyBelumDikirim <= 0) {
                 pemesanan.setStatus("close");
             }
             PemesananPembelianBahanHeadDAO.update(con, pemesanan);

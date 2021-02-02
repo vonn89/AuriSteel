@@ -337,6 +337,7 @@ public class DataUserController  {
                 Arrays.asList(                    
                     "Add New Pemesanan Pembelian Bahan",
                     "Detail Pemesanan Pembelian Bahan",
+                    "Pemesanan Pembelian Bahan Selesai",
                     "Batal Pemesanan Pembelian Bahan",
                     "Detail Pembayaran DP Pembelian Bahan",
                     "Pembayaran DP Pembelian Bahan",
@@ -477,6 +478,7 @@ public class DataUserController  {
                     "Data Gudang",
                     "Print Laporan",
                     "Export Excel",
+                    "Export Faktur Pajak",
                     "Penyesuaian Stok Bahan",
                     "Penyesuaian Stok Barang",
                     "Kategori Bahan",

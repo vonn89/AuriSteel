@@ -500,7 +500,6 @@ public class PemesananPembelianBahanController {
         controller.setMainApp(mainApp, mainApp.MainStage, stage);
         controller.setDetailPemesanan(p.getNoPemesanan());
     }
-
     private void batalPemesanan(PemesananPembelianBahanHead p) {
         boolean statusBarang = false;
         for (PemesananPembelianBahanDetail d : p.getListPemesananPembelianBahanDetail()) {

@@ -131,7 +131,7 @@ public class PembelianBahanController {
 
         noPemesananColumn.setCellValueFactory(cellData -> cellData.getValue().noPemesananProperty());
         noPemesananColumn.setCellFactory(col -> Function.getWrapTableCell(noPemesananColumn));
-        
+
         paymentTermColumn.setCellValueFactory(cellData -> cellData.getValue().paymentTermProperty());
         paymentTermColumn.setCellFactory(col -> Function.getWrapTableCell(paymentTermColumn));
 
@@ -247,7 +247,7 @@ public class PembelianBahanController {
                             if (o.getJenis().equals("Detail Pembelian Bahan") && o.isStatus()) {
                                 rm.getItems().add(detail);
                             }
-                            if (o.getJenis().equals("Detail Pemesanan Pembelian Bahan") && o.isStatus()) {
+                            if (o.getJenis().equals("Detail Pemesanan Pembelian Bahan") && o.isStatus() && item.getNoPemesanan() != null) {
                                 rm.getItems().add(detailPemesanan);
                             }
                             if (o.getJenis().equals("Batal Pembelian Bahan") && o.isStatus()) {
@@ -504,6 +504,7 @@ public class PembelianBahanController {
         controller.setMainApp(mainApp, mainApp.MainStage, stage);
         controller.setDetailPembelian(p.getNoPembelian());
     }
+
     private void lihatDetailPemesanan(String noPemesanan) {
         Stage stage = new Stage();
         FXMLLoader loader = mainApp.showDialog(mainApp.MainStage, stage, "View/Dialog/NewPemesananPembelianBahan.fxml");
@@ -511,7 +512,6 @@ public class PembelianBahanController {
         controller.setMainApp(mainApp, mainApp.MainStage, stage);
         controller.setDetailPemesanan(noPemesanan);
     }
-
 
     private void showDetailHutang(PembelianBahanHead p) {
         Stage stage = new Stage();

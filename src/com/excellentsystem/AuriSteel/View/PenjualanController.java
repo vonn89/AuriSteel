@@ -32,6 +32,7 @@ import com.excellentsystem.AuriSteel.Services.Service;
 import com.excellentsystem.AuriSteel.View.Dialog.DetailBebanPenjualanController;
 import com.excellentsystem.AuriSteel.View.Dialog.DetailPiutangController;
 import com.excellentsystem.AuriSteel.View.Dialog.JatuhTempoController;
+import com.excellentsystem.AuriSteel.View.Dialog.LaporanFakturPajakController;
 import com.excellentsystem.AuriSteel.View.Dialog.MessageController;
 import com.excellentsystem.AuriSteel.View.Dialog.NewPembayaranController;
 import com.excellentsystem.AuriSteel.View.Dialog.NewPemesananController;
@@ -201,11 +202,18 @@ public class PenjualanController {
         export.setOnAction((ActionEvent e) -> {
             exportExcel();
         });
+        MenuItem faktur = new MenuItem("Export Faktur Pajak");
+        faktur.setOnAction((ActionEvent e) -> {
+            fakturPajak();
+        });
         MenuItem refresh = new MenuItem("Refresh");
         refresh.setOnAction((ActionEvent e) -> {
             getPenjualan();
         });
         for (Otoritas o : sistem.getUser().getOtoritas()) {
+            if (o.getJenis().equals("Export Faktur Pajak") && o.isStatus()) {
+                rm.getItems().add(faktur);
+            }
             if (o.getJenis().equals("Export Excel") && o.isStatus()) {
                 rm.getItems().add(export);
             }
@@ -257,6 +265,10 @@ public class PenjualanController {
                         export.setOnAction((ActionEvent e) -> {
                             exportExcel();
                         });
+                        MenuItem faktur = new MenuItem("Export Faktur Pajak");
+                        faktur.setOnAction((ActionEvent e) -> {
+                            fakturPajak();
+                        });
                         MenuItem refresh = new MenuItem("Refresh");
                         refresh.setOnAction((ActionEvent e) -> {
                             getPenjualan();
@@ -283,6 +295,9 @@ public class PenjualanController {
                             }
                             if (o.getJenis().equals("Print Invoice") && o.isStatus()) {
                                 rm.getItems().addAll(invoice, invoiceSoftcopy);
+                            }
+                            if (o.getJenis().equals("Export Faktur Pajak") && o.isStatus()) {
+                                rm.getItems().add(faktur);
                             }
                             if (o.getJenis().equals("Export Excel") && o.isStatus()) {
                                 rm.getItems().add(export);
@@ -554,6 +569,12 @@ public class PenjualanController {
         DetailBebanPenjualanController controller = loader.getController();
         controller.setMainApp(mainApp, mainApp.MainStage, child);
         controller.setDetailBebanPenjualan(p.getNoPenjualan());
+    }
+    private void fakturPajak() {
+        Stage stage = new Stage();
+        FXMLLoader loader = mainApp.showDialog(mainApp.MainStage, stage, "View/Dialog/LaporanFakturPajak.fxml");
+        LaporanFakturPajakController x = loader.getController();
+        x.setMainApp(mainApp, mainApp.MainStage, stage);
     }
 
     private void showDetailPiutang(PenjualanBarangHead p) {

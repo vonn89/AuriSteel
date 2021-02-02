@@ -353,7 +353,7 @@ public class ProduksiBarangController {
                             if (o.getJenis().equals("Batal Produksi") && o.isStatus()) {
                                 rm.getItems().add(batal);
                             }
-                            if (o.getJenis().equals("Verifikasi Produksi") && o.isStatus()) {
+                            if (o.getJenis().equals("Verifikasi Produksi") && o.isStatus() && item.getStatus().equals("close")) {
                                 rm.getItems().add(verifikasi);
                             }
                             if (o.getJenis().equals("Export Excel") && o.isStatus()) {

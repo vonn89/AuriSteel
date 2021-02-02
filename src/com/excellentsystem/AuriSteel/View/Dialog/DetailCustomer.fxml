@@ -30,9 +30,11 @@
           <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="5.0" minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="5.0" minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
           <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
           <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -41,33 +43,33 @@
             <Label text="Kode Customer" GridPane.rowIndex="2" />
             <Label text="Nama" GridPane.rowIndex="3" />
             <Label text="Alamat" GridPane.rowIndex="4" />
-            <Label text="Kota" GridPane.rowIndex="6" />
-            <Label text="Negara" GridPane.rowIndex="7" />
-            <Label text="Kode Pos" GridPane.rowIndex="8" />
-            <Label text="Email" GridPane.rowIndex="9" />
+            <Label text="Kota" GridPane.rowIndex="7" />
+            <Label text="Negara" GridPane.rowIndex="8" />
+            <Label text="Kode Pos" GridPane.rowIndex="10" />
+            <Label text="Email" GridPane.rowIndex="11" />
             <Label text="Kontak Person" GridPane.columnIndex="3" GridPane.rowIndex="2" />
             <Label text="No Telp" GridPane.columnIndex="3" GridPane.rowIndex="3" />
             <Label text="No Handphone" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-            <Label text="Kode Sales" GridPane.columnIndex="3" GridPane.rowIndex="8" />
-            <Label text="Bank" GridPane.columnIndex="3" GridPane.rowIndex="5" />
-            <Label text="Atas Nama Rekening" GridPane.columnIndex="3" GridPane.rowIndex="6" />
-            <Label text="No Rekening" GridPane.columnIndex="3" GridPane.rowIndex="7" />
+            <Label text="Kode Sales" GridPane.columnIndex="3" GridPane.rowIndex="10" />
+            <Label text="Nama NPWP" GridPane.columnIndex="3" GridPane.rowIndex="7" />
+            <Label text="Alamat NPWP" GridPane.columnIndex="3" GridPane.rowIndex="8" />
+            <Label text="No NPWP" GridPane.columnIndex="3" GridPane.rowIndex="6" />
             <TextField fx:id="kodeCustomerField" disable="true" editable="false" prefHeight="40.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <TextField fx:id="namaField" prefHeight="40.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <TextArea fx:id="alamatField" prefHeight="40.0" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.rowSpan="2" />
-            <TextField fx:id="kotaField" prefHeight="40.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-            <TextField fx:id="negaraField" prefHeight="40.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-            <TextField fx:id="kodePosField" prefHeight="40.0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-            <TextField fx:id="emailField" prefHeight="40.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+            <TextArea fx:id="alamatField" prefHeight="40.0" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.rowSpan="3" />
+            <TextField fx:id="kotaField" prefHeight="40.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            <TextField fx:id="negaraField" prefHeight="40.0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+            <TextField fx:id="kodePosField" prefHeight="40.0" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+            <TextField fx:id="emailField" prefHeight="40.0" GridPane.columnIndex="1" GridPane.rowIndex="11" />
             <TextField fx:id="kontakPersonField" prefHeight="40.0" GridPane.columnIndex="4" GridPane.rowIndex="2" />
             <TextField fx:id="noTelpField" prefHeight="40.0" GridPane.columnIndex="4" GridPane.rowIndex="3" />
             <TextField fx:id="noHandphoneField" prefHeight="40.0" GridPane.columnIndex="4" GridPane.rowIndex="4" />
-            <ComboBox fx:id="kodeSalesCombo" maxWidth="1.7976931348623157E308" prefHeight="40.0" GridPane.columnIndex="4" GridPane.rowIndex="8" />
-            <TextField fx:id="bankField" prefHeight="40.0" GridPane.columnIndex="4" GridPane.rowIndex="5" />
-            <TextField fx:id="atasNamaRekeningField" prefHeight="40.0" GridPane.columnIndex="4" GridPane.rowIndex="6" />
-            <TextField fx:id="noRekeningField" prefHeight="40.0" GridPane.columnIndex="4" GridPane.rowIndex="7" />
-            <Label text="Limit Hutang" GridPane.columnIndex="3" GridPane.rowIndex="9" />
-            <TextField fx:id="limitHutangField" prefHeight="40.0" text="0" GridPane.columnIndex="4" GridPane.rowIndex="9" />
+            <ComboBox fx:id="kodeSalesCombo" maxWidth="1.7976931348623157E308" prefHeight="40.0" GridPane.columnIndex="4" GridPane.rowIndex="10" />
+            <TextField fx:id="bankField" prefHeight="40.0" GridPane.columnIndex="4" GridPane.rowIndex="7" />
+            <TextField fx:id="atasNamaRekeningField" prefHeight="40.0" GridPane.columnIndex="4" GridPane.rowIndex="8" />
+            <TextField fx:id="noRekeningField" prefHeight="40.0" GridPane.columnIndex="4" GridPane.rowIndex="6" />
+            <Label text="Limit Hutang" GridPane.columnIndex="3" GridPane.rowIndex="11" />
+            <TextField fx:id="limitHutangField" prefHeight="40.0" text="0" GridPane.columnIndex="4" GridPane.rowIndex="11" />
             <Label prefHeight="30.0" styleClass="label-header" text="Detail Customer" GridPane.columnSpan="2147483647" />
             <Button cancelButton="true" mnemonicParsing="false" onAction="#close" prefHeight="30.0" prefWidth="30.0" GridPane.columnIndex="4" GridPane.halignment="RIGHT">
                <graphic>
@@ -78,7 +80,7 @@
                   </ImageView>
                </graphic>
             </Button>
-            <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="1.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="10">
+            <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="1.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="12">
                <children>
                   <Button fx:id="saveButton" defaultButton="true" mnemonicParsing="false" prefHeight="40.0" prefWidth="100.0" styleClass="button2" text="Save" />
                   <Button mnemonicParsing="false" onAction="#close" prefHeight="40.0" prefWidth="100.0" styleClass="button2" text="Cancel" />
