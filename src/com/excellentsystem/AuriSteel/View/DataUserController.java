@@ -279,14 +279,6 @@ public class DataUserController  {
                     "Delete Barang"
                 )
             ));
-            root.getChildren().add(createTreeItem("Data Absensi",
-                Arrays.asList(
-                    "Edit Absensi"
-                )
-            ));
-            root.getChildren().add(createTreeItem("Laporan Absensi",
-                new ArrayList<>()
-            ));
             root.getChildren().add(createTreeItem("Pemesanan",
                 Arrays.asList(
                     "Add New Pemesanan",

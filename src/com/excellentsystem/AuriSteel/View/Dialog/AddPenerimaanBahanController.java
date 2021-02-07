@@ -69,7 +69,9 @@ public class AddPenerimaanBahanController {
     @FXML
     private TableColumn<PenerimaanBahan, Number> beratBersihColumn;
     @FXML
-    private TableColumn<PenerimaanBahan, Number> panjangColumn;
+    private TableColumn<PenerimaanBahan, Number> slitColumn;
+    @FXML
+    private TableColumn<PenerimaanBahan, Number> scraftColumn;
     @FXML
     private TableColumn<PenerimaanBahan, String> kodeUserColumn;
     @FXML
@@ -131,9 +133,12 @@ public class AddPenerimaanBahanController {
         beratBersihColumn.setCellValueFactory(celldata -> celldata.getValue().beratBersihProperty());
         beratBersihColumn.setCellFactory(col -> Function.getTableCell());
 
-        panjangColumn.setCellValueFactory(celldata -> celldata.getValue().panjangProperty());
-        panjangColumn.setCellFactory(col -> Function.getTableCell());
+        slitColumn.setCellValueFactory(celldata -> celldata.getValue().slitProperty());
+        slitColumn.setCellFactory(col -> Function.getTableCell());
 
+        scraftColumn.setCellValueFactory(celldata -> celldata.getValue().scraftProperty());
+        scraftColumn.setCellFactory(col -> Function.getTableCell());
+        
         kodeUserColumn.setCellValueFactory(cellData -> cellData.getValue().kodeUserProperty());
         kodeUserColumn.setCellFactory(col -> Function.getWrapTableCell(kodeUserColumn));
 
@@ -264,7 +269,8 @@ public class AddPenerimaanBahanController {
                             || checkColumn(temp.getKodeUser())
                             || checkColumn(df.format(temp.getBeratKotor()))
                             || checkColumn(df.format(temp.getBeratBersih()))
-                            || checkColumn(df.format(temp.getPanjang()))
+                            || checkColumn(df.format(temp.getSlit()))
+                            || checkColumn(df.format(temp.getScraft()))
                             || checkColumn(df.format(temp.getBeratTimbangan()))) {
                         filterData.add(temp);
                     }

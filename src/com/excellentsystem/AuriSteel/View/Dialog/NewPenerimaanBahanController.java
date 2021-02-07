@@ -37,7 +37,9 @@ public class NewPenerimaanBahanController {
     @FXML
     public TextField beratBersihField;
     @FXML
-    public TextField panjangField;
+    public TextField slitField;
+    @FXML
+    public TextField scraftField;
     @FXML
     public TextField beratTimbanganField;
     @FXML
@@ -51,7 +53,8 @@ public class NewPenerimaanBahanController {
     public void initialize() {
         Function.setNumberField(beratKotorField);
         Function.setNumberField(beratBersihField);
-        Function.setNumberField(panjangField);
+        Function.setNumberField(slitField);
+        Function.setNumberField(scraftField);
         Function.setNumberField(beratTimbanganField);
         
     }

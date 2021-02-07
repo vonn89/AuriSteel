@@ -91,37 +91,6 @@
                         </ImageView>
                      </graphic>
                   </TitledPane>
-                  <TitledPane fx:id="absensiPane" graphicTextGap="10.0" layoutX="10.0" layoutY="45.0" minWidth="0.0" text="Absensi" textFill="WHITE">
-                     <content>
-                        <VBox fx:id="absensiVbox" style="-fx-padding: 0 -1 0 0;">
-                           <children>
-                              <MenuButton fx:id="menuInputAbsensi" mnemonicParsing="false" onMouseClicked="#menuInputAbsensi" prefHeight="35.0" prefWidth="270.0" text="Data Absensi">
-                                 <VBox.margin>
-                                    <Insets />
-                                 </VBox.margin>
-                                 <padding>
-                                    <Insets left="50.0" />
-                                 </padding>
-                              </MenuButton>
-                              <MenuButton fx:id="menuLaporanAbsensi" layoutX="21.0" layoutY="21.0" mnemonicParsing="false" onMouseClicked="#menuLaporanAbsensi" prefHeight="35.0" prefWidth="270.0" text="Laporan Absensi">
-                                 <VBox.margin>
-                                    <Insets />
-                                 </VBox.margin>
-                                 <padding>
-                                    <Insets left="50.0" />
-                                 </padding>
-                              </MenuButton>
-                           </children>
-                        </VBox>
-                     </content>
-                     <graphic>
-                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../Resource/user.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </TitledPane>
                   <TitledPane fx:id="penjualanPane" graphicTextGap="10.0" layoutX="10.0" layoutY="42.0" minWidth="0.0" text="Penjualan" textFill="WHITE">
                      <content>
                         <VBox fx:id="penjualanVbox" style="-fx-padding: 0 -1 0 0;">

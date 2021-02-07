@@ -24,16 +24,42 @@ public class PenerimaanBahan {
     private final StringProperty kodeKategori = new SimpleStringProperty();
     private final StringProperty namaBahan = new SimpleStringProperty();
     private final StringProperty keterangan = new SimpleStringProperty();
-    private final DoubleProperty beratTimbangan = new SimpleDoubleProperty();
-    private final DoubleProperty beratKotor = new SimpleDoubleProperty();
     private final DoubleProperty beratBersih = new SimpleDoubleProperty();
-    private final DoubleProperty panjang = new SimpleDoubleProperty();
+    private final DoubleProperty beratKotor = new SimpleDoubleProperty();
+    private final DoubleProperty beratTimbangan = new SimpleDoubleProperty();
+    private final DoubleProperty slit = new SimpleDoubleProperty();
+    private final DoubleProperty scraft = new SimpleDoubleProperty();
     private final StringProperty kodeUser = new SimpleStringProperty();
     private final StringProperty tglBatal = new SimpleStringProperty();
     private final StringProperty userBatal = new SimpleStringProperty();
     private final StringProperty status = new SimpleStringProperty();
     private final StringProperty kodeGudang = new SimpleStringProperty();
+    
     private final BooleanProperty isChecked = new SimpleBooleanProperty();
+
+    public double getScraft() {
+        return scraft.get();
+    }
+
+    public void setScraft(double value) {
+        scraft.set(value);
+    }
+
+    public DoubleProperty scraftProperty() {
+        return scraft;
+    }
+
+    public double getSlit() {
+        return slit.get();
+    }
+
+    public void setSlit(double value) {
+        slit.set(value);
+    }
+
+    public DoubleProperty slitProperty() {
+        return slit;
+    }
 
     public boolean isIsChecked() {
         return isChecked.get();
@@ -118,19 +144,6 @@ public class PenerimaanBahan {
     public StringProperty kodeUserProperty() {
         return kodeUser;
     }
-
-    public double getPanjang() {
-        return panjang.get();
-    }
-
-    public void setPanjang(double value) {
-        panjang.set(value);
-    }
-
-    public DoubleProperty panjangProperty() {
-        return panjang;
-    }
-
     public double getBeratKotor() {
         return beratKotor.get();
     }

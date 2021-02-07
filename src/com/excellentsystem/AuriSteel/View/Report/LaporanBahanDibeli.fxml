@@ -21,7 +21,7 @@
          </columnConstraints>
          <rowConstraints>
             <RowConstraints maxHeight="35.0" minHeight="35.0" prefHeight="35.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="15.0" minHeight="15.0" prefHeight="15.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="7.0" minHeight="7.0" prefHeight="7.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
@@ -35,10 +35,10 @@
                   <TreeTableColumn fx:id="kodeKategoriColumn" maxWidth="2000.0" prefWidth="100.0" text="Kode Kategori" />
                   <TreeTableColumn fx:id="kodeBahanColumn" maxWidth="2000.0" prefWidth="100.0" text="Kode Bahan" />
                   <TreeTableColumn fx:id="namaBahanColumn" maxWidth="3000.0" prefWidth="100.0" text="Nama Bahan" visible="false" />
-                  <TreeTableColumn fx:id="beratKotorColumn" maxWidth="1000.0" prefWidth="100.0" text="Berat Kotor" />
-                  <TreeTableColumn fx:id="beratBersihColumn" maxWidth="1000.0" prefWidth="100.0" text="Berat Bersih" />
-                  <TreeTableColumn fx:id="panjangColumn" maxWidth="1000.0" prefWidth="100.0" text="Panjang" />
-                  <TreeTableColumn fx:id="totalColumn" maxWidth="2000.0" prefWidth="100.0" text="Harga Beli" />
+                  <TreeTableColumn fx:id="qtyColumn" maxWidth="1000.0" prefWidth="100.0" text="Qty" />
+                  <TreeTableColumn fx:id="nilaiPokokColumn" maxWidth="2000.0" prefWidth="100.0" text="Nilai Pokok" />
+                  <TreeTableColumn fx:id="hargaBeliColumn" maxWidth="2000.0" prefWidth="100.0" text="Harga Beli" />
+                  <TreeTableColumn fx:id="totalColumn" maxWidth="2000.0" prefWidth="100.0" text="Total Harga" />
                </columns>
                <columnResizePolicy>
                   <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -46,18 +46,14 @@
             </TreeTableView>
             <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" style="-fx-background-color: seccolor6;" GridPane.rowIndex="3">
                <children>
-                  <Label alignment="CENTER_RIGHT" text="Total Berat Kotor" HBox.hgrow="ALWAYS">
+                  <Label alignment="CENTER_RIGHT" text="Total Barang" HBox.hgrow="ALWAYS">
                      
                   </Label>
-                  <Label fx:id="totalBeratKotorField" alignment="CENTER_RIGHT" style="-fx-font-weight: bold;" text="0" HBox.hgrow="ALWAYS" />
-                  <Label alignment="CENTER_RIGHT" text="Total Berat Bersih" HBox.hgrow="ALWAYS">
+                  <Label fx:id="totalBarangField" alignment="CENTER_RIGHT" style="-fx-font-weight: bold;" text="0" HBox.hgrow="ALWAYS" />
+                  <Label alignment="CENTER_RIGHT" text="Total Qty" HBox.hgrow="ALWAYS">
                      
                   </Label>
-                  <Label fx:id="totalBeratBersihField" alignment="CENTER_RIGHT" style="-fx-font-weight: bold;" text="0" HBox.hgrow="ALWAYS" />
-                  <Label alignment="CENTER_RIGHT" text="Total Panjang" HBox.hgrow="ALWAYS">
-                     
-                  </Label>
-                  <Label fx:id="totalPanjangField" alignment="CENTER_RIGHT" style="-fx-font-weight: bold;" text="0" HBox.hgrow="ALWAYS" />
+                  <Label fx:id="totalQtyField" alignment="CENTER_RIGHT" style="-fx-font-weight: bold;" text="0" HBox.hgrow="ALWAYS" />
                   <Label alignment="CENTER_RIGHT" text="Total Pembelian" HBox.hgrow="ALWAYS">
                     
                   </Label>

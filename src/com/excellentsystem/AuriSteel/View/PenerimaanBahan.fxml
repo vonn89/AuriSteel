@@ -37,10 +37,11 @@
                   <TableColumn fx:id="kodeBahanColumn" prefWidth="75.0" text="Kode Bahan" />
                   <TableColumn fx:id="namaBahanColumn" prefWidth="75.0" text="Nama Bahan" visible="false" />
                   <TableColumn fx:id="keteranganColumn" prefWidth="75.0" text="Keterangan" />
-                  <TableColumn fx:id="beratTimbanganColumn" prefWidth="75.0" text="Berat Timbangan" />
-                  <TableColumn fx:id="beratKotorColumn" prefWidth="75.0" text="Berat Kotor" />
                   <TableColumn fx:id="beratBersihColumn" prefWidth="75.0" text="Berat Bersih" />
-                  <TableColumn fx:id="panjangColumn" prefWidth="75.0" text="Panjang" visible="false" />
+                  <TableColumn fx:id="beratKotorColumn" prefWidth="75.0" text="Berat Kotor" />
+                  <TableColumn fx:id="beratTimbanganColumn" prefWidth="75.0" text="Berat Timbangan" />
+                  <TableColumn fx:id="slitColumn" prefWidth="75.0" text="Slit" />
+                  <TableColumn fx:id="scraftColumn" prefWidth="75.0" text="Scraft" visible="false" />
                   <TableColumn fx:id="kodeUserColumn" prefWidth="75.0" text="Kode User" visible="false" />
                   <TableColumn fx:id="statusColumn" prefWidth="75.0" text="Status" visible="false" />
               </columns>

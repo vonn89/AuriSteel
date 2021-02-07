@@ -2460,9 +2460,8 @@ public class Service {
 
             for (PembelianBahanDetail detail : p.getListPembelianBahanDetail()) {
                 PemesananPembelianBahanDetail d = PemesananPembelianBahanDetailDAO.get(con, detail.getNoPemesanan(), detail.getNoUrut());
-                d.setQtyDiterima(d.getQtyDiterima()+ detail.getBeratBersih());
+                d.setQtyDiterima(d.getQtyDiterima()+ detail.getQty());
                 PemesananPembelianBahanDetailDAO.update(con, d);
-                
             }
             double qtyBelumDikirim = 0;
             List<PemesananPembelianBahanDetail> listPemesananPembelianBahanDetail = PemesananPembelianBahanDetailDAO.
@@ -2481,7 +2480,6 @@ public class Service {
                 PembelianBahanDetailDAO.insert(con, detail);
                 Bahan bahan = BahanDAO.get(con, detail.getKodeBahan());
                 if (bahan == null) {
-                    double stokBeli = detail.getBeratBersih();
 
                     bahan = new Bahan();
                     bahan.setKodeBahan(detail.getKodeBahan());
@@ -2490,9 +2488,9 @@ public class Service {
                     bahan.setNamaBahan(detail.getNamaBahan());
                     bahan.setSpesifikasi(detail.getSpesifikasi());
                     bahan.setKeterangan("");
-                    bahan.setBeratKotor(detail.getBeratKotor());
-                    bahan.setBeratBersih(detail.getBeratBersih());
-                    bahan.setPanjang(detail.getPanjang());
+                    bahan.setBeratKotor(detail.getQty());
+                    bahan.setBeratBersih(detail.getQty());
+                    bahan.setPanjang(0);
                     bahan.setHargaBeli(detail.getTotal() + bebanPerItem);
                     bahan.setStatus("true");
                     BahanDAO.insert(con, bahan);
@@ -2502,9 +2500,9 @@ public class Service {
                     stokBahan.setKodeBahan(detail.getKodeBahan());
                     stokBahan.setKodeGudang(p.getKodeGudang());
                     stokBahan.setStokAwal(0);
-                    stokBahan.setStokMasuk(stokBeli);
+                    stokBahan.setStokMasuk(detail.getQty());
                     stokBahan.setStokKeluar(0);
-                    stokBahan.setStokAkhir(stokBeli);
+                    stokBahan.setStokAkhir(detail.getQty());
                     StokBahanDAO.insert(con, stokBahan);
 
                     LogBahan log = new LogBahan();
@@ -2515,11 +2513,11 @@ public class Service {
                     log.setKeterangan(p.getNoPembelian());
                     log.setStokAwal(0);
                     log.setNilaiAwal(0);
-                    log.setStokMasuk(stokBeli);
+                    log.setStokMasuk(detail.getQty());
                     log.setNilaiMasuk(detail.getTotal() + bebanPerItem);
                     log.setStokKeluar(0);
                     log.setNilaiKeluar(0);
-                    log.setStokAkhir(stokBeli);
+                    log.setStokAkhir(detail.getQty());
                     log.setNilaiAkhir(detail.getTotal() + bebanPerItem);
                     LogBahanDAO.insert(con, log);
                 } else {
@@ -2619,7 +2617,7 @@ public class Service {
                 
                 for (PembelianBahanDetail detail : pembelian.getListPembelianBahanDetail()) {
                     PemesananPembelianBahanDetail d = PemesananPembelianBahanDetailDAO.get(con, detail.getNoPemesanan(), detail.getNoUrut());
-                    d.setQtyDiterima(d.getQtyDiterima()- detail.getBeratBersih());
+                    d.setQtyDiterima(d.getQtyDiterima()- detail.getQty());
                     PemesananPembelianBahanDetailDAO.update(con, d);
                     
                     PenerimaanBahan pb = PenerimaanBahanDAO.get(con, detail.getNoPenerimaan());

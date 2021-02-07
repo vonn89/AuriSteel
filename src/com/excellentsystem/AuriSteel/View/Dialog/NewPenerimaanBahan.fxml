@@ -30,8 +30,9 @@
             <RowConstraints fillHeight="false" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints fillHeight="false" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints fillHeight="false" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints fillHeight="false" maxHeight="5.0" minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
             <RowConstraints fillHeight="false" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints fillHeight="false" maxHeight="10.0" minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
+            <RowConstraints fillHeight="false" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints fillHeight="false" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints fillHeight="false" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints fillHeight="false" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -45,7 +46,7 @@
                   
                </font>
             </Label>
-            <Label text="Keterangan" GridPane.rowIndex="11">
+            <Label text="Keterangan" GridPane.rowIndex="12">
                <font>
                   
                </font>
@@ -65,8 +66,8 @@
                </graphic></Button>
             <ComboBox fx:id="gudangCombo" prefHeight="35.0" prefWidth="1000.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <TextField fx:id="kodeBahanField" prefHeight="35.0" prefWidth="1000.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <TextField fx:id="keteranganField" prefHeight="35.0" prefWidth="1000.0" GridPane.columnIndex="1" GridPane.rowIndex="11" />
-            <HBox alignment="CENTER_RIGHT" prefHeight="100.0" spacing="1.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="12">
+            <TextField fx:id="keteranganField" prefHeight="35.0" prefWidth="1000.0" GridPane.columnIndex="1" GridPane.rowIndex="12" />
+            <HBox alignment="CENTER_RIGHT" prefHeight="100.0" spacing="1.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="13">
                <children>
                   <Button fx:id="saveButton" mnemonicParsing="false" prefHeight="35.0" prefWidth="100.0" styleClass="button2" text="Save" />
                   <Button mnemonicParsing="false" onAction="#close" prefHeight="35.0" prefWidth="100.0" styleClass="button2" text="Cancel" />
@@ -74,16 +75,18 @@
             </HBox>
             <Label text="Kategori" GridPane.rowIndex="3" />
             <ComboBox fx:id="kategoriCombo" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <Label text="Berat Timbangan" GridPane.rowIndex="10" />
-            <Label text="Berat Kotor" GridPane.rowIndex="6" />
-            <Label text="Berat Bersih" GridPane.rowIndex="7" />
-            <Label text="Panjang" GridPane.rowIndex="8" />
-            <TextField fx:id="beratTimbanganField" prefHeight="30.0" GridPane.columnIndex="1" GridPane.rowIndex="10" />
-            <TextField fx:id="beratKotorField" prefHeight="30.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-            <TextField fx:id="beratBersihField" prefHeight="30.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-            <TextField fx:id="panjangField" prefHeight="30.0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+            <Label text="Berat Timbangan" GridPane.rowIndex="9" />
+            <Label text="Berat Kotor" GridPane.rowIndex="7" />
+            <Label text="Berat Bersih" GridPane.rowIndex="6" />
+            <Label text="Slit" GridPane.rowIndex="10" />
+            <TextField fx:id="beratTimbanganField" prefHeight="30.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+            <TextField fx:id="beratKotorField" prefHeight="30.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            <TextField fx:id="beratBersihField" prefHeight="30.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <TextField fx:id="slitField" prefHeight="30.0" GridPane.columnIndex="1" GridPane.rowIndex="10" />
             <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="4" />
-            <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="9" />
+            <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="8" />
+            <Label text="Scraft" GridPane.rowIndex="11" />
+            <TextField fx:id="scraftField" prefHeight="30.0" GridPane.columnIndex="1" GridPane.rowIndex="11" />
          </children>
          <padding>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />

@@ -143,12 +143,9 @@
                         <TableColumn fx:id="kodeBahanColumn" maxWidth="1000.0" prefWidth="75.0" text="Kode Bahan" />
                         <TableColumn fx:id="namaBahanColumn" maxWidth="3000.0" prefWidth="75.0" text="Nama Bahan" />
                         <TableColumn fx:id="spesifikasiColumn" prefWidth="75.0" text="Spesifikasi" visible="false" />
-                        <TableColumn fx:id="keteranganColumn" prefWidth="75.0" text="Keterangan" visible="false" />
-                        <TableColumn fx:id="beratKotorColumn" maxWidth="1000.0" prefWidth="75.0" text="Berat Kotor" />
-                        <TableColumn fx:id="beratBersihColumn" maxWidth="1000.0" prefWidth="75.0" text="Berat Bersih" />
-                        <TableColumn fx:id="panjangColumn" maxWidth="1000.0" prefWidth="75.0" text="Panjang" />
-                        <TableColumn fx:id="totalColumn" maxWidth="1000.0" prefWidth="75.0" text="Harga Beli" />
-                        <TableColumn fx:id="removeColumn" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" resizable="false" />
+                        <TableColumn fx:id="qtyColumn" maxWidth="1000.0" prefWidth="75.0" text="Qty" />
+                        <TableColumn fx:id="hargaBeliColumn" maxWidth="1000.0" prefWidth="75.0" text="Harga Beli" />
+                        <TableColumn fx:id="totalColumn" maxWidth="1000.0" prefWidth="75.0" text="Total" />
                      </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -156,14 +153,10 @@
                   </TableView>
                   <HBox alignment="TOP_RIGHT" minHeight="25.0" prefHeight="25.0" spacing="10.0" style="-fx-background-color: seccolor6;">
                      <children>
+                        <Label text="Total Barang" />
+                        <Label fx:id="totalBarangField" alignment="CENTER" style="-fx-font-weight: bold;" text="0" />
                         <Label text="Total Qty" />
                         <Label fx:id="totalQtyField" alignment="CENTER" style="-fx-font-weight: bold;" text="0" />
-                        <Label text="Total Berat Kotor" />
-                        <Label fx:id="totalBeratKotorField" alignment="CENTER" style="-fx-font-weight: bold;" text="0" />
-                        <Label text="Total Berat Bersih" />
-                        <Label fx:id="totalBeratBersihField" alignment="CENTER" style="-fx-font-weight: bold;" text="0" />
-                        <Label text="Total Panjang" />
-                        <Label fx:id="totalPanjangField" alignment="CENTER" style="-fx-font-weight: bold;" text="0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets right="10.0" />

@@ -23,7 +23,7 @@ import java.util.List;
 public class PembelianBahanHeadDAO {
     public static List<PembelianBahanHead> getAllByDateAndStatus(Connection con, 
             String tglMulai,String tglAkhir, String status)throws Exception{
-        String sql = "select * from tt_pembelian_head where left(tgl_pembelian,10) between ? and ? ";
+        String sql = "select * from tt_pembelian_bahan_head where left(tgl_pembelian,10) between ? and ? ";
         if(!status.equals("%"))
              sql = sql + " and status = '"+status+"' ";
         PreparedStatement ps = con.prepareStatement(sql);
@@ -54,7 +54,7 @@ public class PembelianBahanHeadDAO {
         return allPembelian;
     }
     public static PembelianBahanHead get(Connection con, String noPembelian)throws Exception{
-        PreparedStatement ps = con.prepareStatement("select * from tt_pembelian_head where no_pembelian = ?");
+        PreparedStatement ps = con.prepareStatement("select * from tt_pembelian_bahan_head where no_pembelian = ?");
         ps.setString(1, noPembelian);
         ResultSet rs = ps.executeQuery();
         PembelianBahanHead p =null;
@@ -80,7 +80,7 @@ public class PembelianBahanHeadDAO {
         return p;
     }
     public static String getId(Connection con, Date date)throws Exception{
-        PreparedStatement ps = con.prepareStatement("select max(right(no_pembelian,3)) from tt_pembelian_head "
+        PreparedStatement ps = con.prepareStatement("select max(right(no_pembelian,3)) from tt_pembelian_bahan_head "
                 + " where mid(no_pembelian,4,4) = ?");
         ps.setString(1, yymm.format(date));
         ResultSet rs = ps.executeQuery();
@@ -90,7 +90,7 @@ public class PembelianBahanHeadDAO {
             return "PO-"+yymm.format(date)+new DecimalFormat("000").format(1);
     }
     public static void insert(Connection con, PembelianBahanHead p)throws Exception{
-        PreparedStatement ps = con.prepareStatement("insert into tt_pembelian_head values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        PreparedStatement ps = con.prepareStatement("insert into tt_pembelian_bahan_head values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
         ps.setString(1, p.getNoPembelian());
         ps.setString(2, p.getTglPembelian());
         ps.setString(3, p.getNoPemesanan());
@@ -110,7 +110,7 @@ public class PembelianBahanHeadDAO {
         ps.executeUpdate();
     }
     public static void update(Connection con, PembelianBahanHead p)throws Exception{
-        PreparedStatement ps = con.prepareStatement("update tt_pembelian_head set "
+        PreparedStatement ps = con.prepareStatement("update tt_pembelian_bahan_head set "
                 + " tgl_pembelian=?, no_pemesanan=?, kode_supplier=?, kode_gudang=?, payment_term=?, "
                 + " total_pembelian=?, total_beban_pembelian=?, grandtotal=?, "
                 + " pembayaran=?, sisa_pembayaran=?, catatan=?, "

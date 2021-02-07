@@ -20,8 +20,8 @@ import java.util.List;
 public class PembelianBahanDetailDAO {
     public static List<PembelianBahanDetail> getAllByDateAndStatus(Connection con, 
             String tglMulai,String tglAkhir, String status)throws Exception{
-        String sql = "select * from tt_pembelian_detail "
-            + " where no_pembelian in (select no_pembelian from tt_pembelian_head "
+        String sql = "select * from tt_pembelian_bahan_detail "
+            + " where no_pembelian in (select no_pembelian from tt_pembelian_bahan_head "
             + " where left(tgl_pembelian,10) between ? and ? ";
         if(!status.equals("%"))
             sql = sql + " and status = '"+status+"' ";
@@ -42,17 +42,16 @@ public class PembelianBahanDetailDAO {
             d.setNoKontrak(rs.getString(7));
             d.setNamaBahan(rs.getString(8));
             d.setSpesifikasi(rs.getString(9));
-            d.setKeterangan(rs.getString(10));
-            d.setBeratKotor(rs.getDouble(11));
-            d.setBeratBersih(rs.getDouble(12));
-            d.setPanjang(rs.getDouble(13));
-            d.setTotal(rs.getDouble(14));
+            d.setQty(rs.getDouble(10));
+            d.setNilai(rs.getDouble(11));
+            d.setHargaBeli(rs.getDouble(12));
+            d.setTotal(rs.getDouble(13));
             allDetail.add(d);
         }
         return allDetail;
     }
     public static List<PembelianBahanDetail> getAllByNoPembelian(Connection con, String noPembelian)throws Exception{
-        PreparedStatement ps = con.prepareStatement("select * from tt_pembelian_detail where no_pembelian=?");
+        PreparedStatement ps = con.prepareStatement("select * from tt_pembelian_bahan_detail where no_pembelian=?");
         ps.setString(1, noPembelian);
         ResultSet rs = ps.executeQuery();
         List<PembelianBahanDetail> allDetail = new ArrayList<>();
@@ -67,17 +66,16 @@ public class PembelianBahanDetailDAO {
             d.setNoKontrak(rs.getString(7));
             d.setNamaBahan(rs.getString(8));
             d.setSpesifikasi(rs.getString(9));
-            d.setKeterangan(rs.getString(10));
-            d.setBeratKotor(rs.getDouble(11));
-            d.setBeratBersih(rs.getDouble(12));
-            d.setPanjang(rs.getDouble(13));
-            d.setTotal(rs.getDouble(14));
+            d.setQty(rs.getDouble(10));
+            d.setNilai(rs.getDouble(11));
+            d.setHargaBeli(rs.getDouble(12));
+            d.setTotal(rs.getDouble(13));
             allDetail.add(d);
         }
         return allDetail;
     }
     public static void insert(Connection con, PembelianBahanDetail d)throws Exception{
-        PreparedStatement ps = con.prepareStatement("insert into tt_pembelian_detail values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        PreparedStatement ps = con.prepareStatement("insert into tt_pembelian_bahan_detail values(?,?,?,?,?,?,?,?,?,?,?,?,?)");
         ps.setString(1, d.getNoPembelian());
         ps.setString(2, d.getNoPemesanan());
         ps.setInt(3, d.getNoUrut());
@@ -87,11 +85,10 @@ public class PembelianBahanDetailDAO {
         ps.setString(7, d.getNoKontrak());
         ps.setString(8, d.getNamaBahan());
         ps.setString(9, d.getSpesifikasi());
-        ps.setString(10, d.getKeterangan());
-        ps.setDouble(11, d.getBeratKotor());
-        ps.setDouble(12, d.getBeratBersih());
-        ps.setDouble(13, d.getPanjang());
-        ps.setDouble(14, d.getTotal());
+        ps.setDouble(10, d.getQty());
+        ps.setDouble(11, d.getNilai());
+        ps.setDouble(12, d.getHargaBeli());
+        ps.setDouble(13, d.getTotal());
         ps.executeUpdate();
     }
 }

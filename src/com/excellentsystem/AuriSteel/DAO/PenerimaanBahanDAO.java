@@ -41,14 +41,15 @@ public class PenerimaanBahanDAO {
             p.setKodeKategori(rs.getString(5));
             p.setNamaBahan(rs.getString(6));
             p.setKeterangan(rs.getString(7));
-            p.setBeratTimbangan(rs.getDouble(8));
+            p.setBeratBersih(rs.getDouble(8));
             p.setBeratKotor(rs.getDouble(9));
-            p.setBeratBersih(rs.getDouble(10));
-            p.setPanjang(rs.getDouble(11));
-            p.setKodeUser(rs.getString(12));
-            p.setTglBatal(rs.getDate(13).toString()+" "+rs.getTime(13).toString());
-            p.setUserBatal(rs.getString(14));
-            p.setStatus(rs.getString(15));
+            p.setBeratTimbangan(rs.getDouble(10));
+            p.setSlit(rs.getDouble(11));
+            p.setScraft(rs.getDouble(12));
+            p.setKodeUser(rs.getString(13));
+            p.setTglBatal(rs.getDate(14).toString()+" "+rs.getTime(14).toString());
+            p.setUserBatal(rs.getString(15));
+            p.setStatus(rs.getString(16));
             allPemesanan.add(p);
         }
         return allPemesanan;
@@ -72,14 +73,15 @@ public class PenerimaanBahanDAO {
             p.setKodeKategori(rs.getString(5));
             p.setNamaBahan(rs.getString(6));
             p.setKeterangan(rs.getString(7));
-            p.setBeratTimbangan(rs.getDouble(8));
+            p.setBeratBersih(rs.getDouble(8));
             p.setBeratKotor(rs.getDouble(9));
-            p.setBeratBersih(rs.getDouble(10));
-            p.setPanjang(rs.getDouble(11));
-            p.setKodeUser(rs.getString(12));
-            p.setTglBatal(rs.getDate(13).toString()+" "+rs.getTime(13).toString());
-            p.setUserBatal(rs.getString(14));
-            p.setStatus(rs.getString(15));
+            p.setBeratTimbangan(rs.getDouble(10));
+            p.setSlit(rs.getDouble(11));
+            p.setScraft(rs.getDouble(12));
+            p.setKodeUser(rs.getString(13));
+            p.setTglBatal(rs.getDate(14).toString()+" "+rs.getTime(14).toString());
+            p.setUserBatal(rs.getString(15));
+            p.setStatus(rs.getString(16));
             allPemesanan.add(p);
         }
         return allPemesanan;
@@ -98,14 +100,15 @@ public class PenerimaanBahanDAO {
             p.setKodeKategori(rs.getString(5));
             p.setNamaBahan(rs.getString(6));
             p.setKeterangan(rs.getString(7));
-            p.setBeratTimbangan(rs.getDouble(8));
+            p.setBeratBersih(rs.getDouble(8));
             p.setBeratKotor(rs.getDouble(9));
-            p.setBeratBersih(rs.getDouble(10));
-            p.setPanjang(rs.getDouble(11));
-            p.setKodeUser(rs.getString(12));
-            p.setTglBatal(rs.getDate(13).toString()+" "+rs.getTime(13).toString());
-            p.setUserBatal(rs.getString(14));
-            p.setStatus(rs.getString(15));
+            p.setBeratTimbangan(rs.getDouble(10));
+            p.setSlit(rs.getDouble(11));
+            p.setScraft(rs.getDouble(12));
+            p.setKodeUser(rs.getString(13));
+            p.setTglBatal(rs.getDate(14).toString()+" "+rs.getTime(14).toString());
+            p.setUserBatal(rs.getString(15));
+            p.setStatus(rs.getString(16));
         }
         return p;
     }
@@ -120,7 +123,7 @@ public class PenerimaanBahanDAO {
             return "PM-"+yymm.format(date)+new DecimalFormat("000").format(1);
     }
     public static void insert(Connection con, PenerimaanBahan p)throws Exception{
-        PreparedStatement ps = con.prepareStatement("insert into tt_penerimaan_bahan values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        PreparedStatement ps = con.prepareStatement("insert into tt_penerimaan_bahan values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
         ps.setString(1, p.getNoPenerimaan());
         ps.setString(2, p.getTglPenerimaan());
         ps.setString(3, p.getKodeGudang());
@@ -128,20 +131,21 @@ public class PenerimaanBahanDAO {
         ps.setString(5, p.getKodeKategori());
         ps.setString(6, p.getNamaBahan());
         ps.setString(7, p.getKeterangan());
-        ps.setDouble(8, p.getBeratTimbangan());
+        ps.setDouble(8, p.getBeratBersih());
         ps.setDouble(9, p.getBeratKotor());
-        ps.setDouble(10, p.getBeratBersih());
-        ps.setDouble(11, p.getPanjang());
-        ps.setString(12, p.getKodeUser());
-        ps.setString(13, p.getTglBatal());
-        ps.setString(14, p.getUserBatal());
-        ps.setString(15, p.getStatus());
+        ps.setDouble(10, p.getBeratTimbangan());
+        ps.setDouble(11, p.getSlit());
+        ps.setDouble(12, p.getScraft());
+        ps.setString(13, p.getKodeUser());
+        ps.setString(14, p.getTglBatal());
+        ps.setString(15, p.getUserBatal());
+        ps.setString(16, p.getStatus());
         ps.executeUpdate();
     }
     public static void update(Connection con, PenerimaanBahan p)throws Exception{
         PreparedStatement ps = con.prepareStatement("update tt_penerimaan_bahan set "
                 + " tgl_penerimaan=?, kode_gudang=?, kode_bahan=?, kode_kategori=?, "
-                + " nama_bahan=?, keterangan=?, berat_timbangan=?, berat_kotor=?, berat_bersih=?, panjang=?, "
+                + " nama_bahan=?, keterangan=?, berat_bersih=?, berat_kotor=?, berat_timbangan=?, slit=?, scraft=?, "
                 + " kode_user=?, tgl_batal=?, user_batal=?, status=? where no_penerimaan=?");
         ps.setString(1, p.getTglPenerimaan());
         ps.setString(2, p.getKodeGudang());
@@ -149,15 +153,16 @@ public class PenerimaanBahanDAO {
         ps.setString(4, p.getKodeKategori());
         ps.setString(5, p.getNamaBahan());
         ps.setString(6, p.getKeterangan());
-        ps.setDouble(7, p.getBeratTimbangan());
+        ps.setDouble(7, p.getBeratBersih());
         ps.setDouble(8, p.getBeratKotor());
-        ps.setDouble(9, p.getBeratBersih());
-        ps.setDouble(10, p.getPanjang());
-        ps.setString(11, p.getKodeUser());
-        ps.setString(12, p.getTglBatal());
-        ps.setString(13, p.getUserBatal());
-        ps.setString(14, p.getStatus());
-        ps.setString(15, p.getNoPenerimaan());
+        ps.setDouble(9, p.getBeratTimbangan());
+        ps.setDouble(10, p.getSlit());
+        ps.setDouble(11, p.getScraft());
+        ps.setString(12, p.getKodeUser());
+        ps.setString(13, p.getTglBatal());
+        ps.setString(14, p.getUserBatal());
+        ps.setString(15, p.getStatus());
+        ps.setString(16, p.getNoPenerimaan());
         ps.executeUpdate();
     }
 }

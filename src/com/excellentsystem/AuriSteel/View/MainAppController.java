@@ -59,12 +59,7 @@ public class MainAppController {
     @FXML private MenuButton menuDataPegawai;
     @FXML private MenuButton menuDataBahan;
     @FXML private MenuButton menuDataBarang;
-    
-    @FXML private TitledPane absensiPane;
-    @FXML private VBox absensiVbox;
-    @FXML private MenuButton menuInputAbsensi;
-    @FXML private MenuButton menuLaporanAbsensi;
-    
+        
     @FXML private TitledPane penjualanPane;
     @FXML private VBox penjualanVbox;
     @FXML private MenuButton menuPemesanan;
@@ -127,9 +122,6 @@ public class MainAppController {
             for(Node n : masterVbox.getChildren()){
                 n.managedProperty().bind(n.visibleProperty());
             }
-            for(Node n : absensiVbox.getChildren()){
-                n.managedProperty().bind(n.visibleProperty());
-            }
             for(Node n : penjualanVbox.getChildren()){
                 n.managedProperty().bind(n.visibleProperty());
             }
@@ -165,9 +157,6 @@ public class MainAppController {
         menuDataBahan.setVisible(false);
         menuDataBarang.setVisible(false);
 
-        menuInputAbsensi.setVisible(false);
-        menuLaporanAbsensi.setVisible(false);
-        
         menuPemesanan.setVisible(false);
         menuPenjualan.setVisible(false);
         menuPemesananCoil.setVisible(false);
@@ -226,10 +215,6 @@ public class MainAppController {
                     menuDataBahan.setVisible(o.isStatus());
                 }else if(o.getJenis().equals("Data Barang")){
                     menuDataBarang.setVisible(o.isStatus());
-                }else if(o.getJenis().equals("Data Absensi")){
-                    menuInputAbsensi.setVisible(o.isStatus());
-                }else if(o.getJenis().equals("Laporan Absensi")){
-                    menuLaporanAbsensi.setVisible(o.isStatus());
                 }else if(o.getJenis().equals("Pemesanan")){
                     menuPemesanan.setVisible(o.isStatus());
                 }else if(o.getJenis().equals("Penjualan")){
@@ -300,10 +285,6 @@ public class MainAppController {
                     menuDataBahan.isVisible()==false &&
                     menuDataBarang.isVisible()==false ){
                 accordion.getPanes().remove(masterPane);
-            }
-            if(menuInputAbsensi.isVisible()==false &&
-                    menuLaporanAbsensi.isVisible()==false ){
-                accordion.getPanes().remove(absensiPane);
             }
             if(menuPemesanan.isVisible()==false &&
                     menuPenjualan.isVisible()==false &&
@@ -392,7 +373,6 @@ public class MainAppController {
                 final double curWidth = 220 * (1.0 - frac);
                 vbox.setPrefWidth(curWidth);
                 masterPane.setExpanded(false);
-                absensiPane.setExpanded(false);
                 penjualanPane.setExpanded(false);
                 pembelianPane.setExpanded(false);
                 barangPane.setExpanded(false);
@@ -460,16 +440,6 @@ public class MainAppController {
     @FXML
     public void menuDataBarang() {
         mainApp.showDataBarang();
-    }
-    @FXML
-    public void menuDataPaketBarang() {
-    }
-    @FXML
-    public void menuInputAbsensi() {
-        mainApp.showDataAbsensi();
-    }
-    @FXML
-    public void menuLaporanAbsensi() {
     }
     @FXML
     public void menuDataUser() {

@@ -125,17 +125,6 @@ public class Function {
         return date;
     }
     public static TableCell getWrapTableCell(TableColumn tc){ 
-//        TableCell cell = new TableCell<Annotation, Number>(){
-//            @Override
-//            public void updateItem(Number value, boolean empty) {
-//                super.updateItem(value, empty);
-//                if (empty)
-//                    setText(null);
-//                else 
-//                    setText(df.format(value.doubleValue()));
-//            }
-//        };
-//        return cell;
         TableCell cell = new TableCell<>();
         Text text = new Text();
         text.setFill(Paint.valueOf("#333333"));
@@ -159,17 +148,6 @@ public class Function {
         return cell;
     }
     public static TreeTableCell getWrapTreeTableCell(TreeTableColumn tc){ 
-//        TableCell cell = new TableCell<Annotation, Number>(){
-//            @Override
-//            public void updateItem(Number value, boolean empty) {
-//                super.updateItem(value, empty);
-//                if (empty)
-//                    setText(null);
-//                else 
-//                    setText(df.format(value.doubleValue()));
-//            }
-//        };
-//        return cell;
         TreeTableCell cell = new TreeTableCell<>();
         Text text = new Text();
         text.setFill(Paint.valueOf("#333333"));

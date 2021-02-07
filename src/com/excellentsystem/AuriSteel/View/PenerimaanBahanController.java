@@ -87,7 +87,9 @@ public class PenerimaanBahanController {
     @FXML
     private TableColumn<PenerimaanBahan, Number> beratBersihColumn;
     @FXML
-    private TableColumn<PenerimaanBahan, Number> panjangColumn;
+    private TableColumn<PenerimaanBahan, Number> slitColumn;
+    @FXML
+    private TableColumn<PenerimaanBahan, Number> scraftColumn;
     @FXML
     private TableColumn<PenerimaanBahan, String> kodeUserColumn;
     @FXML
@@ -144,8 +146,11 @@ public class PenerimaanBahanController {
         beratBersihColumn.setCellValueFactory(celldata -> celldata.getValue().beratBersihProperty());
         beratBersihColumn.setCellFactory(col -> Function.getTableCell());
         
-        panjangColumn.setCellValueFactory(celldata -> celldata.getValue().panjangProperty());
-        panjangColumn.setCellFactory(col -> Function.getTableCell());
+        slitColumn.setCellValueFactory(celldata -> celldata.getValue().slitProperty());
+        slitColumn.setCellFactory(col -> Function.getTableCell());
+        
+        scraftColumn.setCellValueFactory(celldata -> celldata.getValue().scraftProperty());
+        scraftColumn.setCellFactory(col -> Function.getTableCell());
         
         kodeUserColumn.setCellValueFactory(cellData -> cellData.getValue().kodeUserProperty());
         kodeUserColumn.setCellFactory(col -> Function.getWrapTableCell(kodeUserColumn));
@@ -327,7 +332,8 @@ public class PenerimaanBahanController {
                             || checkColumn(temp.getKodeUser())
                             || checkColumn(df.format(temp.getBeratKotor()))
                             || checkColumn(df.format(temp.getBeratBersih()))
-                            || checkColumn(df.format(temp.getPanjang()))
+                            || checkColumn(df.format(temp.getSlit()))
+                            || checkColumn(df.format(temp.getScraft()))
                             || checkColumn(df.format(temp.getBeratTimbangan()))) {
                         filterData.add(temp);
                     }
@@ -356,6 +362,8 @@ public class PenerimaanBahanController {
             } else if (Double.parseDouble(controller.beratBersihField.getText().replaceAll(",", ""))==0) {
                 mainApp.showMessage(Modality.NONE, "Warning", "Berat bersih masih kosong");
             } else if (Double.parseDouble(controller.beratTimbanganField.getText().replaceAll(",", ""))==0) {
+                mainApp.showMessage(Modality.NONE, "Warning", "Slit masih kosong");
+            } else if (Double.parseDouble(controller.beratTimbanganField.getText().replaceAll(",", ""))==0) {
                 mainApp.showMessage(Modality.NONE, "Warning", "Berat timbangan masih kosong");
             } else if (Double.parseDouble(controller.beratKotorField.getText().replaceAll(",", ""))<
                     Double.parseDouble(controller.beratBersihField.getText().replaceAll(",", ""))) {
@@ -379,7 +387,8 @@ public class PenerimaanBahanController {
                             penerimaan.setBeratTimbangan(Double.parseDouble(controller.beratTimbanganField.getText().replaceAll(",", "")));
                             penerimaan.setBeratKotor(Double.parseDouble(controller.beratKotorField.getText().replaceAll(",", "")));
                             penerimaan.setBeratBersih(Double.parseDouble(controller.beratBersihField.getText().replaceAll(",", "")));
-                            penerimaan.setPanjang(Double.parseDouble(controller.panjangField.getText().replaceAll(",", "")));
+                            penerimaan.setSlit(Double.parseDouble(controller.slitField.getText().replaceAll(",", "")));
+                            penerimaan.setScraft(Double.parseDouble(controller.scraftField.getText().replaceAll(",", "")));
                             penerimaan.setKodeUser(sistem.getUser().getKodeUser());
                             penerimaan.setTglBatal("2000-01-01 00:00:00");
                             penerimaan.setUserBatal("");
@@ -503,11 +512,12 @@ public class PenerimaanBahanController {
                 sheet.getRow(rc).getCell(3).setCellValue("Kategori Bahan");
                 sheet.getRow(rc).getCell(4).setCellValue("Kode Bahan");
                 sheet.getRow(rc).getCell(5).setCellValue("Keterangan");
-                sheet.getRow(rc).getCell(6).setCellValue("Berat Timbangan");
+                sheet.getRow(rc).getCell(6).setCellValue("Berat Bersih");
                 sheet.getRow(rc).getCell(7).setCellValue("Berat Kotor");
-                sheet.getRow(rc).getCell(8).setCellValue("Berat Bersih");
-                sheet.getRow(rc).getCell(9).setCellValue("Panjang");
-                sheet.getRow(rc).getCell(10).setCellValue("Kode User");
+                sheet.getRow(rc).getCell(8).setCellValue("Berat Timbangan");
+                sheet.getRow(rc).getCell(9).setCellValue("Slit");
+                sheet.getRow(rc).getCell(10).setCellValue("Scraft");
+                sheet.getRow(rc).getCell(11).setCellValue("Kode User");
                 rc++;
                 for (PenerimaanBahan b : filterData) {
                     createRow(workbook, sheet, rc, c, "Detail");
@@ -517,11 +527,12 @@ public class PenerimaanBahanController {
                     sheet.getRow(rc).getCell(3).setCellValue(b.getKodeKategori());
                     sheet.getRow(rc).getCell(4).setCellValue(b.getKodeBahan());
                     sheet.getRow(rc).getCell(5).setCellValue(b.getKeterangan());
-                    sheet.getRow(rc).getCell(6).setCellValue(df.format(b.getBeratTimbangan()));
+                    sheet.getRow(rc).getCell(6).setCellValue(df.format(b.getBeratBersih()));
                     sheet.getRow(rc).getCell(7).setCellValue(df.format(b.getBeratKotor()));
-                    sheet.getRow(rc).getCell(8).setCellValue(df.format(b.getBeratBersih()));
-                    sheet.getRow(rc).getCell(9).setCellValue(df.format(b.getPanjang()));
-                    sheet.getRow(rc).getCell(10).setCellValue(b.getKodeUser());
+                    sheet.getRow(rc).getCell(8).setCellValue(df.format(b.getBeratTimbangan()));
+                    sheet.getRow(rc).getCell(9).setCellValue(df.format(b.getSlit()));
+                    sheet.getRow(rc).getCell(10).setCellValue(df.format(b.getScraft()));
+                    sheet.getRow(rc).getCell(11).setCellValue(b.getKodeUser());
                     rc++;
                 }
                 for (int i = 0; i < c; i++) {

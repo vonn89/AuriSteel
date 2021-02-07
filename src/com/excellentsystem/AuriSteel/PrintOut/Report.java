@@ -29,7 +29,6 @@ import com.excellentsystem.AuriSteel.Model.ProduksiDetailBarang;
 import com.excellentsystem.AuriSteel.Model.ProduksiHead;
 import com.excellentsystem.AuriSteel.Model.StokBahan;
 import com.excellentsystem.AuriSteel.Model.StokBarang;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -83,17 +82,6 @@ public class Report {
         return hasil;
     }
 
-    public void cetakBarcode(Bahan b) throws Exception {
-        List<Bahan> listBahan = new ArrayList<>();
-        listBahan.add(b);
-        JasperDesign jasperDesign = JRXmlLoader.load(getClass().getResourceAsStream("BarcodeBahan.jrxml"));
-        JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(listBahan);
-        JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, null, beanColDataSource);
-        JRViewerFx jrViewerFx = new JRViewerFx(jasperPrint);
-    }
-
-
     public static void printBarcode(List<Bahan> listBahan) throws Exception {
         PrintService[] services = PrintServiceLookup.lookupPrintServices(null, null);
         int selectedService = 0;
@@ -103,7 +91,7 @@ public class Report {
             }
         }
         for (Bahan b : listBahan) {
-            String commands =  "^XA"
+            String commands = "^XA"
                     + "^JMB^FS"
                     + "^FO25,25^GB375,500,2,B,0^FS"
                     + "^FO25,25^GB375,550,2,B,0^FS"
@@ -112,9 +100,9 @@ public class Report {
                     + "^FO35,50^FB375,2,0,C^A0N,36,30^FD" + b.getKodeBahan() + "^FS"
                     + "^FO120,140^BQA,2,8^FDMM,A" + b.getKodeBahan() + "^FS"
                     + "^FO50,370^FB340,1,0,C^A0N,36,30^FD" + b.getKodeKategori() + "^FS"
-                    + "^FO50,420^FB340,1,0,C^A0N,22,20^FDBerat Kotor : " + df.format(b.getBeratKotor()) + " kg^FS"
-                    + "^FO50,450^FB340,1,0,C^A0N,22,20^FDBerat Bersih : " + df.format(b.getBeratBersih()) + " kg ^FS"
-                    + "^FO50,480^FB340,1,0,C^A0N,22,20^FDPanjang : " + df.format(b.getPanjang()) + " m^FS"
+                    + "^FO50,420^FB340,1,0,C^A0N,22,20^FDBerat Bersih : " + df.format(b.getBeratKotor()) + " kg^FS"
+                    + "^FO50,450^FB340,1,0,C^A0N,22,20^FDBerat Kotor : " + df.format(b.getBeratBersih()) + " kg ^FS"
+                    + "^FO50,480^FB340,1,0,C^A0N,22,20^FDBerat Timbangan : " + df.format(b.getPanjang()) + " kg^FS"
                     + "^XZ";
             PrintService pservice = services[selectedService];
             DocPrintJob job = pservice.createPrintJob();
@@ -377,7 +365,7 @@ public class Report {
         JasperDesign jasperDesign = null;
         if (groupBy.equals("Supplier")) {
             Collections.sort(pembelian, (o1, o2) -> {
-                return ((PembelianBahanDetail) o1).getPembelianCoilHead().getKodeSupplier().compareTo(((PembelianBahanDetail) o2).getPembelianCoilHead().getKodeSupplier());
+                return ((PembelianBahanDetail) o1).getPembelianBahanHead().getKodeSupplier().compareTo(((PembelianBahanDetail) o2).getPembelianBahanHead().getKodeSupplier());
             });
             jasperDesign = JRXmlLoader.load(getClass().getResourceAsStream("LaporanBarangDibeliSupplier.jrxml"));
         } else if (groupBy.equals("Barang")) {

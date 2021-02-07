@@ -19,23 +19,20 @@ import static com.excellentsystem.AuriSteel.Main.tglLengkap;
 import static com.excellentsystem.AuriSteel.Main.tglSql;
 import com.excellentsystem.AuriSteel.Model.BebanPembelian;
 import com.excellentsystem.AuriSteel.Model.Gudang;
-import com.excellentsystem.AuriSteel.Model.KategoriBahan;
 import com.excellentsystem.AuriSteel.Model.PembelianBahanDetail;
 import com.excellentsystem.AuriSteel.Model.PembelianBahanHead;
 import com.excellentsystem.AuriSteel.Model.PemesananPembelianBahanDetail;
 import com.excellentsystem.AuriSteel.Model.PemesananPembelianBahanHead;
 import com.excellentsystem.AuriSteel.Model.PenerimaanBahan;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.sql.Connection;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -57,8 +54,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -83,13 +78,9 @@ public class NewPembelianController {
     @FXML
     private TableColumn<PembelianBahanDetail, String> spesifikasiColumn;
     @FXML
-    private TableColumn<PembelianBahanDetail, String> keteranganColumn;
+    private TableColumn<PembelianBahanDetail, Number> qtyColumn;
     @FXML
-    private TableColumn<PembelianBahanDetail, Number> beratKotorColumn;
-    @FXML
-    private TableColumn<PembelianBahanDetail, Number> beratBersihColumn;
-    @FXML
-    private TableColumn<PembelianBahanDetail, Number> panjangColumn;
+    private TableColumn<PembelianBahanDetail, Number> hargaBeliColumn;
     @FXML
     private TableColumn<PembelianBahanDetail, Number> totalColumn;
 
@@ -116,13 +107,9 @@ public class NewPembelianController {
     public TextArea catatanField;
 
     @FXML
+    private Label totalBarangField;
+    @FXML
     private Label totalQtyField;
-    @FXML
-    private Label totalBeratKotorField;
-    @FXML
-    private Label totalBeratBersihField;
-    @FXML
-    private Label totalPanjangField;
 
     @FXML
     public TextField bebanPembelianField;
@@ -147,19 +134,24 @@ public class NewPembelianController {
 
     public void initialize() {
         kodeBahanColumn.setCellValueFactory(cellData -> cellData.getValue().kodeBahanProperty());
+
         kodeKategoriColumn.setCellValueFactory(cellData -> cellData.getValue().kodeKategoriProperty());
+
         noKontrakColumn.setCellValueFactory(cellData -> cellData.getValue().noKontrakProperty());
+
         namaBahanColumn.setCellValueFactory(cellData -> cellData.getValue().namaBahanProperty());
+
         spesifikasiColumn.setCellValueFactory(cellData -> cellData.getValue().spesifikasiProperty());
-        keteranganColumn.setCellValueFactory(cellData -> cellData.getValue().keteranganProperty());
+
+        qtyColumn.setCellValueFactory(cellData -> cellData.getValue().qtyProperty());
+        qtyColumn.setCellFactory(col -> Function.getTableCell());
+
+        hargaBeliColumn.setCellValueFactory(cellData -> cellData.getValue().hargaBeliProperty());
+        hargaBeliColumn.setCellFactory(col -> Function.getTableCell());
+
         totalColumn.setCellValueFactory(cellData -> cellData.getValue().totalProperty());
-        beratKotorColumn.setCellValueFactory(cellData -> cellData.getValue().beratKotorProperty());
-        beratBersihColumn.setCellValueFactory(cellData -> cellData.getValue().beratBersihProperty());
-        panjangColumn.setCellValueFactory(cellData -> cellData.getValue().panjangProperty());
-        beratKotorColumn.setCellFactory(col -> Function.getTableCell());
-        beratBersihColumn.setCellFactory(col -> Function.getTableCell());
-        panjangColumn.setCellFactory(col -> Function.getTableCell());
         totalColumn.setCellFactory(col -> Function.getTableCell());
+
         pembelianDetailTable.setItems(allPembelianDetail);
 
         ContextMenu cm = new ContextMenu();
@@ -223,25 +215,19 @@ public class NewPembelianController {
     @FXML
     private void hitungTotal() {
         double totalQty = 0;
-        double totalBeratKotor = 0;
-        double totalBeratBersih = 0;
-        double totalPanjang = 0;
+        double totalBarang = 0;
         double totalPembelian = 0;
         double totalBeban = 0;
         for (PembelianBahanDetail d : allPembelianDetail) {
-            totalQty = totalQty + 1;
+            totalBarang = totalBarang + 1;
             totalPembelian = totalPembelian + d.getTotal();
-            totalBeratKotor = totalBeratKotor + d.getBeratKotor();
-            totalBeratBersih = totalBeratBersih + d.getBeratBersih();
-            totalPanjang = totalPanjang + d.getPanjang();
+            totalQty = totalQty + d.getQty();
         }
         for (BebanPembelian b : allBebanPembelian) {
             totalBeban = totalBeban + b.getJumlahRp();
         }
+        totalBarangField.setText(df.format(totalBarang));
         totalQtyField.setText(df.format(totalQty));
-        totalBeratKotorField.setText(df.format(totalBeratKotor));
-        totalBeratBersihField.setText(df.format(totalBeratBersih));
-        totalPanjangField.setText(df.format(totalPanjang));
         bebanPembelianField.setText(df.format(totalBeban));
         totalPembelianField.setText(df.format(totalPembelian));
         grandtotalField.setText(df.format(totalPembelian + totalBeban));
@@ -324,170 +310,170 @@ public class NewPembelianController {
     private void close() {
         mainApp.closeDialog(owner, stage);
     }
-
-    @FXML
-    private void importBahan() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select .xls or .xlsx files");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Excel Document 2007", "*.xlsx"), new FileChooser.ExtensionFilter("Excel Document 1997-2007", "*.xls"));
-        File selectedFile = fileChooser.showOpenDialog(stage);
-        if (selectedFile != null) {
-            Task<List<PembelianBahanDetail>> task = new Task<List<PembelianBahanDetail>>() {
-                @Override
-                public List<PembelianBahanDetail> call() throws Exception {
-                    List<PembelianBahanDetail> listImport = new ArrayList<>();
-                    String excelFilePath = selectedFile.getPath();
-                    try (FileInputStream inputStream = new FileInputStream(selectedFile)) {
-                        Workbook workbook;
-                        if (excelFilePath.endsWith("xlsx")) {
-                            workbook = new XSSFWorkbook(inputStream);
-                        } else if (excelFilePath.endsWith("xls")) {
-                            workbook = new HSSFWorkbook(inputStream);
-                        } else {
-                            throw new IllegalArgumentException("The specified file is not Excel file");
-                        }
-                        Sheet firstSheet = workbook.getSheetAt(0);
-                        Iterator<Row> iterator = firstSheet.iterator();
-                        iterator.next();
-                        while (iterator.hasNext()) {
-                            Row row = iterator.next();
-                            PembelianBahanDetail detail = new PembelianBahanDetail();
-                            for (int i = 0; i < row.getLastCellNum(); i++) {
-                                Cell cell = row.getCell(i);
-                                if (i == 0) {
-                                    if (cell == null) {
-                                        detail.setKodeKategori("");
-                                    } else {
-                                        detail.setKodeKategori(cell.getStringCellValue());
-                                    }
-                                } else if (i == 1) {
-                                    if (cell == null) {
-                                        detail.setNoKontrak("");
-                                    } else {
-                                        detail.setNoKontrak(cell.getStringCellValue());
-                                    }
-                                } else if (i == 2) {
-                                    if (cell == null) {
-                                        detail.setKodeBahan("");
-                                    } else {
-                                        detail.setKodeBahan(cell.getStringCellValue());
-                                    }
-                                } else if (i == 3) {
-                                    if (cell == null) {
-                                        detail.setNamaBahan("");
-                                    } else {
-                                        detail.setNamaBahan(cell.getStringCellValue());
-                                    }
-                                } else if (i == 4) {
-                                    if (cell == null) {
-                                        detail.setSpesifikasi("");
-                                    } else {
-                                        detail.setSpesifikasi(cell.getStringCellValue());
-                                    }
-                                } else if (i == 5) {
-                                    if (cell == null) {
-                                        detail.setKeterangan("");
-                                    } else {
-                                        detail.setKeterangan(cell.getStringCellValue());
-                                    }
-                                } else if (i == 6) {
-                                    if (cell == null) {
-                                        detail.setBeratKotor(0);
-                                    } else {
-                                        detail.setBeratKotor(cell.getNumericCellValue());
-                                    }
-                                } else if (i == 7) {
-                                    if (cell == null) {
-                                        detail.setBeratBersih(0);
-                                    } else {
-                                        detail.setBeratBersih(cell.getNumericCellValue());
-                                    }
-                                } else if (i == 8) {
-                                    if (cell == null) {
-                                        detail.setPanjang(0);
-                                    } else {
-                                        detail.setPanjang(cell.getNumericCellValue());
-                                    }
-                                } else if (i == 9) {
-                                    if (cell == null) {
-                                        detail.setTotal(0);
-                                    } else {
-                                        detail.setTotal(cell.getNumericCellValue());
-                                    }
-                                }
-                            }
-                            listImport.add(detail);
-                        }
-                        workbook.close();
-                    }
-                    return listImport;
-                }
-            };
-            task.setOnRunning((e) -> {
-                mainApp.showLoadingScreen();
-            });
-            task.setOnSucceeded((WorkerStateEvent ev) -> {
-                try {
-                    mainApp.closeLoading();
-                    List<PembelianBahanDetail> listImport = task.getValue();
-                    String statusKodeBahanTerdaftar = "";
-                    for (PembelianBahanDetail d : allPembelianDetail) {
-                        for (PembelianBahanDetail b : listImport) {
-                            if (d.getKodeBahan().equalsIgnoreCase(b.getKodeBahan())) {
-                                statusKodeBahanTerdaftar = statusKodeBahanTerdaftar + d.getKodeBahan() + ", ";
-                            }
-                        }
-                    }
-                    String statusKodeBahanDouble = "";
-                    for (PembelianBahanDetail d : listImport) {
-                        int i = 0;
-                        for (PembelianBahanDetail b : listImport) {
-                            if (d.getKodeBahan().equalsIgnoreCase(b.getKodeBahan())) {
-                                i = i + 1;
-                            }
-                        }
-                        if (i > 1) {
-                            statusKodeBahanDouble = statusKodeBahanDouble + d.getKodeBahan() + ", ";
-                        }
-                    }
-                    String statusKodeKategori = "";
-                    List<KategoriBahan> listKategori = sistem.getListKategoriBahan();
-                    for (PembelianBahanDetail d : listImport) {
-                        boolean s = false;
-                        for (KategoriBahan k : listKategori) {
-                            if (d.getKodeKategori().equalsIgnoreCase(k.getKodeKategori())) {
-                                d.setKodeKategori(k.getKodeKategori());
-                                s = true;
-                            }
-                        }
-                        if (!s) {
-                            statusKodeKategori = statusKodeKategori + d.getKodeKategori();
-                        }
-                    }
-                    if (!statusKodeBahanTerdaftar.equals("")) {
-                        mainApp.showMessage(Modality.NONE, "Failed", statusKodeBahanTerdaftar + " sudah pernah terdaftar");
-                    } else if (!statusKodeBahanDouble.equals("")) {
-                        mainApp.showMessage(Modality.NONE, "Failed", statusKodeBahanDouble + " lebih dari satu");
-                    } else if (!statusKodeKategori.equals("")) {
-                        mainApp.showMessage(Modality.NONE, "Failed", statusKodeKategori + " tidak terdaftar dalam kategori bahan");
-                    } else {
-                        for (PembelianBahanDetail d : listImport) {
-                            allPembelianDetail.addAll(d);
-                        }
-                        hitungTotal();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    mainApp.showMessage(Modality.NONE, "Error", e.toString());
-                }
-            });
-            task.setOnFailed((e) -> {
-                mainApp.showMessage(Modality.NONE, "Error", task.getException().toString());
-                mainApp.closeLoading();
-            });
-            new Thread(task).start();
-        }
-    }
+//
+//    @FXML
+//    private void importBahan() {
+//        FileChooser fileChooser = new FileChooser();
+//        fileChooser.setTitle("Select .xls or .xlsx files");
+//        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Excel Document 2007", "*.xlsx"), new FileChooser.ExtensionFilter("Excel Document 1997-2007", "*.xls"));
+//        File selectedFile = fileChooser.showOpenDialog(stage);
+//        if (selectedFile != null) {
+//            Task<List<PembelianBahanDetail>> task = new Task<List<PembelianBahanDetail>>() {
+//                @Override
+//                public List<PembelianBahanDetail> call() throws Exception {
+//                    List<PembelianBahanDetail> listImport = new ArrayList<>();
+//                    String excelFilePath = selectedFile.getPath();
+//                    try (FileInputStream inputStream = new FileInputStream(selectedFile)) {
+//                        Workbook workbook;
+//                        if (excelFilePath.endsWith("xlsx")) {
+//                            workbook = new XSSFWorkbook(inputStream);
+//                        } else if (excelFilePath.endsWith("xls")) {
+//                            workbook = new HSSFWorkbook(inputStream);
+//                        } else {
+//                            throw new IllegalArgumentException("The specified file is not Excel file");
+//                        }
+//                        Sheet firstSheet = workbook.getSheetAt(0);
+//                        Iterator<Row> iterator = firstSheet.iterator();
+//                        iterator.next();
+//                        while (iterator.hasNext()) {
+//                            Row row = iterator.next();
+//                            PembelianBahanDetail detail = new PembelianBahanDetail();
+//                            for (int i = 0; i < row.getLastCellNum(); i++) {
+//                                Cell cell = row.getCell(i);
+//                                if (i == 0) {
+//                                    if (cell == null) {
+//                                        detail.setKodeKategori("");
+//                                    } else {
+//                                        detail.setKodeKategori(cell.getStringCellValue());
+//                                    }
+//                                } else if (i == 1) {
+//                                    if (cell == null) {
+//                                        detail.setNoKontrak("");
+//                                    } else {
+//                                        detail.setNoKontrak(cell.getStringCellValue());
+//                                    }
+//                                } else if (i == 2) {
+//                                    if (cell == null) {
+//                                        detail.setKodeBahan("");
+//                                    } else {
+//                                        detail.setKodeBahan(cell.getStringCellValue());
+//                                    }
+//                                } else if (i == 3) {
+//                                    if (cell == null) {
+//                                        detail.setNamaBahan("");
+//                                    } else {
+//                                        detail.setNamaBahan(cell.getStringCellValue());
+//                                    }
+//                                } else if (i == 4) {
+//                                    if (cell == null) {
+//                                        detail.setSpesifikasi("");
+//                                    } else {
+//                                        detail.setSpesifikasi(cell.getStringCellValue());
+//                                    }
+//                                } else if (i == 5) {
+//                                    if (cell == null) {
+//                                        detail.setKeterangan("");
+//                                    } else {
+//                                        detail.setKeterangan(cell.getStringCellValue());
+//                                    }
+//                                } else if (i == 6) {
+//                                    if (cell == null) {
+//                                        detail.setBeratKotor(0);
+//                                    } else {
+//                                        detail.setBeratKotor(cell.getNumericCellValue());
+//                                    }
+//                                } else if (i == 7) {
+//                                    if (cell == null) {
+//                                        detail.setBeratBersih(0);
+//                                    } else {
+//                                        detail.setBeratBersih(cell.getNumericCellValue());
+//                                    }
+//                                } else if (i == 8) {
+//                                    if (cell == null) {
+//                                        detail.setPanjang(0);
+//                                    } else {
+//                                        detail.setPanjang(cell.getNumericCellValue());
+//                                    }
+//                                } else if (i == 9) {
+//                                    if (cell == null) {
+//                                        detail.setTotal(0);
+//                                    } else {
+//                                        detail.setTotal(cell.getNumericCellValue());
+//                                    }
+//                                }
+//                            }
+//                            listImport.add(detail);
+//                        }
+//                        workbook.close();
+//                    }
+//                    return listImport;
+//                }
+//            };
+//            task.setOnRunning((e) -> {
+//                mainApp.showLoadingScreen();
+//            });
+//            task.setOnSucceeded((WorkerStateEvent ev) -> {
+//                try {
+//                    mainApp.closeLoading();
+//                    List<PembelianBahanDetail> listImport = task.getValue();
+//                    String statusKodeBahanTerdaftar = "";
+//                    for (PembelianBahanDetail d : allPembelianDetail) {
+//                        for (PembelianBahanDetail b : listImport) {
+//                            if (d.getKodeBahan().equalsIgnoreCase(b.getKodeBahan())) {
+//                                statusKodeBahanTerdaftar = statusKodeBahanTerdaftar + d.getKodeBahan() + ", ";
+//                            }
+//                        }
+//                    }
+//                    String statusKodeBahanDouble = "";
+//                    for (PembelianBahanDetail d : listImport) {
+//                        int i = 0;
+//                        for (PembelianBahanDetail b : listImport) {
+//                            if (d.getKodeBahan().equalsIgnoreCase(b.getKodeBahan())) {
+//                                i = i + 1;
+//                            }
+//                        }
+//                        if (i > 1) {
+//                            statusKodeBahanDouble = statusKodeBahanDouble + d.getKodeBahan() + ", ";
+//                        }
+//                    }
+//                    String statusKodeKategori = "";
+//                    List<KategoriBahan> listKategori = sistem.getListKategoriBahan();
+//                    for (PembelianBahanDetail d : listImport) {
+//                        boolean s = false;
+//                        for (KategoriBahan k : listKategori) {
+//                            if (d.getKodeKategori().equalsIgnoreCase(k.getKodeKategori())) {
+//                                d.setKodeKategori(k.getKodeKategori());
+//                                s = true;
+//                            }
+//                        }
+//                        if (!s) {
+//                            statusKodeKategori = statusKodeKategori + d.getKodeKategori();
+//                        }
+//                    }
+//                    if (!statusKodeBahanTerdaftar.equals("")) {
+//                        mainApp.showMessage(Modality.NONE, "Failed", statusKodeBahanTerdaftar + " sudah pernah terdaftar");
+//                    } else if (!statusKodeBahanDouble.equals("")) {
+//                        mainApp.showMessage(Modality.NONE, "Failed", statusKodeBahanDouble + " lebih dari satu");
+//                    } else if (!statusKodeKategori.equals("")) {
+//                        mainApp.showMessage(Modality.NONE, "Failed", statusKodeKategori + " tidak terdaftar dalam kategori bahan");
+//                    } else {
+//                        for (PembelianBahanDetail d : listImport) {
+//                            allPembelianDetail.addAll(d);
+//                        }
+//                        hitungTotal();
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    mainApp.showMessage(Modality.NONE, "Error", e.toString());
+//                }
+//            });
+//            task.setOnFailed((e) -> {
+//                mainApp.showMessage(Modality.NONE, "Error", task.getException().toString());
+//                mainApp.closeLoading();
+//            });
+//            new Thread(task).start();
+//        }
+//    }
 
     private void downloadFormatExcel() {
         try {
@@ -541,9 +527,9 @@ public class NewPembelianController {
     private void addPemesananBahan() {
         if (pemesanan == null) {
             mainApp.showMessage(Modality.NONE, "Warning", "Pemesanan Pembelian belum dipilih");
-        } else if(gudangCombo.getSelectionModel().getSelectedItem().equals("")){
+        } else if (gudangCombo.getSelectionModel().getSelectedItem()==null || gudangCombo.getSelectionModel().getSelectedItem().equals("")) {
             mainApp.showMessage(Modality.NONE, "Warning", "Gudang belum dipilih");
-        }else{
+        } else {
             Stage child = new Stage();
             FXMLLoader loader = mainApp.showDialog(stage, child, "View/Dialog/AddDetailPemesananPembelianBahan.fxml");
             AddDetailPemesananPembelianBahanController controller = loader.getController();
@@ -581,25 +567,44 @@ public class NewPembelianController {
                                 }
                                 if (status.equals("true")) {
                                     for (PenerimaanBahan pb : listBahan) {
-                                        PembelianBahanDetail detail = new PembelianBahanDetail();
-                                        detail.setNoPemesanan(d.getNoPemesanan());
-                                        detail.setNoUrut(d.getNoUrut());
-                                        detail.setNoPenerimaan(pb.getNoPenerimaan());
-                                        detail.setKodeBahan(pb.getKodeBahan());
-                                        detail.setKodeKategori(d.getKategoriBahan());
-                                        detail.setNoKontrak(pemesanan.getNoKontrak());
-                                        detail.setNamaBahan(pb.getNamaBahan());
-                                        detail.setSpesifikasi(d.getSpesifikasi());
-                                        detail.setKeterangan(d.getKeterangan());
-                                        detail.setBeratKotor(pb.getBeratKotor());
-                                        detail.setBeratBersih(pb.getBeratBersih());
-                                        detail.setPanjang(pb.getPanjang());
-                                        detail.setTotal(pb.getBeratBersih() * d.getHarga());
-                                        allPembelianDetail.add(detail);
+                                        if (pb.getSlit() > 1) {
+                                            for (int i = 1; i <= (int) pb.getSlit(); i++) {
+                                                double qty = (pb.getBeratBersih()-pb.getScraft())/pb.getSlit(); 
+                                                PembelianBahanDetail detail = new PembelianBahanDetail();
+                                                detail.setNoPemesanan(d.getNoPemesanan());
+                                                detail.setNoUrut(d.getNoUrut());
+                                                detail.setNoPenerimaan(pb.getNoPenerimaan());
+                                                detail.setKodeBahan(pb.getKodeBahan()+"-"+new DecimalFormat("00").format(i));
+                                                detail.setKodeKategori(d.getKategoriBahan());
+                                                detail.setNoKontrak(pemesanan.getNoKontrak());
+                                                detail.setNamaBahan(pb.getNamaBahan());
+                                                detail.setSpesifikasi(d.getSpesifikasi());
+                                                detail.setQty(qty);
+                                                detail.setNilai(qty * d.getHarga());
+                                                detail.setHargaBeli(d.getHarga());
+                                                detail.setTotal(qty * d.getHarga());
+                                                allPembelianDetail.add(detail);
+                                            }
+                                        } else {
+                                            PembelianBahanDetail detail = new PembelianBahanDetail();
+                                            detail.setNoPemesanan(d.getNoPemesanan());
+                                            detail.setNoUrut(d.getNoUrut());
+                                            detail.setNoPenerimaan(pb.getNoPenerimaan());
+                                            detail.setKodeBahan(pb.getKodeBahan());
+                                            detail.setKodeKategori(d.getKategoriBahan());
+                                            detail.setNoKontrak(pemesanan.getNoKontrak());
+                                            detail.setNamaBahan(pb.getNamaBahan());
+                                            detail.setSpesifikasi(d.getSpesifikasi());
+                                            detail.setQty(pb.getBeratBersih());
+                                            detail.setNilai(pb.getBeratBersih() * d.getHarga());
+                                            detail.setHargaBeli(d.getHarga());
+                                            detail.setTotal(pb.getBeratBersih() * d.getHarga());
+                                            allPembelianDetail.add(detail);
+                                        }
                                         hitungTotal();
                                     }
                                 } else {
-                                    mainApp.showMessage(Modality.NONE, "Warning", "Kode bahan baku "+status+" sudah diinput");
+                                    mainApp.showMessage(Modality.NONE, "Warning", "Kode bahan baku " + status + " sudah diinput");
                                 }
                             });
                         }

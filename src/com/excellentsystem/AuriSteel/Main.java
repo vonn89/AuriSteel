@@ -23,7 +23,6 @@ import com.excellentsystem.AuriSteel.Model.User;
 import com.excellentsystem.AuriSteel.Services.Service;
 import com.excellentsystem.AuriSteel.View.AsetTetapController;
 import com.excellentsystem.AuriSteel.View.DashboardController;
-import com.excellentsystem.AuriSteel.View.DataAbsensiController;
 import com.excellentsystem.AuriSteel.View.DataBahanController;
 import com.excellentsystem.AuriSteel.View.DataBarangController;
 import com.excellentsystem.AuriSteel.View.DataCustomerController;
@@ -136,7 +135,7 @@ public class Main extends Application {
     public static Sistem sistem;
     private double x = 0;
     private double y = 0;
-    public final String version = "2.4.5";
+    public final String version = "2.4.7";
     public static SecretKeySpec key;
     @Override
     public void start(Stage stage)  {
@@ -145,9 +144,6 @@ public class Main extends Application {
         MainStage.setMaximized(true);
         MainStage.getIcons().add(new Image(getClass().getResourceAsStream("Resource/icon.png")));
         screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-//            Font.loadFont(getClass().getResourceAsStream("Resource/Lato-Regular.ttf"), 12);
-//            Font.loadFont(getClass().getResourceAsStream("Resource/Lato-Bold.ttf"), 12);
-//            Font.loadFont(getClass().getResourceAsStream("Resource/BodonBk.ttf"), 12);
         ProgressBar progress = new ProgressBar();
         Label updateLabel = new Label();
         Task<String> task = new Task<String>() {
@@ -188,10 +184,7 @@ public class Main extends Application {
                         updateProgress(50, 100);
                         return Function.downloadUpdateGoogleStorage("Auri Steel.exe");
                     }
-//                Service.createAbsensi(con, 01, 2020);
-////                if(Function.getServerDate(con).getDate()==1){
                     Service.setPenyusutanAset(con);
-////                }
                     updateProgress(70, 100);
                     Thread.sleep(500);
                     updateProgress(80, 100);
@@ -354,13 +347,6 @@ public class Main extends Application {
         DataUserController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Data User");
-        return controller;
-    }
-    public DataAbsensiController showDataAbsensi(){
-        FXMLLoader loader = changeStage("View/DataAbsensi.fxml");
-        DataAbsensiController controller = loader.getController();
-        controller.setMainApp(this);
-        setTitle("Data Absensi");
         return controller;
     }
     public PemesananController showPemesanan(){

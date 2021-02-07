@@ -15,7 +15,6 @@ import static com.excellentsystem.AuriSteel.Main.df;
 import static com.excellentsystem.AuriSteel.Main.sistem;
 import com.excellentsystem.AuriSteel.Model.Bahan;
 import com.excellentsystem.AuriSteel.Model.Otoritas;
-import com.excellentsystem.AuriSteel.PrintOut.Report;
 import com.excellentsystem.AuriSteel.Services.Service;
 import com.excellentsystem.AuriSteel.View.Dialog.DetailBahanBakuController;
 import java.io.File;
@@ -136,10 +135,6 @@ public class DataBahanController  {
                         edit.setOnAction((ActionEvent e)->{
                             editBahan(item);
                         });
-                        MenuItem barcode = new MenuItem("Cetak Barcode");
-                        barcode.setOnAction((ActionEvent e)->{
-                            cetakBarcode(item);
-                        });
                         MenuItem export = new MenuItem("Export Excel");
                         export.setOnAction((ActionEvent e)->{
                             exportExcel();
@@ -150,8 +145,6 @@ public class DataBahanController  {
                         });
                         if(item.getNamaBahan()!=null){
                             for(Otoritas o : sistem.getUser().getOtoritas()){
-                                if(o.getJenis().equals("Cetak Barcode")&&o.isStatus())
-                                    rm.getItems().add(barcode);
                                 if(o.getJenis().equals("Edit Bahan")&&o.isStatus())
                                     rm.getItems().add(edit);
                                 if(o.getJenis().equals("Export Excel")&&o.isStatus())
@@ -311,14 +304,6 @@ public class DataBahanController  {
         totalBeratBersihLabel.setText(df.format(totalBeratBersih));
         totalPanjangLabel.setText(df.format(totalPanjang));
         totalHargaLabel.setText(df.format(totalHarga));
-    }
-    private void cetakBarcode(Bahan b){
-        try{
-            Report report = new Report();
-            report.cetakBarcode(b);
-        }catch(Exception e){
-            mainApp.showMessage(Modality.NONE, "Error", e.toString());
-        }
     }
     private void editBahan(Bahan b){
         Stage stage = new Stage();

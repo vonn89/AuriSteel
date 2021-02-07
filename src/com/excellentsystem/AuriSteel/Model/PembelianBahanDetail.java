@@ -22,18 +22,54 @@ public class PembelianBahanDetail {
     private final StringProperty noPemesanan = new SimpleStringProperty();
     private final IntegerProperty noUrut = new SimpleIntegerProperty();
     private final StringProperty noPenerimaan = new SimpleStringProperty();
+    
     private final StringProperty kodeBahan = new SimpleStringProperty();
-    private final StringProperty kodeBarcode = new SimpleStringProperty();
     private final StringProperty kodeKategori = new SimpleStringProperty();
     private final StringProperty noKontrak = new SimpleStringProperty();
     private final StringProperty namaBahan = new SimpleStringProperty();
+    
     private final StringProperty spesifikasi = new SimpleStringProperty();
-    private final StringProperty keterangan = new SimpleStringProperty();
-    private final DoubleProperty beratKotor = new SimpleDoubleProperty();
-    private final DoubleProperty beratBersih = new SimpleDoubleProperty();
-    private final DoubleProperty panjang = new SimpleDoubleProperty();
+    private final DoubleProperty qty = new SimpleDoubleProperty();
+    private final DoubleProperty nilai = new SimpleDoubleProperty();
+    private final DoubleProperty hargaBeli = new SimpleDoubleProperty();
     private final DoubleProperty total = new SimpleDoubleProperty();
-    private PembelianBahanHead pembelianCoilHead;
+    private PembelianBahanHead pembelianBahanHead;
+
+    public double getHargaBeli() {
+        return hargaBeli.get();
+    }
+
+    public void setHargaBeli(double value) {
+        hargaBeli.set(value);
+    }
+
+    public DoubleProperty hargaBeliProperty() {
+        return hargaBeli;
+    }
+
+    public double getNilai() {
+        return nilai.get();
+    }
+
+    public void setNilai(double value) {
+        nilai.set(value);
+    }
+
+    public DoubleProperty nilaiProperty() {
+        return nilai;
+    }
+
+    public double getQty() {
+        return qty.get();
+    }
+
+    public void setQty(double value) {
+        qty.set(value);
+    }
+
+    public DoubleProperty qtyProperty() {
+        return qty;
+    }
 
     public String getNoPenerimaan() {
         return noPenerimaan.get();
@@ -57,18 +93,6 @@ public class PembelianBahanDetail {
 
     public IntegerProperty noUrutProperty() {
         return noUrut;
-    }
-
-    public String getKodeBarcode() {
-        return kodeBarcode.get();
-    }
-
-    public void setKodeBarcode(String value) {
-        kodeBarcode.set(value);
-    }
-
-    public StringProperty kodeBarcodeProperty() {
-        return kodeBarcode;
     }
 
     public String getNoPemesanan() {
@@ -96,12 +120,12 @@ public class PembelianBahanDetail {
     }
 
     
-    public PembelianBahanHead getPembelianCoilHead() {
-        return pembelianCoilHead;
+    public PembelianBahanHead getPembelianBahanHead() {
+        return pembelianBahanHead;
     }
 
-    public void setPembelianCoilHead(PembelianBahanHead pembelianCoilHead) {
-        this.pembelianCoilHead = pembelianCoilHead;
+    public void setPembelianBahanHead(PembelianBahanHead pembelianBahanHead) {
+        this.pembelianBahanHead = pembelianBahanHead;
     }
     
   
@@ -141,53 +165,7 @@ public class PembelianBahanDetail {
         return spesifikasi;
     }
 
-    public String getKeterangan() {
-        return keterangan.get();
-    }
 
-    public void setKeterangan(String value) {
-        keterangan.set(value);
-    }
-
-    public StringProperty keteranganProperty() {
-        return keterangan;
-    }
-
-    public double getBeratKotor() {
-        return beratKotor.get();
-    }
-
-    public void setBeratKotor(double value) {
-        beratKotor.set(value);
-    }
-
-    public DoubleProperty beratKotorProperty() {
-        return beratKotor;
-    }
-
-    public double getBeratBersih() {
-        return beratBersih.get();
-    }
-
-    public void setBeratBersih(double value) {
-        beratBersih.set(value);
-    }
-
-    public DoubleProperty beratBersihProperty() {
-        return beratBersih;
-    }
-
-    public double getPanjang() {
-        return panjang.get();
-    }
-
-    public void setPanjang(double value) {
-        panjang.set(value);
-    }
-
-    public DoubleProperty panjangProperty() {
-        return panjang;
-    }
     
     public double getTotal() {
         return total.get();
