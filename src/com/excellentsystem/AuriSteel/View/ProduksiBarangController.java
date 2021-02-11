@@ -215,7 +215,7 @@ public class ProduksiBarangController {
 
         totalQtyBarangColumn.setCellValueFactory(cellData -> {
             double qty = 0;
-            for (ProduksiDetailBahan d : cellData.getValue().getListProduksiDetailBahan()) {
+            for (ProduksiDetailBarang d : cellData.getValue().getListProduksiDetailBarang()) {
                 qty = qty + d.getQty();
             }
             return new SimpleDoubleProperty(qty);
