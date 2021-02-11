@@ -377,7 +377,7 @@ public class LaporanFakturPajakController {
                     sheet.getRow(rc).getCell(9).setCellValue("TARIF_PPNBM");
                     sheet.getRow(rc).getCell(10).setCellValue("PPNBM");
                     rc++;
-                    int noFaktur = Integer.parseInt(nomorFakturField.getText());
+                    long noFaktur = Long.parseLong(nomorFakturField.getText());
                     for (PenjualanBarangHead p : listFaktur) {
                         createRow(workbook, sheet, rc, c, "Detail");
                         sheet.getRow(rc).getCell(0).setCellValue("FK");
@@ -418,7 +418,7 @@ public class LaporanFakturPajakController {
                         rc++;
                         for (PenjualanBarangDetail d : p.getListPenjualanBarangDetail()) {
                             createRow(workbook, sheet, rc, c, "Detail");
-                            sheet.getRow(rc).getCell(0).setCellValue("FK");
+                            sheet.getRow(rc).getCell(0).setCellValue("OF");
                             sheet.getRow(rc).getCell(1).setCellValue(d.getKodeBarang());
                             sheet.getRow(rc).getCell(2).setCellValue(d.getNamaBarang());
                             sheet.getRow(rc).getCell(3).setCellValue(d.getHargaJual() / 1.1);

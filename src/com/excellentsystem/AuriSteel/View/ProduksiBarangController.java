@@ -105,6 +105,8 @@ public class ProduksiBarangController {
     @FXML
     private TableColumn<ProduksiHead, Number> totalBeratBarangColumn;
     @FXML
+    private TableColumn<ProduksiHead, Number> totalQtyBarangColumn;
+    @FXML
     private TableColumn<ProduksiHead, Number> beratColumn;
     @FXML
     private TableColumn<ProduksiHead, Number> bebanMaterialColumn;
@@ -211,6 +213,15 @@ public class ProduksiBarangController {
         });
         totalBeratBahanColumn.setCellFactory(col -> Function.getTableCell());
 
+        totalQtyBarangColumn.setCellValueFactory(cellData -> {
+            double qty = 0;
+            for (ProduksiDetailBahan d : cellData.getValue().getListProduksiDetailBahan()) {
+                qty = qty + d.getQty();
+            }
+            return new SimpleDoubleProperty(qty);
+        });
+        totalQtyBarangColumn.setCellFactory(col -> Function.getTableCell());
+        
         listBarangColumn.setCellValueFactory(cellData -> {
             String x = "";
             for (ProduksiDetailBarang d : cellData.getValue().getListProduksiDetailBarang()) {

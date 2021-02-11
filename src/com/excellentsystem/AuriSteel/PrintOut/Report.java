@@ -82,6 +82,34 @@ public class Report {
         return hasil;
     }
 
+    public static void printLabel(String namaBarang, String keterangan, String qty, int jumlah) throws Exception {
+        PrintService[] services = PrintServiceLookup.lookupPrintServices(null, null);
+        int selectedService = 0;
+        for (int i = 0; i < services.length; i++) {
+            if (services[i].getName().toUpperCase().contains("ZD230")) {
+                selectedService = i;
+            }
+        }
+        for (int i = 0; i < jumlah; i++) {
+            String commands = "^XA"
+                    + "^JMB^FS"
+                    + "^FO25,25^GB375,550,2,B,0^FS"
+                    + "^FO25,25^GB100,550,2,B,0^FS"
+                    + "^FO122,200^GB180,375,2,B,0^FS"
+                    + "^FO300,200^GB100,375,2,B,0^FS"
+                    + "^FO300,450^GB100,125,2,B,0^FS"
+                    + "^FO40,20^FB550,2,0,C^A0B,56,40^FD" + namaBarang + "^FS"
+                    + "^FO180,200^FB370,2,0,C^A0B,56,40^FD" + keterangan + "^FS"
+                    + "^FO170,75^FB180,1,0,C^A0N,96,80^FD" + qty + "^FS"
+                    + "^XZ";
+            PrintService pservice = services[selectedService];
+            DocPrintJob job = pservice.createPrintJob();
+            DocFlavor flavor = DocFlavor.BYTE_ARRAY.AUTOSENSE;
+            Doc doc = new SimpleDoc(commands.getBytes(), flavor, null);
+            job.print(doc, null);
+        }
+    }
+
     public static void printBarcode(List<Bahan> listBahan) throws Exception {
         PrintService[] services = PrintServiceLookup.lookupPrintServices(null, null);
         int selectedService = 0;

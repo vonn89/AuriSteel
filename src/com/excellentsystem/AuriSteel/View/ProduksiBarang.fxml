@@ -46,7 +46,7 @@
               <columns>
                 <TableColumn fx:id="kodeProduksiColumn" maxWidth="2000.0" prefWidth="75.0" text="Kode Produksi" />
                 <TableColumn fx:id="tglMulaiColumn" maxWidth="2000.0" prefWidth="75.0" text="Tgl Mulai" />
-                  <TableColumn fx:id="tglSelesaiColumn" maxWidth="2000.0" prefWidth="75.0" text="Tgl Selesai" />
+                  <TableColumn fx:id="tglSelesaiColumn" maxWidth="2000.0" prefWidth="75.0" text="Tgl Selesai" visible="false" />
                   <TableColumn fx:id="tglVerifikasiColumn" maxWidth="2000.0" prefWidth="75.0" text="Tgl Verifikasi" visible="false" />
                   <TableColumn fx:id="gudangColumn" maxWidth="2000.0" prefWidth="75.0" text="Gudang" />
                   <TableColumn fx:id="listOperatorColumn" maxWidth="2000.0" prefWidth="75.0" text="Operator" />
@@ -56,9 +56,10 @@
                 <TableColumn fx:id="listBahanColumn" maxWidth="3000.0" prefWidth="75.0" text="List Bahan" />
                   <TableColumn fx:id="totalBeratBahanColumn" maxWidth="3000.0" prefWidth="75.0" text="Total Berat Bahan" />
                 <TableColumn fx:id="listBarangColumn" maxWidth="3000.0" prefWidth="75.0" text="List Barang" />
+                  <TableColumn fx:id="totalQtyBarangColumn" maxWidth="2000.0" prefWidth="75.0" text="Total Qty Barang" />
                   <TableColumn fx:id="totalBeratBarangColumn" maxWidth="3000.0" prefWidth="75.0" text="Total Berat Barang" />
                   <TableColumn fx:id="beratColumn" maxWidth="2000.0" prefWidth="75.0" text="Berat Jadi" />
-                  <TableColumn fx:id="catatanColumn" maxWidth="2000.0" prefWidth="75.0" text="Catatan" />
+                  <TableColumn fx:id="catatanColumn" maxWidth="2000.0" prefWidth="75.0" text="Catatan" visible="false" />
                   <TableColumn fx:id="kodeUserColumn" prefWidth="75.0" text="User Verifikasi" visible="false" />
                   <TableColumn fx:id="userMulaiColumn" prefWidth="75.0" text="User Mulai" visible="false" />
                   <TableColumn fx:id="userSelesaiColumn" prefWidth="75.0" text="User Selesai" visible="false" />
