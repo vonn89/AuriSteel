@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.excellentsystem.AuriSteel;
 
 import com.excellentsystem.AuriSteel.DAO.GudangDAO;
@@ -26,8 +25,10 @@ import com.excellentsystem.AuriSteel.View.DashboardController;
 import com.excellentsystem.AuriSteel.View.DataBahanController;
 import com.excellentsystem.AuriSteel.View.DataBarangController;
 import com.excellentsystem.AuriSteel.View.DataCustomerController;
+import com.excellentsystem.AuriSteel.View.DataMesinController;
 import com.excellentsystem.AuriSteel.View.DataPegawaiController;
 import com.excellentsystem.AuriSteel.View.DataSupplierController;
+import com.excellentsystem.AuriSteel.View.DataUserAppController;
 import com.excellentsystem.AuriSteel.View.DataUserController;
 import com.excellentsystem.AuriSteel.View.Dialog.GudangController;
 import com.excellentsystem.AuriSteel.View.Dialog.KategoriBahanController;
@@ -53,6 +54,7 @@ import com.excellentsystem.AuriSteel.View.PengirimanBarangController;
 import com.excellentsystem.AuriSteel.View.PengirimanCoilController;
 import com.excellentsystem.AuriSteel.View.PenjualanCoilController;
 import com.excellentsystem.AuriSteel.View.PenjualanController;
+import com.excellentsystem.AuriSteel.View.PerencanaanProduksiDanKirimController;
 import com.excellentsystem.AuriSteel.View.PermintaanBarangController;
 import com.excellentsystem.AuriSteel.View.PindahBahanController;
 import com.excellentsystem.AuriSteel.View.PindahBarangController;
@@ -123,22 +125,23 @@ public class Main extends Application {
     public static DateFormat tglLengkap = new SimpleDateFormat("dd MMM yyyy HH:mm:ss");
     public static DateFormat yymm = new SimpleDateFormat("yyMM");
     public static DateFormat yymmdd = new SimpleDateFormat("yyMMdd");
-    
+
     public Stage MainStage;
     public Stage loading;
     public Stage message;
-    
+
     public BorderPane mainLayout;
     public Dimension screenSize;
     private MainAppController mainAppController;
-    
+
     public static Sistem sistem;
     private double x = 0;
     private double y = 0;
     public final String version = "2.4.9";
     public static SecretKeySpec key;
+
     @Override
-    public void start(Stage stage)  {
+    public void start(Stage stage) {
         MainStage = stage;
         MainStage.setTitle("Auri Steel Metalindo");
         MainStage.setMaximized(true);
@@ -147,8 +150,8 @@ public class Main extends Application {
         ProgressBar progress = new ProgressBar();
         Label updateLabel = new Label();
         Task<String> task = new Task<String>() {
-            @Override 
-            public String call() throws Exception{
+            @Override
+            public String call() throws Exception {
                 updateMessage("connecting to server...");
                 updateProgress(10, 100);
                 try (Connection con = Koneksi.getConnection()) {
@@ -168,18 +171,19 @@ public class Main extends Application {
                     sistem.setListKategoriPiutang(KategoriPiutangDAO.getAll(con));
                     List<User> listUser = UserDAO.getAll(con);
                     List<Otoritas> listOtoritas = OtoritasDAO.getAll(con);
-                    for(User u : listUser){
+                    for (User u : listUser) {
                         List<Otoritas> otoritas = new ArrayList<>();
-                        for(Otoritas o : listOtoritas){
-                            if(u.getKodeUser().equals(o.getKodeUser()))
+                        for (Otoritas o : listOtoritas) {
+                            if (u.getKodeUser().equals(o.getKodeUser())) {
                                 otoritas.add(o);
+                            }
                         }
                         u.setOtoritas(otoritas);
                     }
                     sistem.setListUser(listUser);
                     updateProgress(40, 100);
                     updateMessage("checking for updates...");
-                    if(!version.equals(sistem.getVersion())){
+                    if (!version.equals(sistem.getVersion())) {
                         updateMessage("updating software...");
                         updateProgress(50, 100);
                         return Function.downloadUpdateGoogleStorage("Auri Steel.exe");
@@ -201,9 +205,9 @@ public class Main extends Application {
         });
         task.setOnSucceeded((e) -> {
             splash.close();
-            if(task.getValue().equals("true")){
+            if (task.getValue().equals("true")) {
                 showLoginScene();
-            }else{
+            } else {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Information");
                 alert.setContentText(task.getValue());
@@ -215,7 +219,7 @@ public class Main extends Application {
             task.getException().printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
-            alert.setContentText("Application error - \n" +task.getException());
+            alert.setContentText("Application error - \n" + task.getException());
             alert.showAndWait();
             System.exit(0);
             splash.close();
@@ -224,44 +228,52 @@ public class Main extends Application {
         updateLabel.textProperty().bind(task.messageProperty());
         new Thread(task).start();
     }
+
     public void showLoginScene() {
-        try{
+        try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(Main.class.getResource("View/Login.fxml"));
             AnchorPane container = (AnchorPane) loader.load();
-            
+
             Scene scene = new Scene(container);
             MainStage.hide();
             MainStage.setScene(scene);
             MainStage.show();
             LoginController controller = loader.getController();
             controller.setMainApp(this);
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.initOwner(MainStage);
             alert.setTitle("Error");
-            alert.setContentText("Application error - \n" +e);
+            alert.setContentText("Application error - \n" + e);
             alert.showAndWait();
         }
     }
-    public void showMainScene(){
-        try{
+
+    public void showMainScene() {
+        try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(Main.class.getResource("View/MainApp.fxml"));
             mainLayout = (BorderPane) loader.load();
             Scene scene = new Scene(mainLayout);
-            
+
             final Animation animationshow = new Transition() {
-                { setCycleDuration(Duration.millis(1000)); }
+                {
+                    setCycleDuration(Duration.millis(1000));
+                }
+
                 @Override
                 protected void interpolate(double frac) {
-                    MainStage.setOpacity(1-frac);
+                    MainStage.setOpacity(1 - frac);
                 }
             };
             animationshow.onFinishedProperty().set((EventHandler<ActionEvent>) (ActionEvent actionEvent) -> {
                 final Animation animation = new Transition() {
-                    { setCycleDuration(Duration.millis(1000)); }
+                    {
+                        setCycleDuration(Duration.millis(1000));
+                    }
+
                     @Override
                     protected void interpolate(double frac) {
                         MainStage.setOpacity(frac);
@@ -271,409 +283,495 @@ public class Main extends Application {
                 MainStage.hide();
                 MainStage.setScene(scene);
                 mainAppController = loader.getController();
-                
+
                 mainAppController.setMainApp(this);
-                if(sistem.getUser().getLevel().equals("Gudang"))
+                if (sistem.getUser().getLevel().equals("Gudang")) {
                     showPengirimanBarang();
-                if(sistem.getUser().getLevel().equals("Produksi"))
+                }
+                if (sistem.getUser().getLevel().equals("Produksi")) {
                     showPermintaanBarang();
-                if(sistem.getUser().getLevel().equals("Produksi"))
+                }
+                if (sistem.getUser().getLevel().equals("Produksi")) {
                     showPengirimanBarang();
-                if(sistem.getUser().getLevel().equals("Penjualan"))
+                }
+                if (sistem.getUser().getLevel().equals("Penjualan")) {
                     showPenjualan();
-                if(sistem.getUser().getLevel().equals("Pembelian"))
+                }
+                if (sistem.getUser().getLevel().equals("Pembelian")) {
                     showPembelianBahan();
-                if(sistem.getUser().getLevel().equals("Keuangan"))
+                }
+                if (sistem.getUser().getLevel().equals("Keuangan")) {
                     showKeuangan();
-                if(sistem.getUser().getLevel().equals("Manager"))
+                }
+                if (sistem.getUser().getLevel().equals("Manager")) {
                     showDashboard();
-                
+                }
+
                 MainStage.show();
             });
             animationshow.play();
-            
-        }catch(Exception e){
+
+        } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.initOwner(MainStage);
             alert.setTitle("Error");
-            alert.setContentText("Application error - \n" +e);
+            alert.setContentText("Application error - \n" + e);
             alert.showAndWait();
         }
     }
-    public DashboardController showDashboard(){
+
+    public DashboardController showDashboard() {
         FXMLLoader loader = changeStage("View/Dashboard.fxml");
         DashboardController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Dashboard");
         return controller;
     }
-    public DataCustomerController showDataCustomer(){
+
+    public DataCustomerController showDataCustomer() {
         FXMLLoader loader = changeStage("View/DataCustomer.fxml");
         DataCustomerController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Data Customer");
         return controller;
     }
-    public DataSupplierController showDataSupplier(){
+
+    public DataSupplierController showDataSupplier() {
         FXMLLoader loader = changeStage("View/DataSupplier.fxml");
         DataSupplierController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Data Supplier");
         return controller;
     }
-    public DataPegawaiController showDataPegawai(){
+
+    public DataPegawaiController showDataPegawai() {
         FXMLLoader loader = changeStage("View/DataPegawai.fxml");
         DataPegawaiController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Data Pegawai");
         return controller;
     }
-    public DataBahanController showDataBahan(){
+
+    public DataBahanController showDataBahan() {
         FXMLLoader loader = changeStage("View/DataBahan.fxml");
         DataBahanController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Data Bahan");
         return controller;
     }
-    public DataBarangController showDataBarang(){
+
+    public DataBarangController showDataBarang() {
         FXMLLoader loader = changeStage("View/DataBarang.fxml");
         DataBarangController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Data Barang");
         return controller;
     }
-    public DataUserController showDataUser(){
+
+    public DataUserController showDataUser() {
         FXMLLoader loader = changeStage("View/DataUser.fxml");
         DataUserController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Data User");
         return controller;
     }
-    public PemesananController showPemesanan(){
+
+    public DataUserAppController showDataUserApp() {
+        FXMLLoader loader = changeStage("View/DataUserApp.fxml");
+        DataUserAppController controller = loader.getController();
+        controller.setMainApp(this);
+        setTitle("Data User App");
+        return controller;
+    }
+
+    public DataMesinController showDataMesin() {
+        FXMLLoader loader = changeStage("View/DataMesin.fxml");
+        DataMesinController controller = loader.getController();
+        controller.setMainApp(this);
+        setTitle("Data Mesin");
+        return controller;
+    }
+
+    public PemesananController showPemesanan() {
         FXMLLoader loader = changeStage("View/Pemesanan.fxml");
         PemesananController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Pemesanan");
         return controller;
     }
-    public PemesananCoilController showPemesananCoil(){
+
+    public PemesananCoilController showPemesananCoil() {
         FXMLLoader loader = changeStage("View/PemesananCoil.fxml");
         PemesananCoilController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Pemesanan Coil");
         return controller;
     }
-    public PenjualanController showPenjualan(){
+
+    public PenjualanController showPenjualan() {
         FXMLLoader loader = changeStage("View/Penjualan.fxml");
         PenjualanController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Penjualan");
         return controller;
     }
-    public PenjualanCoilController showPenjualanCoil(){
+
+    public PenjualanCoilController showPenjualanCoil() {
         FXMLLoader loader = changeStage("View/PenjualanCoil.fxml");
         PenjualanCoilController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Penjualan Coil");
         return controller;
     }
-    public PemesananPembelianBahanController showPemesananPembelian(){
+
+    public PemesananPembelianBahanController showPemesananPembelian() {
         FXMLLoader loader = changeStage("View/PemesananPembelianBahan.fxml");
         PemesananPembelianBahanController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Pemesanan Pembelian Bahan");
         return controller;
     }
-    public PembelianBahanController showPembelianBahan(){
+
+    public PembelianBahanController showPembelianBahan() {
         FXMLLoader loader = changeStage("View/PembelianBahan.fxml");
         PembelianBahanController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Pembelian Bahan");
         return controller;
     }
-    public PembelianBarangController showPembelianBarang(){
+
+    public PembelianBarangController showPembelianBarang() {
         FXMLLoader loader = changeStage("View/PembelianBarang.fxml");
         PembelianBarangController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Pembelian Barang");
         return controller;
     }
-    public PermintaanBarangController showPermintaanBarang(){
+
+    public PermintaanBarangController showPermintaanBarang() {
         FXMLLoader loader = changeStage("View/PermintaanBarang.fxml");
         PermintaanBarangController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Permintaan Barang");
         return controller;
     }
-    public ProduksiBarangController showProduksiBarang(){
+    
+    public PerencanaanProduksiDanKirimController showRencanaProduksiBarang() {
+        FXMLLoader loader = changeStage("View/PerencanaanProduksiDanKirim.fxml");
+        PerencanaanProduksiDanKirimController controller = loader.getController();
+        controller.setMainApp(this);
+        setTitle("Rencana Produksi Barang");
+        return controller;
+    }
+
+    public ProduksiBarangController showProduksiBarang() {
         FXMLLoader loader = changeStage("View/ProduksiBarang.fxml");
         ProduksiBarangController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Produksi Barang");
         return controller;
     }
-    public PengirimanBarangController showPengirimanBarang(){
+
+    public PengirimanBarangController showPengirimanBarang() {
         FXMLLoader loader = changeStage("View/PengirimanBarang.fxml");
         PengirimanBarangController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Pengiriman Barang");
         return controller;
     }
-    public PengirimanCoilController showPengirimanCoil(){
+
+    public PengirimanCoilController showPengirimanCoil() {
         FXMLLoader loader = changeStage("View/PengirimanCoil.fxml");
         PengirimanCoilController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Pengiriman Coil");
         return controller;
     }
-    public PenerimaanBahanController showPenerimaanBahan(){
+
+    public PenerimaanBahanController showPenerimaanBahan() {
         FXMLLoader loader = changeStage("View/PenerimaanBahan.fxml");
         PenerimaanBahanController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Penerimaan Bahan");
         return controller;
     }
-    public PindahBahanController showPindahBahan(){
+
+    public PindahBahanController showPindahBahan() {
         FXMLLoader loader = changeStage("View/PindahBahan.fxml");
         PindahBahanController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Pindah Bahan");
         return controller;
     }
-    public PindahBarangController showPindahBarang(){
+
+    public PindahBarangController showPindahBarang() {
         FXMLLoader loader = changeStage("View/PindahBarang.fxml");
         PindahBarangController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Pindah Barang");
         return controller;
     }
-    public KeuanganController showKeuangan(){
+
+    public KeuanganController showKeuangan() {
         FXMLLoader loader = changeStage("View/Keuangan.fxml");
         KeuanganController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Keuangan");
         return controller;
     }
-    public HutangController showHutang(){
+
+    public HutangController showHutang() {
         FXMLLoader loader = changeStage("View/Hutang.fxml");
         HutangController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Hutang");
         return controller;
     }
-    public PiutangController showPiutang(){
+
+    public PiutangController showPiutang() {
         FXMLLoader loader = changeStage("View/Piutang.fxml");
         PiutangController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Piutang");
         return controller;
     }
-    public ModalController showModal(){
+
+    public ModalController showModal() {
         FXMLLoader loader = changeStage("View/Modal.fxml");
         ModalController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Modal");
         return controller;
     }
-    public AsetTetapController showAsetTetap(){
+
+    public AsetTetapController showAsetTetap() {
         FXMLLoader loader = changeStage("View/AsetTetap.fxml");
         AsetTetapController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Aset Tetap");
         return controller;
     }
-    public LaporanBarangController showLaporanBarang(){
+
+    public LaporanBarangController showLaporanBarang() {
         FXMLLoader loader = changeStage("View/Report/LaporanBarang.fxml");
         LaporanBarangController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Laporan Barang");
         return controller;
     }
-    public LaporanBahanController showLaporanBahan(){
+
+    public LaporanBahanController showLaporanBahan() {
         FXMLLoader loader = changeStage("View/Report/LaporanBahan.fxml");
         LaporanBahanController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Laporan Bahan");
         return controller;
     }
-    public LaporanProduksiBarangController showLaporanProduksiBarang(){
+
+    public LaporanProduksiBarangController showLaporanProduksiBarang() {
         FXMLLoader loader = changeStage("View/Report/LaporanProduksiBarang.fxml");
         LaporanProduksiBarangController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Laporan Produksi Barang");
         return controller;
     }
-    public LaporanBarangDiproduksiController showLaporanBarangDiproduksi(){
+
+    public LaporanBarangDiproduksiController showLaporanBarangDiproduksi() {
         FXMLLoader loader = changeStage("View/Report/LaporanBarangDiproduksi.fxml");
         LaporanBarangDiproduksiController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Laporan Barang Diproduksi");
         return controller;
     }
-    public LaporanPenyesuaianStokBahanController showLaporanPenyesuaianStokBahan(){
+
+    public LaporanPenyesuaianStokBahanController showLaporanPenyesuaianStokBahan() {
         FXMLLoader loader = changeStage("View/Report/LaporanPenyesuaianStokBahan.fxml");
         LaporanPenyesuaianStokBahanController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Laporan Penyesuaian Stok Bahan");
         return controller;
     }
-    public LaporanPenyesuaianStokBarangController showLaporanPenyesuaianStokBarang(){
+
+    public LaporanPenyesuaianStokBarangController showLaporanPenyesuaianStokBarang() {
         FXMLLoader loader = changeStage("View/Report/LaporanPenyesuaianStokBarang.fxml");
         LaporanPenyesuaianStokBarangController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Laporan Penyesuaian Stok Barang");
         return controller;
     }
-    public LaporanPenjualanController showLaporanPenjualan(){
+
+    public LaporanPenjualanController showLaporanPenjualan() {
         FXMLLoader loader = changeStage("View/Report/LaporanPenjualan.fxml");
         LaporanPenjualanController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Laporan Penjualan");
         return controller;
     }
-    public LaporanBarangTerjualController showLaporanBarangTerjual(){
+
+    public LaporanBarangTerjualController showLaporanBarangTerjual() {
         FXMLLoader loader = changeStage("View/Report/LaporanBarangTerjual.fxml");
         LaporanBarangTerjualController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Laporan Barang Terjual");
         return controller;
     }
-    public LaporanPenjualanCoilController showLaporanPenjualanCoil(){
+
+    public LaporanPenjualanCoilController showLaporanPenjualanCoil() {
         FXMLLoader loader = changeStage("View/Report/LaporanPenjualanCoil.fxml");
         LaporanPenjualanCoilController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Laporan Penjualan Coil");
         return controller;
     }
-    public LaporanCoilTerjualController showLaporanCoilTerjual(){
+
+    public LaporanCoilTerjualController showLaporanCoilTerjual() {
         FXMLLoader loader = changeStage("View/Report/LaporanCoilTerjual.fxml");
         LaporanCoilTerjualController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Laporan Coil Terjual");
         return controller;
     }
-    public LaporanPembelianController showLaporanPembelian(){
+
+    public LaporanPembelianController showLaporanPembelian() {
         FXMLLoader loader = changeStage("View/Report/LaporanPembelian.fxml");
         LaporanPembelianController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Laporan Pembelian");
         return controller;
     }
-    public LaporanBahanDibeliController showLaporanBahanDibeli(){
+
+    public LaporanBahanDibeliController showLaporanBahanDibeli() {
         FXMLLoader loader = changeStage("View/Report/LaporanBahanDibeli.fxml");
         LaporanBahanDibeliController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Laporan Bahan Dibeli");
         return controller;
     }
-    public LaporanKeuanganController showLaporanKeuangan(){
+
+    public LaporanKeuanganController showLaporanKeuangan() {
         FXMLLoader loader = changeStage("View/Report/LaporanKeuangan.fxml");
         LaporanKeuanganController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Laporan Keuangan");
         return controller;
     }
-    public LaporanHutangController showLaporanHutang(){
+
+    public LaporanHutangController showLaporanHutang() {
         FXMLLoader loader = changeStage("View/Report/LaporanHutang.fxml");
         LaporanHutangController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Laporan Hutang");
         return controller;
     }
-    public LaporanPiutangController showLaporanPiutang(){
+
+    public LaporanPiutangController showLaporanPiutang() {
         FXMLLoader loader = changeStage("View/Report/LaporanPiutang.fxml");
         LaporanPiutangController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Laporan Piutang");
         return controller;
     }
-    public LaporanUntungRugiController showLaporanUntungRugi(){
+
+    public LaporanUntungRugiController showLaporanUntungRugi() {
         FXMLLoader loader = changeStage("View/Report/LaporanUntungRugi.fxml");
         LaporanUntungRugiController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Laporan Untung Rugi");
         return controller;
     }
-    public LaporanUntungRugiPeriodeController showLaporanUntungRugiPeriode(){
+
+    public LaporanUntungRugiPeriodeController showLaporanUntungRugiPeriode() {
         FXMLLoader loader = changeStage("View/Report/LaporanUntungRugiPeriode.fxml");
         LaporanUntungRugiPeriodeController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Laporan Untung Rugi Periode");
         return controller;
     }
-    public LaporanUntungRugiSummaryController showLaporanUntungRugiSummary(){
+
+    public LaporanUntungRugiSummaryController showLaporanUntungRugiSummary() {
         FXMLLoader loader = changeStage("View/Report/LaporanUntungRugiSummary.fxml");
         LaporanUntungRugiSummaryController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Laporan Untung Rugi Summary");
         return controller;
     }
-    public LaporanNeracaController showLaporanNeraca(){
+
+    public LaporanNeracaController showLaporanNeraca() {
         FXMLLoader loader = changeStage("View/Report/LaporanNeraca.fxml");
         LaporanNeracaController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Laporan Neraca");
         return controller;
     }
-    public KategoriBahanController showKategoriBahan(){
+
+    public KategoriBahanController showKategoriBahan() {
         Stage stage = new Stage();
-        FXMLLoader loader = showDialog(MainStage ,stage, "View/Dialog/KategoriBahan.fxml");
+        FXMLLoader loader = showDialog(MainStage, stage, "View/Dialog/KategoriBahan.fxml");
         KategoriBahanController controller = loader.getController();
         controller.setMainApp(this, MainStage, stage);
         return controller;
     }
-    public GudangController showGudang(){
+
+    public GudangController showGudang() {
         Stage stage = new Stage();
-        FXMLLoader loader = showDialog(MainStage ,stage, "View/Dialog/Gudang.fxml");
+        FXMLLoader loader = showDialog(MainStage, stage, "View/Dialog/Gudang.fxml");
         GudangController controller = loader.getController();
         controller.setMainApp(this, MainStage, stage);
         return controller;
     }
-    public KategoriHutangController showKategoriHutang(){
+
+    public KategoriHutangController showKategoriHutang() {
         Stage stage = new Stage();
-        FXMLLoader loader = showDialog(MainStage ,stage, "View/Dialog/KategoriHutang.fxml");
+        FXMLLoader loader = showDialog(MainStage, stage, "View/Dialog/KategoriHutang.fxml");
         KategoriHutangController controller = loader.getController();
         controller.setMainApp(this, MainStage, stage);
         return controller;
     }
-    public KategoriPiutangController showKategoriPiutang(){
+
+    public KategoriPiutangController showKategoriPiutang() {
         Stage stage = new Stage();
-        FXMLLoader loader = showDialog(MainStage ,stage, "View/Dialog/KategoriPiutang.fxml");
+        FXMLLoader loader = showDialog(MainStage, stage, "View/Dialog/KategoriPiutang.fxml");
         KategoriPiutangController controller = loader.getController();
         controller.setMainApp(this, MainStage, stage);
         return controller;
     }
-    public KategoriTransaksiController showKategoriTransaksi(){
+
+    public KategoriTransaksiController showKategoriTransaksi() {
         Stage stage = new Stage();
-        FXMLLoader loader = showDialog(MainStage ,stage, "View/Dialog/KategoriTransaksi.fxml");
+        FXMLLoader loader = showDialog(MainStage, stage, "View/Dialog/KategoriTransaksi.fxml");
         KategoriTransaksiController controller = loader.getController();
         controller.setMainApp(this, MainStage, stage);
         return controller;
     }
-    public KategoriKeuanganController showKategoriKeuangan(){
+
+    public KategoriKeuanganController showKategoriKeuangan() {
         Stage stage = new Stage();
-        FXMLLoader loader = showDialog(MainStage ,stage, "View/Dialog/KategoriKeuangan.fxml");
+        FXMLLoader loader = showDialog(MainStage, stage, "View/Dialog/KategoriKeuangan.fxml");
         KategoriKeuanganController controller = loader.getController();
         controller.setMainApp(this, MainStage, stage);
         return controller;
     }
-    public UbahPasswordController showUbahPassword(){
+
+    public UbahPasswordController showUbahPassword() {
         Stage stage = new Stage();
         FXMLLoader loader = showDialog(MainStage, stage, "View/Dialog/UbahPassword.fxml");
         UbahPasswordController controller = loader.getController();
-        controller.setMainApp(this, MainStage ,stage);
+        controller.setMainApp(this, MainStage, stage);
         return controller;
     }
-    
-    public void setTitle(String title){
+
+    public void setTitle(String title) {
         mainAppController.setTitle(title);
-        if (mainAppController.vbox.isVisible()) 
+        if (mainAppController.vbox.isVisible()) {
             mainAppController.showHideMenu();
+        }
     }
-    public void showLoadingScreen(){
-        try{
-            if(loading!=null)
+
+    public void showLoadingScreen() {
+        try {
+            if (loading != null) {
                 loading.close();
+            }
             loading = new Stage();
             loading.initModality(Modality.WINDOW_MODAL);
             loading.initOwner(MainStage);
@@ -681,49 +779,53 @@ public class Main extends Application {
             loading.setOnCloseRequest((event) -> {
                 event.consume();
             });
-            
+
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(Main.class.getResource("View/Dialog/LoadingScreen.fxml"));
             AnchorPane container = (AnchorPane) loader.load();
 
             Scene scene = new Scene(container);
             scene.setFill(Color.TRANSPARENT);
-            
+
             loading.setOpacity(0.7);
             loading.hide();
             loading.setScene(scene);
             loading.show();
-            
+
             loading.setHeight(MainStage.getHeight());
             loading.setWidth(MainStage.getWidth());
             loading.setX((MainStage.getWidth() - loading.getWidth()) / 2);
             loading.setY((MainStage.getHeight() - loading.getHeight()) / 2);
-        }catch(Exception e){
+        } catch (Exception e) {
             showMessage(Modality.NONE, "Error", e.toString());
             e.printStackTrace();
         }
     }
-    public void closeLoading(){
+
+    public void closeLoading() {
         loading.close();
     }
-    public FXMLLoader changeStage(String URL){
-        try{
+
+    public FXMLLoader changeStage(String URL) {
+        try {
             FXMLLoader loader = new FXMLLoader(Main.class.getResource(URL));
             AnchorPane container = (AnchorPane) loader.load();
             BorderPane border = (BorderPane) mainLayout.getCenter();
             border.setCenter(container);
             return loader;
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             showMessage(Modality.NONE, "Error", e.toString());
             return null;
         }
     }
     private Stage splash;
-    public void showSplashScreen(ProgressBar progressBar, Label updateLabel){
-        try{
-            if(splash!=null)
+
+    public void showSplashScreen(ProgressBar progressBar, Label updateLabel) {
+        try {
+            if (splash != null) {
                 splash.close();
+            }
             splash = new Stage();
             splash.getIcons().add(new Image(getClass().getResourceAsStream("Resource/icon.png")));
             splash.initModality(Modality.WINDOW_MODAL);
@@ -732,7 +834,7 @@ public class Main extends Application {
             splash.setOnCloseRequest((event) -> {
                 event.consume();
             });
-            
+
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(Main.class.getResource("View/Dialog/SplashScreen.fxml"));
             AnchorPane container = (AnchorPane) loader.load();
@@ -743,40 +845,42 @@ public class Main extends Application {
 
             Scene scene = new Scene(container);
             scene.setFill(Color.TRANSPARENT);
-            
+
             splash.hide();
             splash.setScene(scene);
             splash.show();
-            
+
             splash.setHeight(screenSize.getHeight());
             splash.setWidth(screenSize.getWidth());
             splash.setX((screenSize.getWidth() - splash.getWidth()) / 2);
             splash.setY((screenSize.getHeight() - splash.getHeight()) / 2);
-        }catch(Exception e){
+        } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.initOwner(MainStage);
             alert.setTitle("Error");
-            alert.setContentText("Application error - \n" +e);
+            alert.setContentText("Application error - \n" + e);
             alert.showAndWait();
         }
     }
-    public void closeDialog(Stage owner,Stage dialog){
+
+    public void closeDialog(Stage owner, Stage dialog) {
         dialog.close();
-        owner.getScene().getRoot().setEffect(new ColorAdjust(0,0,0,0));
+        owner.getScene().getRoot().setEffect(new ColorAdjust(0, 0, 0, 0));
     }
-    public FXMLLoader showDialog(Stage owner, Stage dialog, String URL){
-        try{
+
+    public FXMLLoader showDialog(Stage owner, Stage dialog, String URL) {
+        try {
             dialog.initModality(Modality.APPLICATION_MODAL);
             dialog.initOwner(owner);
             dialog.initStyle(StageStyle.TRANSPARENT);
-            
+
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(Main.class.getResource(URL));
             AnchorPane container = (AnchorPane) loader.load();
 
             Scene scene = new Scene(container);
             scene.setFill(Color.TRANSPARENT);
-                        
+
             scene.setOnMousePressed((MouseEvent mouseEvent) -> {
                 x = dialog.getX() - mouseEvent.getScreenX();
                 y = dialog.getY() - mouseEvent.getScreenY();
@@ -793,33 +897,38 @@ public class Main extends Application {
             dialog.setX((screenSize.getWidth() - dialog.getWidth()) / 2);
             dialog.setY((screenSize.getHeight() - dialog.getHeight()) / 2);
             return loader;
-        }catch(IOException e){
+        } catch (IOException e) {
             showMessage(Modality.NONE, "Error", e.toString());
             return null;
         }
     }
-    public MessageController showMessage(Modality modal,String type,String content){
-        try{
-            if(message!=null)
+
+    public MessageController showMessage(Modality modal, String type, String content) {
+        try {
+            if (message != null) {
                 message.close();
+            }
             message = new Stage();
             message.initModality(modal);
             message.initOwner(MainStage);
             message.initStyle(StageStyle.TRANSPARENT);
-            
+
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(Main.class.getResource("View/Dialog/Message.fxml"));
             AnchorPane container = (AnchorPane) loader.load();
 
             Scene scene = new Scene(container);
             scene.setFill(Color.TRANSPARENT);
-            message.setX(MainStage.getWidth()-450);
-            message.setY(MainStage.getHeight()-150);
+            message.setX(MainStage.getWidth() - 450);
+            message.setY(MainStage.getHeight() - 150);
             final Animation popup = new Transition() {
-                { setCycleDuration(Duration.millis(250)); }
+                {
+                    setCycleDuration(Duration.millis(250));
+                }
+
                 @Override
                 protected void interpolate(double frac) {
-                    final double curPos = (MainStage.getHeight()-150) * (1-frac);
+                    final double curPos = (MainStage.getHeight() - 150) * (1 - frac);
                     container.setTranslateY(curPos);
                 }
             };
@@ -828,22 +937,24 @@ public class Main extends Application {
             message.setScene(scene);
             message.show();
             MessageController controller = loader.getController();
-            controller.setMainApp(this,type,content);
+            controller.setMainApp(this, type, content);
             return controller;
-        }catch(Exception e){
+        } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.initOwner(MainStage);
             alert.setTitle("Error");
-            alert.setContentText("Application error - \n" +e);
+            alert.setContentText("Application error - \n" + e);
             alert.showAndWait();
             return null;
         }
     }
-    public void closeMessage(){
+
+    public void closeMessage() {
         message.close();
     }
+
     public static void main(String[] args) {
         launch(args);
     }
-    
+
 }

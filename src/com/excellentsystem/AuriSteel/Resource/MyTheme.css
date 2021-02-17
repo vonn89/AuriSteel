@@ -434,17 +434,17 @@ and open the template in the editor.
     -fx-background-color: transparent;
 }
 .tab-pane  .tab {
-    -fx-background-color: seccolor1;
+    -fx-background-color: seccolor2;
     -fx-background-insets: 0 0 -1 0;
-    -fx-border-color: seccolor1;
-    -fx-border-radius: 3;
+    -fx-border-color: seccolor5;
+    -fx-border-radius: 1;
     -fx-border-width: 1 1 0 1;
 }
 .tab-pane  .tab:selected{
-    -fx-background-color: seccolor4;
+    -fx-background-color: seccolor6;
     -fx-background-insets: 0 0 -1 0;
-    -fx-border-color: seccolor1;
-    -fx-border-radius: 3;
+    -fx-border-color: seccolor2;
+    -fx-border-radius: 1;
     -fx-border-width: 1 1 0 1;
 }
 .tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
@@ -452,13 +452,13 @@ and open the template in the editor.
 }
 .tab:selected .tab-label { 
     -fx-alignment: center;
-    -fx-text-fill: seccolor1;
-    -fx-font-size: 18;
+    -fx-text-fill: blackColor;
+    -fx-font-size: 14;
 }
 .tab .tab-label { 
     -fx-alignment: center;
-    -fx-text-fill: seccolor3;
-    -fx-font-size: 18;
+    -fx-text-fill: seccolor6;
+    -fx-font-size: 14;
 }
 
 /*splitpane*/

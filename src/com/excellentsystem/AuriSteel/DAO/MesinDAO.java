@@ -25,17 +25,25 @@ public class MesinDAO {
         while(rs.next()){
             Mesin k = new Mesin();
             k.setKodeMesin(rs.getString(1));
+            k.setKapasitas(rs.getDouble(2));
             allMesin.add(k);
         }
         return allMesin;
     }
     public static void insert(Connection con, Mesin k)throws Exception{
-        PreparedStatement ps = con.prepareStatement("insert into tm_mesin values(?)");
+        PreparedStatement ps = con.prepareStatement("insert into tm_mesin values(?,?)");
         ps.setString(1, k.getKodeMesin());
+        ps.setDouble(2, k.getKapasitas());
+        ps.executeUpdate();
+    }
+    public static void update(Connection con, Mesin k)throws Exception{
+        PreparedStatement ps = con.prepareStatement("update tm_mesin set kapasitas = ? where kode_mesin = ?");
+        ps.setDouble(1, k.getKapasitas());
+        ps.setString(2, k.getKodeMesin());
         ps.executeUpdate();
     }
     public static void delete(Connection con, Mesin g)throws Exception{
-        PreparedStatement ps = con.prepareStatement("delete from tm_mesin where kode_gudang = ?");
+        PreparedStatement ps = con.prepareStatement("delete from tm_mesin where kode_mesin = ?");
         ps.setString(1, g.getKodeMesin());
         ps.executeUpdate();
     }

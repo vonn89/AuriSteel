@@ -5,7 +5,7 @@
  */
 package com.excellentsystem.AuriSteel.DAO;
 
-import com.excellentsystem.AuriSteel.Model.User;
+import com.excellentsystem.AuriSteel.Model.UserApp;
 import com.excellentsystem.AuriSteel.Model.VerifikasiApp;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -27,7 +27,7 @@ public class VerifikasiAppDAO {
             VerifikasiApp o = new VerifikasiApp();
             o.setKodeUser(rs.getString(1));
             o.setJenis(rs.getString(2));
-            o.setStatus(rs.getString(3));
+            o.setStatus(Boolean.parseBoolean(rs.getString(3)));
             allVerifikasiApp.add(o);
         }
         return allVerifikasiApp;
@@ -41,7 +41,7 @@ public class VerifikasiAppDAO {
             VerifikasiApp o = new VerifikasiApp();
             o.setKodeUser(rs.getString(1));
             o.setJenis(rs.getString(2));
-            o.setStatus(rs.getString(3));
+            o.setStatus(Boolean.parseBoolean(rs.getString(3)));
             allVerifikasiApp.add(o);
         }
         return allVerifikasiApp;
@@ -50,17 +50,17 @@ public class VerifikasiAppDAO {
         PreparedStatement ps = con.prepareStatement("insert into tm_verifikasi_app values(?,?,?)");
         ps.setString(1, otoritas.getKodeUser());
         ps.setString(2, otoritas.getJenis());
-        ps.setString(3, otoritas.getStatus());
+        ps.setString(3, String.valueOf(otoritas.isStatus()));
         ps.executeUpdate();
     }
     public static void update(Connection con, VerifikasiApp otoritas)throws Exception{
         PreparedStatement ps = con.prepareStatement("update tm_verifikasi_app set status=? where kode_user=? and jenis=?");
-        ps.setString(1, otoritas.getStatus());
+        ps.setString(1, String.valueOf(otoritas.isStatus()));
         ps.setString(2, otoritas.getKodeUser());
         ps.setString(3, otoritas.getJenis());
         ps.executeUpdate();
     }
-    public static void delete(Connection con, User user)throws Exception{
+    public static void delete(Connection con, UserApp user)throws Exception{
         PreparedStatement ps = con.prepareStatement("delete from tm_verifikasi_app where kode_user=?");
         ps.setString(1, user.getKodeUser());
         ps.executeUpdate();

@@ -69,33 +69,50 @@ import javafx.stage.Modality;
 public class DashboardController {
 
     private Boolean scrollingMenu = false;
-    @FXML private ScrollPane scrollPane;
-    @FXML private GridPane gridPane;
-    
-    @FXML private Label totalPenjualanLabel;
-    @FXML private Label keuntunganKotorLabel;
-    @FXML private Label pendapatanBebanLabel;
-    @FXML private Label keuntunganBersihLabel;
-    
-    @FXML private StackedBarChart<String, Double> salesPerformanceChart;
-    @FXML private CategoryAxis salesAxis;
-    
-    @FXML private LineChart<String, Double> omzetPenjualanChart;
-    @FXML private CategoryAxis periodeOmzetAxis;
-    
-    
-    @FXML private TableView<TopCustomer> topCustomerTable;
-    @FXML private TableColumn<TopCustomer, String> namaCustomerColumn;
-    @FXML private TableColumn<TopCustomer, Number> totalColumn;
-    @FXML private TableColumn<TopCustomer, Number> persenColumn;
+    @FXML
+    private ScrollPane scrollPane;
+    @FXML
+    private GridPane gridPane;
+
+    @FXML
+    private Label totalPenjualanLabel;
+    @FXML
+    private Label keuntunganKotorLabel;
+    @FXML
+    private Label pendapatanBebanLabel;
+    @FXML
+    private Label keuntunganBersihLabel;
+
+    @FXML
+    private StackedBarChart<String, Double> salesPerformanceChart;
+    @FXML
+    private CategoryAxis salesAxis;
+
+    @FXML
+    private LineChart<String, Double> omzetPenjualanChart;
+    @FXML
+    private CategoryAxis periodeOmzetAxis;
+
+    @FXML
+    private TableView<TopCustomer> topCustomerTable;
+    @FXML
+    private TableColumn<TopCustomer, String> namaCustomerColumn;
+    @FXML
+    private TableColumn<TopCustomer, Number> totalColumn;
+    @FXML
+    private TableColumn<TopCustomer, Number> persenColumn;
     private ObservableList<TopCustomer> customer = FXCollections.observableArrayList();
-    
-    @FXML private ComboBox<String> periodeCombo;
+
+    @FXML
+    private ComboBox<String> periodeCombo;
     private ObservableList<String> periode = FXCollections.observableArrayList();
-    @FXML private CheckBox penjualanCheckBox;
-    @FXML private CheckBox penjualanCoilCheckBox;
-    
-    private Main mainApp;  
+    @FXML
+    private CheckBox penjualanCheckBox;
+    @FXML
+    private CheckBox penjualanCoilCheckBox;
+
+    private Main mainApp;
+
     public void initialize() {
         scrollPane.addEventHandler(MouseEvent.DRAG_DETECTED, e -> {
             scrollingMenu = true;
@@ -110,18 +127,18 @@ public class DashboardController {
             scrollingMenu = false;
         });
         gridPane.setOnScroll((ScrollEvent event) -> {
-            double deltaY = event.getDeltaY()*2; // *6 to make the scrolling a bit faster
+            double deltaY = event.getDeltaY() * 2; // *6 to make the scrolling a bit faster
             double width = scrollPane.getContent().getBoundsInLocal().getHeight();
             double vvalue = scrollPane.getVvalue();
-            scrollPane.setVvalue(vvalue + -deltaY/width); // deltaY/width to make the scrolling equally fast regardless of the actual width of the component
+            scrollPane.setVvalue(vvalue + -deltaY / width); // deltaY/width to make the scrolling equally fast regardless of the actual width of the component
         });
-        
+
         namaCustomerColumn.setCellValueFactory(cellData -> cellData.getValue().namaProperty());
         totalColumn.setCellValueFactory(cellData -> cellData.getValue().totalPenjualanProperty());
         totalColumn.setCellFactory(col -> Function.getTableCell());
         persenColumn.setCellValueFactory(cellData -> cellData.getValue().persentasePenjualanProperty());
         persenColumn.setCellFactory(col -> Function.getTableCell());
-        
+
         kodeBarangBestSellingItemsColumn.setCellValueFactory(cellData -> cellData.getValue().kodeBarangProperty());
         qtyBestSellingItemsColumn.setCellValueFactory(cellData -> cellData.getValue().qtyProperty());
         qtyBestSellingItemsColumn.setCellFactory(col -> Function.getTableCell());
@@ -135,7 +152,7 @@ public class DashboardController {
         persenBeratBestSellingItemsColumn.setCellFactory(col -> Function.getTableCell());
         persenJumlahRpBestSellingItemsColumn.setCellValueFactory(cellData -> cellData.getValue().persenJumlahRpProperty());
         persenJumlahRpBestSellingItemsColumn.setCellFactory(col -> Function.getTableCell());
-        
+
         kodeBarangPendingItemsColumn.setCellValueFactory(cellData -> cellData.getValue().kodeBarangProperty());
         qtyPendingItemsColumn.setCellValueFactory(cellData -> cellData.getValue().qtyProperty());
         qtyPendingItemsColumn.setCellFactory(col -> Function.getTableCell());
@@ -149,7 +166,8 @@ public class DashboardController {
         persenBeratPendingItemsColumn.setCellFactory(col -> Function.getTableCell());
         persenJumlahRpPendingItemsColumn.setCellValueFactory(cellData -> cellData.getValue().persenJumlahRpProperty());
         persenJumlahRpPendingItemsColumn.setCellFactory(col -> Function.getTableCell());
-    } 
+    }
+
     public void setMainApp(Main mainApp) {
         this.mainApp = mainApp;
         periode.clear();
@@ -166,37 +184,38 @@ public class DashboardController {
         salesPerformanceChart.setCursor(Cursor.CROSSHAIR);
         getData();
     }
+
     @FXML
-    private void getData(){
+    private void getData() {
         Task<DashboardModel> task = new Task<DashboardModel>() {
-            @Override 
-            public DashboardModel call() throws Exception{
+            @Override
+            public DashboardModel call() throws Exception {
                 try (Connection con = Koneksi.getConnection()) {
-                    System.out.println("start "+new Date());
+                    System.out.println("start " + new Date());
                     String tglMulai = "";
                     String tglAkhir = "";
-                    if(periodeCombo.getSelectionModel().getSelectedItem().equals("This Month")){
+                    if (periodeCombo.getSelectionModel().getSelectedItem().equals("This Month")) {
                         LocalDate startdate = LocalDate.now();
                         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM");
-                        tglMulai = startdate.format(format)+"-01";
+                        tglMulai = startdate.format(format) + "-01";
                         LocalDate enddate = LocalDate.now();
                         tglAkhir = enddate.toString();
-                    }else if(periodeCombo.getSelectionModel().getSelectedItem().equals("Last 6 Months")){
+                    } else if (periodeCombo.getSelectionModel().getSelectedItem().equals("Last 6 Months")) {
                         LocalDate startdate = LocalDate.now().minusMonths(5);
                         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM");
-                        tglMulai = startdate.format(format)+"-01";
+                        tglMulai = startdate.format(format) + "-01";
                         LocalDate enddate = LocalDate.now();
                         tglAkhir = enddate.toString();
-                    }else if(periodeCombo.getSelectionModel().getSelectedItem().equals("Last 12 Months")){
+                    } else if (periodeCombo.getSelectionModel().getSelectedItem().equals("Last 12 Months")) {
                         LocalDate startdate = LocalDate.now().minusMonths(11);
                         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM");
-                        tglMulai = startdate.format(format)+"-01";
+                        tglMulai = startdate.format(format) + "-01";
                         LocalDate enddate = LocalDate.now();
                         tglAkhir = enddate.toString();
-                    }else if(periodeCombo.getSelectionModel().getSelectedItem().equals("This Year")){
+                    } else if (periodeCombo.getSelectionModel().getSelectedItem().equals("This Year")) {
                         LocalDate startdate = LocalDate.now();
                         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy");
-                        tglMulai = startdate.format(format)+"-01-01";
+                        tglMulai = startdate.format(format) + "-01-01";
                         LocalDate enddate = LocalDate.now();
                         tglAkhir = enddate.toString();
                     }
@@ -205,12 +224,12 @@ public class DashboardController {
                     dashboard.setListPenjualanHead(new ArrayList<>());
                     dashboard.setListPenjualanCoilHead(new ArrayList<>());
                     dashboard.setListSales(PegawaiDAO.getAllByStatus(con, "%"));
-                    System.out.println("getSales "+new Date());
-                    
+                    System.out.println("getSales " + new Date());
+
                     List<Customer> listCustomer = CustomerDAO.getAllByStatus(con, "%");
-                    System.out.println("getCustomer "+new Date());
+                    System.out.println("getCustomer " + new Date());
                     List<TopCustomer> listTopCustomer = new ArrayList<>();
-                    for(Customer c : listCustomer){
+                    for (Customer c : listCustomer) {
                         TopCustomer tc = new TopCustomer();
                         tc.setKodeCustomer(c.getKodeCustomer());
                         tc.setNama(c.getNama());
@@ -219,62 +238,67 @@ public class DashboardController {
                         listTopCustomer.add(tc);
                     }
                     dashboard.setListTopCustomer(listTopCustomer);
-                    
-                    if(penjualanCheckBox.isSelected()){
+
+                    if (penjualanCheckBox.isSelected()) {
                         dashboard.setListPenjualanHead(PenjualanBarangHeadDAO.getAllByDateAndStatus(
                                 con, tglMulai, tglAkhir, "true"));
-                        for(PenjualanBarangHead p : dashboard.getListPenjualanHead()){
-                            for(Customer c : listCustomer){
-                                if(p.getKodeCustomer().equals(c.getKodeCustomer()))
+                        for (PenjualanBarangHead p : dashboard.getListPenjualanHead()) {
+                            for (Customer c : listCustomer) {
+                                if (p.getKodeCustomer().equals(c.getKodeCustomer())) {
                                     p.setCustomer(c);
+                                }
                             }
-                            for(Pegawai s : dashboard.getListSales()){
-                                if(p.getKodeSales().equals(s.getKodePegawai()))
+                            for (Pegawai s : dashboard.getListSales()) {
+                                if (p.getKodeSales().equals(s.getKodePegawai())) {
                                     p.setSales(s);
+                                }
                             }
                         }
-                        System.out.println("getPenjualan "+new Date());
+                        System.out.println("getPenjualan " + new Date());
                     }
-                    if(penjualanCoilCheckBox.isSelected()){
+                    if (penjualanCoilCheckBox.isSelected()) {
                         dashboard.setListPenjualanCoilHead(PenjualanBahanHeadDAO.getAllByDateAndStatus(
                                 con, tglMulai, tglAkhir, "true"));
-                        for(PenjualanBahanHead p : dashboard.getListPenjualanCoilHead()){
-                            for(Customer c : listCustomer){
-                                if(p.getKodeCustomer().equals(c.getKodeCustomer()))
+                        for (PenjualanBahanHead p : dashboard.getListPenjualanCoilHead()) {
+                            for (Customer c : listCustomer) {
+                                if (p.getKodeCustomer().equals(c.getKodeCustomer())) {
                                     p.setCustomer(c);
+                                }
                             }
-                            for(Pegawai s : dashboard.getListSales()){
-                                if(p.getKodeSales().equals(s.getKodePegawai()))
+                            for (Pegawai s : dashboard.getListSales()) {
+                                if (p.getKodeSales().equals(s.getKodePegawai())) {
                                     p.setSales(s);
+                                }
                             }
                         }
-                        System.out.println("getPenjualanCoil "+new Date());
+                        System.out.println("getPenjualanCoil " + new Date());
                     }
-                    
+
                     List<Barang> listBarang = BarangDAO.getAllByStatus(con, "%");
-                    System.out.println("getBarang "+new Date());
+                    System.out.println("getBarang " + new Date());
                     List<PenjualanBarangDetail> listPenjualanDetail = PenjualanBarangDetailDAO.getAllByDateAndStatus(con, tglMulai, tglAkhir, "true");
-                    System.out.println("getPenjualanDetail "+new Date());
+                    System.out.println("getPenjualanDetail " + new Date());
                     List<BestSellingItems> listBestSellingItems = new ArrayList<>();
                     double totalQty = 0;
                     double totalBerat = 0;
                     double totalRp = 0;
-                    for(PenjualanBarangDetail p : listPenjualanDetail){
+                    for (PenjualanBarangDetail p : listPenjualanDetail) {
                         double berat = 0;
-                        for(Barang b : listBarang){
-                            if(b.getKodeBarang().equals(p.getKodeBarang()))
-                                berat = p.getQty()*b.getBerat();
+                        for (Barang b : listBarang) {
+                            if (b.getKodeBarang().equals(p.getKodeBarang())) {
+                                berat = p.getQty() * b.getBerat();
+                            }
                         }
                         boolean status = false;
-                        for(BestSellingItems b : listBestSellingItems){
-                            if(b.getKodeBarang().equals(p.getKodeBarang())){
-                                b.setQty(b.getQty()+p.getQty());
-                                b.setBerat(b.getBerat()+berat);
-                                b.setJumlahRp(b.getJumlahRp()+p.getTotal());
+                        for (BestSellingItems b : listBestSellingItems) {
+                            if (b.getKodeBarang().equals(p.getKodeBarang())) {
+                                b.setQty(b.getQty() + p.getQty());
+                                b.setBerat(b.getBerat() + berat);
+                                b.setJumlahRp(b.getJumlahRp() + p.getTotal());
                                 status = true;
                             }
                         }
-                        if(status==false){
+                        if (status == false) {
                             BestSellingItems b = new BestSellingItems();
                             b.setKodeBarang(p.getKodeBarang());
                             b.setQty(p.getQty());
@@ -289,38 +313,39 @@ public class DashboardController {
                         totalBerat = totalBerat + berat;
                         totalRp = totalRp + p.getTotal();
                     }
-                    for(BestSellingItems c : listBestSellingItems){
-                        c.setPersenQty(c.getQty()/totalQty*100);
-                        c.setPersenBerat(c.getBerat()/totalBerat*100);
-                        c.setPersenJumlahRp(c.getJumlahRp()/totalRp*100);
+                    for (BestSellingItems c : listBestSellingItems) {
+                        c.setPersenQty(c.getQty() / totalQty * 100);
+                        c.setPersenBerat(c.getBerat() / totalBerat * 100);
+                        c.setPersenJumlahRp(c.getJumlahRp() / totalRp * 100);
                     }
                     dashboard.setListBestSellingItems(listBestSellingItems);
-                    
-                    List<PemesananBarangDetail> listPemesananDetail = PemesananBarangDetailDAO.getAllByDateAndStatus(con, 
-                            LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"))+"-01-01", tglAkhir, "open");
-                    System.out.println("getPemesananDetail "+new Date());
+
+                    List<PemesananBarangDetail> listPemesananDetail = PemesananBarangDetailDAO.getAllByDateAndStatus(con,
+                            LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy")) + "-01-01", tglAkhir, "open");
+                    System.out.println("getPemesananDetail " + new Date());
                     List<PendingItems> listPendingItems = new ArrayList<>();
                     double totalQtyPendingItems = 0;
                     double totalBeratPendingItems = 0;
                     double totalRpPendingItems = 0;
-                    for(PemesananBarangDetail p : listPemesananDetail){
-                        double qty = p.getQty()-p.getQtyTerkirim();
+                    for (PemesananBarangDetail p : listPemesananDetail) {
+                        double qty = p.getQty() - p.getQtyTerkirim();
                         double berat = 0;
-                        for(Barang b : listBarang){
-                            if(b.getKodeBarang().equals(p.getKodeBarang()))
-                                berat = (p.getQty()-p.getQtyTerkirim())*b.getBerat();
+                        for (Barang b : listBarang) {
+                            if (b.getKodeBarang().equals(p.getKodeBarang())) {
+                                berat = (p.getQty() - p.getQtyTerkirim()) * b.getBerat();
+                            }
                         }
                         double total = qty * p.getHargaJual();
                         boolean status = false;
-                        for(PendingItems b : listPendingItems){
-                            if(b.getKodeBarang().equals(p.getKodeBarang())){
-                                b.setQty(b.getQty()+qty);
-                                b.setBerat(b.getBerat()+berat);
-                                b.setJumlahRp(b.getJumlahRp()+total);
+                        for (PendingItems b : listPendingItems) {
+                            if (b.getKodeBarang().equals(p.getKodeBarang())) {
+                                b.setQty(b.getQty() + qty);
+                                b.setBerat(b.getBerat() + berat);
+                                b.setJumlahRp(b.getJumlahRp() + total);
                                 status = true;
                             }
                         }
-                        if(status==false){
+                        if (status == false) {
                             PendingItems b = new PendingItems();
                             b.setKodeBarang(p.getKodeBarang());
                             b.setQty(qty);
@@ -335,16 +360,16 @@ public class DashboardController {
                         totalBeratPendingItems = totalBeratPendingItems + berat;
                         totalRpPendingItems = totalRpPendingItems + total;
                     }
-                    for(PendingItems c : listPendingItems){
-                        c.setPersenQty(c.getQty()/totalQtyPendingItems*100);
-                        c.setPersenBerat(c.getBerat()/totalBeratPendingItems*100);
-                        c.setPersenJumlahRp(c.getJumlahRp()/totalRpPendingItems*100);
+                    for (PendingItems c : listPendingItems) {
+                        c.setPersenQty(c.getQty() / totalQtyPendingItems * 100);
+                        c.setPersenBerat(c.getBerat() / totalBeratPendingItems * 100);
+                        c.setPersenJumlahRp(c.getJumlahRp() / totalRpPendingItems * 100);
                     }
                     dashboard.setListPendingItems(listPendingItems);
-                    
+
                     dashboard.setListKeuangan(KeuanganDAO.getAllByTanggal(con, tglMulai, tglAkhir));
-                    System.out.println("getKeuangan "+new Date());
-                    
+                    System.out.println("getKeuangan " + new Date());
+
                     return dashboard;
                 }
             }
@@ -353,7 +378,7 @@ public class DashboardController {
             mainApp.showLoadingScreen();
         });
         task.setOnSucceeded((WorkerStateEvent e) -> {
-            try{
+            try {
                 mainApp.closeLoading();
                 DashboardModel dashboard = task.getValue();
                 setOmzetPenjualan(dashboard.getListKeuangan());
@@ -362,40 +387,42 @@ public class DashboardController {
                 double totalPenjualan = 0;
                 double totalHpp = 0;
                 double totalPendapatanBeban = 0;
-                for(Keuangan k : dashboard.getListKeuangan()){
-                    if(k.getTipeKeuangan().equals("Penjualan")){
-                        if(k.getKategori().equals("Penjualan") && penjualanCheckBox.isSelected())
+                for (Keuangan k : dashboard.getListKeuangan()) {
+                    if (k.getTipeKeuangan().equals("Penjualan")) {
+                        if (k.getKategori().equals("Penjualan") && penjualanCheckBox.isSelected()) {
                             totalPenjualan = totalPenjualan + k.getJumlahRp();
-                        else if(k.getKategori().equals("Penjualan Coil") && penjualanCoilCheckBox.isSelected())
+                        } else if (k.getKategori().equals("Penjualan Coil") && penjualanCoilCheckBox.isSelected()) {
                             totalPenjualan = totalPenjualan + k.getJumlahRp();
+                        }
                     }
-                    if(penjualanCheckBox.isSelected()){
-                        if(k.getTipeKeuangan().equals("Retur Penjualan")){
+                    if (penjualanCheckBox.isSelected()) {
+                        if (k.getTipeKeuangan().equals("Retur Penjualan")) {
                             totalPenjualan = totalPenjualan - k.getJumlahRp();
                         }
                     }
-                    if(k.getTipeKeuangan().equals("HPP")){
-                        if(k.getKategori().equals("Penjualan") && penjualanCheckBox.isSelected())
+                    if (k.getTipeKeuangan().equals("HPP")) {
+                        if (k.getKategori().equals("Penjualan") && penjualanCheckBox.isSelected()) {
                             totalHpp = totalHpp + k.getJumlahRp();
-                        else if(k.getKategori().equals("Penjualan Coil") && penjualanCoilCheckBox.isSelected())
+                        } else if (k.getKategori().equals("Penjualan Coil") && penjualanCoilCheckBox.isSelected()) {
                             totalHpp = totalHpp + k.getJumlahRp();
-                        else if(k.getKategori().equals("Retur Penjualan") && penjualanCheckBox.isSelected())
+                        } else if (k.getKategori().equals("Retur Penjualan") && penjualanCheckBox.isSelected()) {
                             totalHpp = totalHpp + k.getJumlahRp();
+                        }
                     }
-                    if(k.getTipeKeuangan().equals("Pendapatan/Beban")){
+                    if (k.getTipeKeuangan().equals("Pendapatan/Beban")) {
                         totalPendapatanBeban = totalPendapatanBeban + k.getJumlahRp();
                     }
                 }
-                setLabelHeader(totalPenjualan, totalPenjualan-totalHpp, totalPendapatanBeban, totalPenjualan-totalHpp+totalPendapatanBeban);
-            
+                setLabelHeader(totalPenjualan, totalPenjualan - totalHpp, totalPendapatanBeban, totalPenjualan - totalHpp + totalPendapatanBeban);
+
                 listBestSellingItems.clear();
                 listBestSellingItems.addAll(dashboard.getListBestSellingItems());
                 chooseBestSellingItems();
-                
+
                 listPendingItems.clear();
                 listPendingItems.addAll(dashboard.getListPendingItems());
                 choosePendingItems();
-            }catch(Exception ex){
+            } catch (Exception ex) {
                 mainApp.showMessage(Modality.NONE, "Error", ex.toString());
             }
         });
@@ -406,103 +433,121 @@ public class DashboardController {
         });
         new Thread(task).start();
     }
-    private void setLabelHeader(double totalPenjualan, double urKotor, double pendapatanBeban, double urBersih){
+
+    private void setLabelHeader(double totalPenjualan, double urKotor, double pendapatanBeban, double urBersih) {
         String a = new DecimalFormat("###,##0").format(totalPenjualan);
         String b = new DecimalFormat("###,##0").format(urKotor);
         String c = new DecimalFormat("###,##0").format(pendapatanBeban);
         String d = new DecimalFormat("###,##0").format(urBersih);
-        if(totalPenjualan/1000000000>=1 || totalPenjualan/1000000000<=-1)
-            a = df.format(totalPenjualan/1000000000)+" M";
-        if(urKotor/1000000000>=1 || urKotor/1000000000<=-1)
-            b = df.format(urKotor/1000000000)+" M";
-        if(pendapatanBeban/1000000000>=1 || pendapatanBeban/1000000000<=-1)
-            c = df.format(pendapatanBeban/1000000000)+" M";
-        if(urBersih/1000000000>=1 || urBersih/1000000000<=-1)
-            d = df.format(urBersih/1000000000)+" M";
-        
+        if (totalPenjualan / 1000000000 >= 1 || totalPenjualan / 1000000000 <= -1) {
+            a = df.format(totalPenjualan / 1000000000) + " M";
+        }
+        if (urKotor / 1000000000 >= 1 || urKotor / 1000000000 <= -1) {
+            b = df.format(urKotor / 1000000000) + " M";
+        }
+        if (pendapatanBeban / 1000000000 >= 1 || pendapatanBeban / 1000000000 <= -1) {
+            c = df.format(pendapatanBeban / 1000000000) + " M";
+        }
+        if (urBersih / 1000000000 >= 1 || urBersih / 1000000000 <= -1) {
+            d = df.format(urBersih / 1000000000) + " M";
+        }
+
         totalPenjualanLabel.setText(a);
         keuntunganKotorLabel.setText(b);
         pendapatanBebanLabel.setText(c);
         keuntunganBersihLabel.setText(d);
     }
-    private void setTopCustomer(List<PenjualanBarangHead> listPenjualan, List<PenjualanBahanHead> listPenjualanCoil, List<TopCustomer> listCustomer)throws Exception{
+
+    private void setTopCustomer(List<PenjualanBarangHead> listPenjualan, List<PenjualanBahanHead> listPenjualanCoil, List<TopCustomer> listCustomer) throws Exception {
         customer.clear();
         double grandtotal = 0;
-        for(TopCustomer c : listCustomer){
-            for(PenjualanBarangHead p : listPenjualan){
-                if(c.getKodeCustomer().equals(p.getKodeCustomer())){
-                    c.setTotalPenjualan(c.getTotalPenjualan()+p.getTotalPenjualan());
+        for (TopCustomer c : listCustomer) {
+            for (PenjualanBarangHead p : listPenjualan) {
+                if (c.getKodeCustomer().equals(p.getKodeCustomer())) {
+                    c.setTotalPenjualan(c.getTotalPenjualan() + p.getTotalPenjualan());
                     grandtotal = grandtotal + p.getTotalPenjualan();
                 }
             }
-            for(PenjualanBahanHead p : listPenjualanCoil){
-                if(c.getKodeCustomer().equals(p.getKodeCustomer())){
-                    c.setTotalPenjualan(c.getTotalPenjualan()+p.getTotalPenjualan());
+            for (PenjualanBahanHead p : listPenjualanCoil) {
+                if (c.getKodeCustomer().equals(p.getKodeCustomer())) {
+                    c.setTotalPenjualan(c.getTotalPenjualan() + p.getTotalPenjualan());
                     grandtotal = grandtotal + p.getTotalPenjualan();
                 }
             }
         }
-        for(TopCustomer c : listCustomer){
-            c.setPersentasePenjualan(c.getTotalPenjualan()/grandtotal*100);
-            if(c.getTotalPenjualan()!=0)
+        for (TopCustomer c : listCustomer) {
+            c.setPersentasePenjualan(c.getTotalPenjualan() / grandtotal * 100);
+            if (c.getTotalPenjualan() != 0) {
                 customer.add(c);
+            }
         }
         customer.sort(Comparator.comparingDouble(TopCustomer::getTotalPenjualan).reversed());
     }
-    private XYChart.Series getXYChartSeriesStore(CategoryAxis categoryAxis, List<Keuangan> listKeuangan, String kategori)throws Exception{
+
+    private XYChart.Series getXYChartSeriesStore(CategoryAxis categoryAxis, List<Keuangan> listKeuangan, String kategori) throws Exception {
         XYChart.Series series = new XYChart.Series<>();
-        series.setName(kategori);  
-        for(String s : categoryAxis.getCategories()){
+        series.setName(kategori);
+        for (String s : categoryAxis.getCategories()) {
             double x = 0;
-            for(Keuangan k : listKeuangan){
-                if(k.getTipeKeuangan().equals("Penjualan") && k.getKategori().equals(kategori)){
+            for (Keuangan k : listKeuangan) {
+                if (k.getTipeKeuangan().equals("Penjualan") && k.getKategori().equals(kategori)) {
                     boolean status = false;
-                    if(periodeCombo.getSelectionModel().getSelectedItem().equals("This Month")){
-                        if(s.equals(new SimpleDateFormat("dd MMM yyyy").format(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(k.getTglKeuangan()))))
-                            status =true;
-                    }else{
-                        if(s.equals(new SimpleDateFormat("MMM yyyy").format(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(k.getTglKeuangan()))))
-                            status =true;
+                    if (periodeCombo.getSelectionModel().getSelectedItem().equals("This Month")) {
+                        if (s.equals(new SimpleDateFormat("dd MMM yyyy").format(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(k.getTglKeuangan())))) {
+                            status = true;
+                        }
+                    } else {
+                        if (s.equals(new SimpleDateFormat("MMM yyyy").format(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(k.getTglKeuangan())))) {
+                            status = true;
+                        }
                     }
-                    if(status)
+                    if (status) {
                         x = x + k.getJumlahRp();
+                    }
                 }
             }
             XYChart.Data<String, Double> data = new XYChart.Data<>(s, x);
             data.setNode(
-                new HoveredThresholdNode(x)
+                    new HoveredThresholdNode(x)
             );
-            if(x!=0)
+            if (x != 0) {
                 series.getData().add(data);
+            }
         }
         return series;
     }
+
     private void setOmzetPenjualan(List<Keuangan> listKeuangan) throws Exception {
         omzetPenjualanChart.getData().clear();
         periodeOmzetAxis.getCategories().clear();
-        for(Keuangan k : listKeuangan){
-            if(periodeCombo.getSelectionModel().getSelectedItem().equals("This Month")){
-                if(!periodeOmzetAxis.getCategories().contains(new SimpleDateFormat("dd MMM yyyy").format(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(k.getTglKeuangan()))))
+        for (Keuangan k : listKeuangan) {
+            if (periodeCombo.getSelectionModel().getSelectedItem().equals("This Month")) {
+                if (!periodeOmzetAxis.getCategories().contains(new SimpleDateFormat("dd MMM yyyy").format(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(k.getTglKeuangan())))) {
                     periodeOmzetAxis.getCategories().add(new SimpleDateFormat("dd MMM yyyy").format(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(k.getTglKeuangan())));
-            }else{
-                if(!periodeOmzetAxis.getCategories().contains(new SimpleDateFormat("MMM yyyy").format(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(k.getTglKeuangan()))))
+                }
+            } else {
+                if (!periodeOmzetAxis.getCategories().contains(new SimpleDateFormat("MMM yyyy").format(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(k.getTglKeuangan())))) {
                     periodeOmzetAxis.getCategories().add(new SimpleDateFormat("MMM yyyy").format(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(k.getTglKeuangan())));
+                }
             }
         }
 
         ObservableList<XYChart.Series<String, Double>> dataStorePerformance = FXCollections.observableArrayList();
         XYChart.Series series1 = getXYChartSeriesStore(periodeOmzetAxis, listKeuangan, "Penjualan");
-        if(!series1.getData().isEmpty())
+        if (!series1.getData().isEmpty()) {
             dataStorePerformance.add(series1);
+        }
 
         XYChart.Series series2 = getXYChartSeriesStore(periodeOmzetAxis, listKeuangan, "Penjualan Coil");
-        if(!series2.getData().isEmpty())
+        if (!series2.getData().isEmpty()) {
             dataStorePerformance.add(series2);
-        
+        }
+
         omzetPenjualanChart.setData(dataStorePerformance);
     }
+
     class HoveredThresholdNode extends StackPane {
-        
+
         HoveredThresholdNode(double value) {
             setPrefSize(15, 15);
             final Label label = createDataThresholdLabel(value);
@@ -516,6 +561,7 @@ public class DashboardController {
                 setCursor(Cursor.CROSSHAIR);
             });
         }
+
         private Label createDataThresholdLabel(double value) {
             final Label label = new Label(df.format(value));
             label.getStyleClass().addAll("default-color0", "chart-line-symbol", "chart-series-line");
@@ -524,70 +570,92 @@ public class DashboardController {
             return label;
         }
     }
-    private void setSalesPerformance(List<PenjualanBarangHead> listPenjualan, List<PenjualanBahanHead> listPenjualanCoil) throws Exception{
+
+    private void setSalesPerformance(List<PenjualanBarangHead> listPenjualan, List<PenjualanBahanHead> listPenjualanCoil) throws Exception {
         salesPerformanceChart.getData().clear();
         salesAxis.getCategories().clear();
-        for(PenjualanBarangHead p : listPenjualan){
-            if(!salesAxis.getCategories().contains(p.getSales().getNama())){
+        for (PenjualanBarangHead p : listPenjualan) {
+            if (!salesAxis.getCategories().contains(p.getSales().getNama())) {
                 salesAxis.getCategories().add(p.getSales().getNama());
             }
         }
-        for(PenjualanBahanHead p : listPenjualanCoil){
-            if(!salesAxis.getCategories().contains(p.getSales().getNama()))
+        for (PenjualanBahanHead p : listPenjualanCoil) {
+            if (!salesAxis.getCategories().contains(p.getSales().getNama())) {
                 salesAxis.getCategories().add(p.getSales().getNama());
+            }
         }
         XYChart.Series series1 = new XYChart.Series<>();
-        series1.setName("Penjualan");  
-        for(String s : salesAxis.getCategories()){
+        series1.setName("Penjualan");
+        for (String s : salesAxis.getCategories()) {
             double totalPenjualan = 0;
-            for(PenjualanBarangHead p : listPenjualan){
-                if(s.equals(p.getSales().getNama()))
+            for (PenjualanBarangHead p : listPenjualan) {
+                if (s.equals(p.getSales().getNama())) {
                     totalPenjualan = totalPenjualan + p.getTotalPenjualan();
+                }
             }
             XYChart.Data<String, Double> data = new XYChart.Data<>(s, totalPenjualan);
             data.setNode(
-                new HoveredThresholdNode(totalPenjualan)
+                    new HoveredThresholdNode(totalPenjualan)
             );
-            if(totalPenjualan!=0)
+            if (totalPenjualan != 0) {
                 series1.getData().add(data);
+            }
         }
-        if(!series1.getData().isEmpty())
+        if (!series1.getData().isEmpty()) {
             salesPerformanceChart.getData().add(series1);
-        
+        }
+
         XYChart.Series series2 = new XYChart.Series<>();
-        series2.setName("Penjualan Coil");  
-        for(String s : salesAxis.getCategories()){
+        series2.setName("Penjualan Coil");
+        for (String s : salesAxis.getCategories()) {
             double totalPenjualan = 0;
-            for(PenjualanBahanHead p : listPenjualanCoil){
-                if(s.equals(p.getSales().getNama()))
+            for (PenjualanBahanHead p : listPenjualanCoil) {
+                if (s.equals(p.getSales().getNama())) {
                     totalPenjualan = totalPenjualan + p.getTotalPenjualan();
+                }
             }
             XYChart.Data<String, Double> data = new XYChart.Data<>(s, totalPenjualan);
             data.setNode(
-                new HoveredThresholdNode(totalPenjualan)
+                    new HoveredThresholdNode(totalPenjualan)
             );
-            if(totalPenjualan!=0)
+            if (totalPenjualan != 0) {
                 series2.getData().add(data);
+            }
         }
-        if(!series2.getData().isEmpty())
+        if (!series2.getData().isEmpty()) {
             salesPerformanceChart.getData().add(series2);
+        }
     }
-    
-    @FXML private RadioButton qtyBestSellingItemsRadio;
-    @FXML private RadioButton beratBestSellingItemsRadio;
-    @FXML private RadioButton jumlahRpBestSellingItemsRadio;
-    @FXML private TableView<BestSellingItems> bestSellingItemsTable;
-    @FXML private TableColumn<BestSellingItems, String> kodeBarangBestSellingItemsColumn;
-    @FXML private TableColumn<BestSellingItems, Number> qtyBestSellingItemsColumn;
-    @FXML private TableColumn<BestSellingItems, Number> beratBestSellingItemsColumn;
-    @FXML private TableColumn<BestSellingItems, Number> jumlahRpBestSellingItemsColumn;
-    @FXML private TableColumn<BestSellingItems, Number> persenQtyBestSellingItemsColumn;
-    @FXML private TableColumn<BestSellingItems, Number> persenBeratBestSellingItemsColumn;
-    @FXML private TableColumn<BestSellingItems, Number> persenJumlahRpBestSellingItemsColumn;
-    @FXML private Label totalBestSellingItemsLabel;
+
+    @FXML
+    private RadioButton qtyBestSellingItemsRadio;
+    @FXML
+    private RadioButton beratBestSellingItemsRadio;
+    @FXML
+    private RadioButton jumlahRpBestSellingItemsRadio;
+    @FXML
+    private TableView<BestSellingItems> bestSellingItemsTable;
+    @FXML
+    private TableColumn<BestSellingItems, String> kodeBarangBestSellingItemsColumn;
+    @FXML
+    private TableColumn<BestSellingItems, Number> qtyBestSellingItemsColumn;
+    @FXML
+    private TableColumn<BestSellingItems, Number> beratBestSellingItemsColumn;
+    @FXML
+    private TableColumn<BestSellingItems, Number> jumlahRpBestSellingItemsColumn;
+    @FXML
+    private TableColumn<BestSellingItems, Number> persenQtyBestSellingItemsColumn;
+    @FXML
+    private TableColumn<BestSellingItems, Number> persenBeratBestSellingItemsColumn;
+    @FXML
+    private TableColumn<BestSellingItems, Number> persenJumlahRpBestSellingItemsColumn;
+    @FXML
+    private Label totalBestSellingItemsLabel;
     private ObservableList<BestSellingItems> listBestSellingItems = FXCollections.observableArrayList();
-    @FXML private void chooseBestSellingItems(){
-        if(qtyBestSellingItemsRadio.isSelected()){
+
+    @FXML
+    private void chooseBestSellingItems() {
+        if (qtyBestSellingItemsRadio.isSelected()) {
             qtyBestSellingItemsColumn.setVisible(true);
             beratBestSellingItemsColumn.setVisible(false);
             jumlahRpBestSellingItemsColumn.setVisible(false);
@@ -596,11 +664,11 @@ public class DashboardController {
             persenJumlahRpBestSellingItemsColumn.setVisible(false);
             listBestSellingItems.sort(Comparator.comparingDouble(BestSellingItems::getQty).reversed());
             double total = 0;
-            for(BestSellingItems b : listBestSellingItems){
+            for (BestSellingItems b : listBestSellingItems) {
                 total = total + b.getQty();
             }
             totalBestSellingItemsLabel.setText(df.format(total));
-        }else if(beratBestSellingItemsRadio.isSelected()){
+        } else if (beratBestSellingItemsRadio.isSelected()) {
             qtyBestSellingItemsColumn.setVisible(false);
             beratBestSellingItemsColumn.setVisible(true);
             jumlahRpBestSellingItemsColumn.setVisible(false);
@@ -609,11 +677,11 @@ public class DashboardController {
             persenJumlahRpBestSellingItemsColumn.setVisible(false);
             listBestSellingItems.sort(Comparator.comparingDouble(BestSellingItems::getBerat).reversed());
             double total = 0;
-            for(BestSellingItems b : listBestSellingItems){
+            for (BestSellingItems b : listBestSellingItems) {
                 total = total + b.getBerat();
             }
             totalBestSellingItemsLabel.setText(df.format(total));
-        }else if(jumlahRpBestSellingItemsRadio.isSelected()){
+        } else if (jumlahRpBestSellingItemsRadio.isSelected()) {
             qtyBestSellingItemsColumn.setVisible(false);
             beratBestSellingItemsColumn.setVisible(false);
             jumlahRpBestSellingItemsColumn.setVisible(true);
@@ -622,28 +690,42 @@ public class DashboardController {
             persenJumlahRpBestSellingItemsColumn.setVisible(true);
             listBestSellingItems.sort(Comparator.comparingDouble(BestSellingItems::getJumlahRp).reversed());
             double total = 0;
-            for(BestSellingItems b : listBestSellingItems){
+            for (BestSellingItems b : listBestSellingItems) {
                 total = total + b.getJumlahRp();
             }
             totalBestSellingItemsLabel.setText(df.format(total));
         }
     }
-    
-    @FXML private RadioButton qtyPendingItemsRadio;
-    @FXML private RadioButton beratPendingItemsRadio;
-    @FXML private RadioButton jumlahRpPendingItemsRadio;
-    @FXML private TableView<PendingItems> pendingItemsTable;
-    @FXML private TableColumn<PendingItems, String> kodeBarangPendingItemsColumn;
-    @FXML private TableColumn<PendingItems, Number> qtyPendingItemsColumn;
-    @FXML private TableColumn<PendingItems, Number> beratPendingItemsColumn;
-    @FXML private TableColumn<PendingItems, Number> jumlahRpPendingItemsColumn;
-    @FXML private TableColumn<PendingItems, Number> persenQtyPendingItemsColumn;
-    @FXML private TableColumn<PendingItems, Number> persenBeratPendingItemsColumn;
-    @FXML private TableColumn<PendingItems, Number> persenJumlahRpPendingItemsColumn;
-    @FXML private Label totalPendingItemsLabel;
+
+    @FXML
+    private RadioButton qtyPendingItemsRadio;
+    @FXML
+    private RadioButton beratPendingItemsRadio;
+    @FXML
+    private RadioButton jumlahRpPendingItemsRadio;
+    @FXML
+    private TableView<PendingItems> pendingItemsTable;
+    @FXML
+    private TableColumn<PendingItems, String> kodeBarangPendingItemsColumn;
+    @FXML
+    private TableColumn<PendingItems, Number> qtyPendingItemsColumn;
+    @FXML
+    private TableColumn<PendingItems, Number> beratPendingItemsColumn;
+    @FXML
+    private TableColumn<PendingItems, Number> jumlahRpPendingItemsColumn;
+    @FXML
+    private TableColumn<PendingItems, Number> persenQtyPendingItemsColumn;
+    @FXML
+    private TableColumn<PendingItems, Number> persenBeratPendingItemsColumn;
+    @FXML
+    private TableColumn<PendingItems, Number> persenJumlahRpPendingItemsColumn;
+    @FXML
+    private Label totalPendingItemsLabel;
     private ObservableList<PendingItems> listPendingItems = FXCollections.observableArrayList();
-    @FXML private void choosePendingItems(){
-        if(qtyPendingItemsRadio.isSelected()){
+
+    @FXML
+    private void choosePendingItems() {
+        if (qtyPendingItemsRadio.isSelected()) {
             qtyPendingItemsColumn.setVisible(true);
             beratPendingItemsColumn.setVisible(false);
             jumlahRpPendingItemsColumn.setVisible(false);
@@ -652,11 +734,11 @@ public class DashboardController {
             persenJumlahRpPendingItemsColumn.setVisible(false);
             listPendingItems.sort(Comparator.comparingDouble(PendingItems::getQty).reversed());
             double total = 0;
-            for(PendingItems b : listPendingItems){
+            for (PendingItems b : listPendingItems) {
                 total = total + b.getQty();
             }
             totalPendingItemsLabel.setText(df.format(total));
-        }else if(beratPendingItemsRadio.isSelected()){
+        } else if (beratPendingItemsRadio.isSelected()) {
             qtyPendingItemsColumn.setVisible(false);
             beratPendingItemsColumn.setVisible(true);
             jumlahRpPendingItemsColumn.setVisible(false);
@@ -665,11 +747,11 @@ public class DashboardController {
             persenJumlahRpPendingItemsColumn.setVisible(false);
             listPendingItems.sort(Comparator.comparingDouble(PendingItems::getBerat).reversed());
             double total = 0;
-            for(PendingItems b : listPendingItems){
+            for (PendingItems b : listPendingItems) {
                 total = total + b.getBerat();
             }
             totalPendingItemsLabel.setText(df.format(total));
-        }else if(jumlahRpPendingItemsRadio.isSelected()){
+        } else if (jumlahRpPendingItemsRadio.isSelected()) {
             qtyPendingItemsColumn.setVisible(false);
             beratPendingItemsColumn.setVisible(false);
             jumlahRpPendingItemsColumn.setVisible(true);
@@ -678,7 +760,7 @@ public class DashboardController {
             persenJumlahRpPendingItemsColumn.setVisible(true);
             listPendingItems.sort(Comparator.comparingDouble(PendingItems::getJumlahRp).reversed());
             double total = 0;
-            for(PendingItems b : listPendingItems){
+            for (PendingItems b : listPendingItems) {
                 total = total + b.getJumlahRp();
             }
             totalPendingItemsLabel.setText(df.format(total));

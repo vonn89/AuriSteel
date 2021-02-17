@@ -41,7 +41,6 @@ import javafx.util.Duration;
  */
 public class MainAppController {
 
-    
     @FXML public VBox vbox;
     @FXML private Accordion accordion;
     @FXML private Label title;
@@ -76,6 +75,7 @@ public class MainAppController {
     @FXML private TitledPane barangPane;
     @FXML private VBox barangVbox;
     @FXML private MenuButton menuPermintaanBarang;
+    @FXML private MenuButton menuRencanaProduksiDanPengirimanBarang;
     @FXML private MenuButton menuProduksiBarang;
     @FXML private MenuButton menuPengirimanBarang;
     @FXML private MenuButton menuPengirimanCoil;
@@ -102,7 +102,9 @@ public class MainAppController {
     @FXML private TitledPane pengaturanPane;
     @FXML private VBox pengaturanVbox;
     @FXML private MenuButton menuDataUser;
+    @FXML private MenuButton menuDataUserApp;
     @FXML private MenuButton menuDataGudang;
+    @FXML private MenuButton menuDataMesin;
     @FXML private MenuButton menuKategoriBahan;
     @FXML private MenuButton menuKategoriHutang;
     @FXML private MenuButton menuKategoriPiutang;
@@ -167,6 +169,7 @@ public class MainAppController {
         menuPembelianBarang.setVisible(false);
 
         menuPermintaanBarang.setVisible(false);
+        menuRencanaProduksiDanPengirimanBarang.setVisible(true);
         menuProduksiBarang.setVisible(false);
         menuPengirimanBarang.setVisible(false);
         menuPengirimanCoil.setVisible(false);
@@ -187,6 +190,8 @@ public class MainAppController {
         menuLaporanManagerial.setVisible(false);
 
         menuDataUser.setVisible(false);
+        menuDataUserApp.setVisible(false);
+        menuDataMesin.setVisible(false);
         menuDataGudang.setVisible(false);
         menuKategoriBahan.setVisible(false);
         menuKategoriHutang.setVisible(false);
@@ -231,6 +236,8 @@ public class MainAppController {
                     menuPembelianBarang.setVisible(o.isStatus());
                 }else if(o.getJenis().equals("Permintaan Barang")){
                     menuPermintaanBarang.setVisible(o.isStatus());
+                }else if(o.getJenis().equals("Rencana Produksi Barang")){
+                    menuRencanaProduksiDanPengirimanBarang.setVisible(o.isStatus());
                 }else if(o.getJenis().equals("Produksi Barang")){
                     menuProduksiBarang.setVisible(o.isStatus());
                 }else if(o.getJenis().equals("Pengiriman Barang")){
@@ -267,6 +274,10 @@ public class MainAppController {
                     menuDataUser.setVisible(o.isStatus());
                 }else if(o.getJenis().equals("Data Gudang")){
                     menuDataGudang.setVisible(o.isStatus());
+                }else if(o.getJenis().equals("Data User App")){
+                    menuDataUserApp.setVisible(o.isStatus());
+                }else if(o.getJenis().equals("Data Mesin")){
+                    menuDataMesin.setVisible(o.isStatus());
                 }else if(o.getJenis().equals("Kategori Bahan")){
                     menuKategoriBahan.setVisible(o.isStatus());
                 }else if(o.getJenis().equals("Kategori Hutang")){
@@ -298,6 +309,7 @@ public class MainAppController {
                 accordion.getPanes().remove(pembelianPane);
             }
             if(menuPermintaanBarang.isVisible()==false &&
+                    menuRencanaProduksiDanPengirimanBarang.isVisible()==false &&
                     menuProduksiBarang.isVisible()==false &&
                     menuPengirimanBarang.isVisible()==false &&
                     menuPengirimanCoil.isVisible()==false &&
@@ -321,6 +333,8 @@ public class MainAppController {
                 accordion.getPanes().remove(laporanPane);
             }
             if(menuDataUser.isVisible()==false &&
+                    menuDataUserApp.isVisible()==false &&
+                    menuDataMesin.isVisible()==false &&
                     menuDataGudang.isVisible()==false &&
                     menuKategoriBahan.isVisible()==false &&
                     menuKategoriHutang.isVisible()==false &&
@@ -406,44 +420,52 @@ public class MainAppController {
         title.setText(x);
     }
     @FXML
-    public void menuLogout() {
+    private void menuLogout() {
         mainApp.showLoginScene();
     }
     @FXML
-    public void menuExit() {
+    private void menuExit() {
         System.exit(0);
     }
     @FXML
-    public void menushowUbahPassword() {
+    private void menushowUbahPassword() {
         mainApp.showUbahPassword();
     }
     @FXML
-    public void menuDashboard() {
+    private void menuDashboard() {
         mainApp.showDashboard();
     }
     @FXML
-    public void menuDataCustomer() {
+    private void menuDataCustomer() {
         mainApp.showDataCustomer();
     }
     @FXML
-    public void menuDataSupplier() {
+    private void menuDataSupplier() {
         mainApp.showDataSupplier();
     }
     @FXML
-    public void menuDataPegawai() {
+    private void menuDataPegawai() {
         mainApp.showDataPegawai();
     }
     @FXML
-    public void menuDataBahan() {
+    private void menuDataBahan() {
         mainApp.showDataBahan();
     }
     @FXML
-    public void menuDataBarang() {
+    private void menuDataBarang() {
         mainApp.showDataBarang();
     }
     @FXML
-    public void menuDataUser() {
+    private void menuDataUser() {
         mainApp.showDataUser();
+    }
+    @FXML
+    private void menuDataUserApp() {
+        mainApp.showDataUserApp();
+    }
+    @FXML
+    private void menuDataMesin(){
+        mainApp.showDataMesin();
     }
     @FXML
     private void menuDataGudang(){
@@ -471,165 +493,169 @@ public class MainAppController {
     }
 
     @FXML
-    public void menuPenjualan() {
+    private void menuPenjualan() {
         mainApp.showPenjualan();
     }
     @FXML
-    public void menuPenjualanCoil() {
+    private void menuPenjualanCoil() {
         mainApp.showPenjualanCoil();
     }
     @FXML
-    public void menuPemesanan() {
+    private void menuPemesanan() {
         mainApp.showPemesanan();
     }
     @FXML
-    public void menuPemesananCoil() {
+    private void menuPemesananCoil() {
         mainApp.showPemesananCoil();
     }
     @FXML
-    public void menuPemesananPembelian() {
+    private void menuPemesananPembelian() {
         mainApp.showPemesananPembelian();
     }
     @FXML
-    public void menuPembelian() {
+    private void menuPembelian() {
         mainApp.showPembelianBahan();
     }
     @FXML
-    public void menuPembelianBarang() {
+    private void menuPembelianBarang() {
         mainApp.showPembelianBarang();
     }
     @FXML
-    public void menuPermintaanBarang() {
+    private void menuPermintaanBarang() {
         mainApp.showPermintaanBarang();
     }
     @FXML
-    public void menuProduksiBarang() {
+    private void menuRencanaProduksiBarang() {
+        mainApp.showRencanaProduksiBarang();
+    }
+    @FXML
+    private void menuProduksiBarang() {
         mainApp.showProduksiBarang();
     }
     @FXML
-    public void menuPengirimanBarang() {
+    private void menuPengirimanBarang() {
         mainApp.showPengirimanBarang();
     }
     @FXML
-    public void menuPengirimanCoil() {
+    private void menuPengirimanCoil() {
         mainApp.showPengirimanCoil();
     }
     @FXML
-    public void menuPenerimaanBahan() {
+    private void menuPenerimaanBahan() {
         mainApp.showPenerimaanBahan();
     }
     @FXML
-    public void menuPindahBarang() {
+    private void menuPindahBarang() {
         mainApp.showPindahBarang();
     }
     @FXML
-    public void menuPindahBahan() {
+    private void menuPindahBahan() {
         mainApp.showPindahBahan();
     }
     @FXML
-    public void menuKeuangan() {
+    private void menuKeuangan() {
         mainApp.showKeuangan();
     }
     @FXML
-    public void menuHutang() {
+    private void menuHutang() {
         mainApp.showHutang();
     }
     @FXML
-    public void menuPiutang() {
+    private void menuPiutang() {
         mainApp.showPiutang();
     }
     @FXML
-    public void menuModal() {
+    private void menuModal() {
         mainApp.showModal();
     }
     @FXML
-    public void menuAsetTetap() {
+    private void menuAsetTetap() {
         mainApp.showAsetTetap();
     }
     @FXML
-    public void menuLaporanBarang() {
+    private void menuLaporanBarang() {
         mainApp.showLaporanBarang();
     }
     @FXML
-    public void menuLaporanBahan() {
+    private void menuLaporanBahan() {
         mainApp.showLaporanBahan();
     }
     @FXML
-    public void menuLaporanProduksiBarang() {
+    private void menuLaporanProduksiBarang() {
         mainApp.showLaporanProduksiBarang();
     }
     @FXML
-    public void menuLaporanBarangDiproduksi() {
+    private void menuLaporanBarangDiproduksi() {
         mainApp.showLaporanBarangDiproduksi();
     }
     @FXML
-    public void menuLaporanPenyesuaianStokBahan() {
+    private void menuLaporanPenyesuaianStokBahan() {
         mainApp.showLaporanPenyesuaianStokBahan();
     }
     @FXML
-    public void menuLaporanPenyesuaianStokBarang() {
+    private void menuLaporanPenyesuaianStokBarang() {
         mainApp.showLaporanPenyesuaianStokBarang();
     }
 
     @FXML
-    public void menuLaporanPenjualan() {
+    private void menuLaporanPenjualan() {
         mainApp.showLaporanPenjualan();
     }
     @FXML
-    public void menuLaporanBarangTerjual() {
+    private void menuLaporanBarangTerjual() {
         mainApp.showLaporanBarangTerjual();
     }
     @FXML
-    public void menuLaporanPenjualanCoil() {
+    private void menuLaporanPenjualanCoil() {
         mainApp.showLaporanPenjualanCoil();
     }
     @FXML
-    public void menuLaporanCoilTerjual() {
+    private void menuLaporanCoilTerjual() {
         mainApp.showLaporanCoilTerjual();
     }
 
 
 
     @FXML
-    public void menuLaporanPembelian() {
+    private void menuLaporanPembelian() {
         mainApp.showLaporanPembelian();
     }
     @FXML
-    public void menuLaporanBahanDibeli() {
+    private void menuLaporanBahanDibeli() {
         mainApp.showLaporanBahanDibeli();
     }
 
     @FXML
-    public void menuLaporanKeuangan() {
+    private void menuLaporanKeuangan() {
         mainApp.showLaporanKeuangan();
     }
 
     @FXML
-    public void menuLaporanHutang() {
+    private void menuLaporanHutang() {
         mainApp.showLaporanHutang();
     }
 
     @FXML
-    public void menuLaporanPiutang() {
+    private void menuLaporanPiutang() {
         mainApp.showLaporanPiutang();
     }
 
     @FXML
-    public void menuLaporanUntungRugiPerpetual() {
+    private void menuLaporanUntungRugiPerpetual() {
         mainApp.showLaporanUntungRugi();
     }
     @FXML
-    public void menuLaporanUntungRugiPeriode() {
+    private void menuLaporanUntungRugiPeriode() {
         mainApp.showLaporanUntungRugiPeriode();
     }
 
 
     @FXML
-    public void menuLaporanNeracaPerpetual() {
+    private void menuLaporanNeracaPerpetual() {
         mainApp.showLaporanNeraca();
     }
     @FXML
-    public void menuLaporanUntungRugiSummary() {
+    private void menuLaporanUntungRugiSummary() {
         mainApp.showLaporanUntungRugiSummary();
     }
 }

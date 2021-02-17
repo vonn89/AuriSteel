@@ -466,7 +466,9 @@ public class DataUserController  {
             ));
             root.getChildren().add(createTreeItem("Pengaturan Umum",
                 Arrays.asList(                    
-                    "Data User",        
+                    "Data User",          
+                    "Data User App",  
+                    "Data Mesin",
                     "Data Gudang",
                     "Print Laporan",
                     "Export Excel",

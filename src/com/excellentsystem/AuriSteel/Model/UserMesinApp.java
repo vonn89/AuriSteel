@@ -5,6 +5,8 @@
  */
 package com.excellentsystem.AuriSteel.Model;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -16,7 +18,19 @@ public class UserMesinApp {
 
     private final StringProperty kodeUser = new SimpleStringProperty();
     private final StringProperty kodeMesin = new SimpleStringProperty();
-    private final StringProperty status = new SimpleStringProperty();
+    private final BooleanProperty status = new SimpleBooleanProperty();
+
+    public boolean isStatus() {
+        return status.get();
+    }
+
+    public void setStatus(boolean value) {
+        status.set(value);
+    }
+
+    public BooleanProperty statusProperty() {
+        return status;
+    }
 
     public String getKodeMesin() {
         return kodeMesin.get();
@@ -30,17 +44,6 @@ public class UserMesinApp {
         return kodeMesin;
     }
 
-    public String getStatus() {
-        return status.get();
-    }
-
-    public void setStatus(String value) {
-        status.set(value);
-    }
-
-    public StringProperty statusProperty() {
-        return status;
-    }
 
     public String getKodeUser() {
         return kodeUser.get();

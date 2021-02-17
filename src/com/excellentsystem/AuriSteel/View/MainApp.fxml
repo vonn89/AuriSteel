@@ -165,6 +165,11 @@
                                     <Insets left="50.0" />
                                  </padding>
                               </MenuButton>
+                              <MenuButton fx:id="menuRencanaProduksiDanPengirimanBarang" mnemonicParsing="false" onMouseClicked="#menuRencanaProduksiBarang" prefHeight="35.0" prefWidth="270.0" text="Rencana Produksi Barang">
+                                 <padding>
+                                    <Insets left="50.0" />
+                                 </padding>
+                              </MenuButton>
                               <MenuButton fx:id="menuProduksiBarang" mnemonicParsing="false" onMouseClicked="#menuProduksiBarang" prefHeight="35.0" prefWidth="270.0" text="Produksi Barang">
                                  <padding>
                                     <Insets left="50.0" />
@@ -323,6 +328,16 @@
                                  <VBox.margin>
                                     <Insets />
                                  </VBox.margin>
+                                 <padding>
+                                    <Insets left="50.0" />
+                                 </padding>
+                              </MenuButton>
+                              <MenuButton fx:id="menuDataUserApp" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onMouseClicked="#menuDataUserApp" prefHeight="35.0" prefWidth="270.0" text="Data User App">
+                                 <padding>
+                                    <Insets left="50.0" />
+                                 </padding>
+                              </MenuButton>
+                              <MenuButton fx:id="menuDataMesin" layoutX="10.0" layoutY="255.0" mnemonicParsing="false" onMouseClicked="#menuDataMesin" prefHeight="35.0" prefWidth="270.0" text="Data Mesin">
                                  <padding>
                                     <Insets left="50.0" />
                                  </padding>
