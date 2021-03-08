@@ -34,9 +34,12 @@ import java.text.ParseException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 import javafx.scene.control.Control;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
@@ -69,6 +72,7 @@ import org.apache.poi.ss.usermodel.Workbook;
  * @author yunaz
  */
 public class Function {
+    public static List<String> hari = new ArrayList<>(Arrays. asList("Senin", "Selasa", "Rabu","Kamis","Jumat","Sabtu"));
     public static double pembulatan(double angka){
         return (double) Math.round(angka*100)/100;
     }

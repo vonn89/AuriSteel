@@ -165,7 +165,7 @@
                                     <Insets left="50.0" />
                                  </padding>
                               </MenuButton>
-                              <MenuButton fx:id="menuRencanaProduksiDanPengirimanBarang" mnemonicParsing="false" onMouseClicked="#menuRencanaProduksiBarang" prefHeight="35.0" prefWidth="270.0" text="Rencana Produksi Barang">
+                              <MenuButton fx:id="menuRencanaProduksiDanPengirimanBarang" mnemonicParsing="false" onMouseClicked="#menuRencanaProduksiBarang" prefHeight="35.0" prefWidth="270.0" text="Rencana Produksi">
                                  <padding>
                                     <Insets left="50.0" />
                                  </padding>

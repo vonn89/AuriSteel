@@ -140,7 +140,7 @@ and open the template in the editor.
     -fx-opacity: 0.6;
 }
 .toggle-button:hover {
-    -fx-background-color: derive(seccolor2,50%);
+    -fx-background-color: derive(seccolor1,50%);
     -fx-opacity: 1;
 }
 .toggle-button:pressed, .toggle-button:default:hover:pressed {
@@ -149,7 +149,7 @@ and open the template in the editor.
     -fx-opacity: 1;
 }
 .toggle-button:selected {
-    -fx-background-color: seccolor1;
+    -fx-background-color: seccolor2;
     -fx-opacity: 1;
 }
 .toggle-button:disabled, .toggle-button:default:disabled {

@@ -6,9 +6,7 @@
 package com.excellentsystem.AuriSteel.Model;
 
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -20,7 +18,6 @@ public class RencanaProduksi {
 
     private final StringProperty noRencana = new SimpleStringProperty();
     private final StringProperty hari = new SimpleStringProperty();
-    private final IntegerProperty noKirim = new SimpleIntegerProperty();
     private final StringProperty tujuanKirim = new SimpleStringProperty();
     private final StringProperty noPemesanan = new SimpleStringProperty();
     private final StringProperty customer = new SimpleStringProperty();
@@ -30,7 +27,24 @@ public class RencanaProduksi {
     private final StringProperty sales = new SimpleStringProperty();
     private final DoubleProperty qty = new SimpleDoubleProperty();
     private final DoubleProperty tonase = new SimpleDoubleProperty();
+    private final DoubleProperty produksi = new SimpleDoubleProperty();
 
+    public double getProduksi() {
+        return produksi.get();
+    }
+
+    public void setProduksi(double value) {
+        produksi.set(value);
+    }
+
+    public DoubleProperty produksiProperty() {
+        return produksi;
+    }
+
+    
+    
+
+    
     public String getNoRencana() {
         return noRencana.get();
     }
@@ -55,17 +69,6 @@ public class RencanaProduksi {
         return tujuanKirim;
     }
 
-    public int getNoKirim() {
-        return noKirim.get();
-    }
-
-    public void setNoKirim(int value) {
-        noKirim.set(value);
-    }
-
-    public IntegerProperty noKirimProperty() {
-        return noKirim;
-    }
 
     public double getTonase() {
         return tonase.get();

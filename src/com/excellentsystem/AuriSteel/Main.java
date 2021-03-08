@@ -54,12 +54,12 @@ import com.excellentsystem.AuriSteel.View.PengirimanBarangController;
 import com.excellentsystem.AuriSteel.View.PengirimanCoilController;
 import com.excellentsystem.AuriSteel.View.PenjualanCoilController;
 import com.excellentsystem.AuriSteel.View.PenjualanController;
-import com.excellentsystem.AuriSteel.View.PerencanaanProduksiDanKirimController;
 import com.excellentsystem.AuriSteel.View.PermintaanBarangController;
 import com.excellentsystem.AuriSteel.View.PindahBahanController;
 import com.excellentsystem.AuriSteel.View.PindahBarangController;
 import com.excellentsystem.AuriSteel.View.PiutangController;
 import com.excellentsystem.AuriSteel.View.ProduksiBarangController;
+import com.excellentsystem.AuriSteel.View.RencanaProduksiController;
 import com.excellentsystem.AuriSteel.View.Report.LaporanBahanController;
 import com.excellentsystem.AuriSteel.View.Report.LaporanBahanDibeliController;
 import com.excellentsystem.AuriSteel.View.Report.LaporanBarangController;
@@ -137,7 +137,7 @@ public class Main extends Application {
     public static Sistem sistem;
     private double x = 0;
     private double y = 0;
-    public final String version = "2.4.9";
+    public final String version = "2.5.2";
     public static SecretKeySpec key;
 
     @Override
@@ -456,11 +456,11 @@ public class Main extends Application {
         return controller;
     }
     
-    public PerencanaanProduksiDanKirimController showRencanaProduksiBarang() {
-        FXMLLoader loader = changeStage("View/PerencanaanProduksiDanKirim.fxml");
-        PerencanaanProduksiDanKirimController controller = loader.getController();
+    public RencanaProduksiController showRencanaProduksiBarang() {
+        FXMLLoader loader = changeStage("View/RencanaProduksi.fxml");
+        RencanaProduksiController controller = loader.getController();
         controller.setMainApp(this);
-        setTitle("Rencana Produksi Barang");
+        setTitle("Rencana Produksi");
         return controller;
     }
 

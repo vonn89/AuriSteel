@@ -69,7 +69,8 @@
                   <TreeTableColumn fx:id="namaSalesColumn" prefWidth="75.0" text="Sales" visible="false" />
                   <TreeTableColumn fx:id="kodeBarangColumn" prefWidth="75.0" text="Kode Barang" visible="false" />
                   <TreeTableColumn fx:id="namaBarangColumn" prefWidth="75.0" text="Nama Barang" />
-                  <TreeTableColumn fx:id="satuanColumn" prefWidth="75.0" text="Satuan" />
+                  <TreeTableColumn fx:id="keteranganColumn" prefWidth="75.0" text="Keterangan" />
+                  <TreeTableColumn fx:id="satuanColumn" prefWidth="75.0" text="Satuan" visible="false" />
                   <TreeTableColumn fx:id="qtyColumn" prefWidth="75.0" text="Qty" />
                   <TreeTableColumn fx:id="nilaiColumn" prefWidth="75.0" text="Nilai" />
                   <TreeTableColumn fx:id="totalNilaiColumn" prefWidth="75.0" text="Total Nilai" />

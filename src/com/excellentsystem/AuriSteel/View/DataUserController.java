@@ -363,6 +363,15 @@ public class DataUserController  {
                     "Print SPK"
                 )
             ));
+            root.getChildren().add(createTreeItem("Rencana Produksi",
+                Arrays.asList(                    
+                    "Add Rencana Produksi", 
+                    "Edit Rencana Produksi", 
+                    "Delete Rencana Produksi", 
+                    "Reset Rencana Produksi", 
+                    "Print Rencana Produksi"
+                )
+            ));
             root.getChildren().add(createTreeItem("Produksi Barang",
                 Arrays.asList(          
                     "Add New Produksi",

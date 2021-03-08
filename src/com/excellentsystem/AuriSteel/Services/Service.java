@@ -3483,7 +3483,6 @@ public class Service {
             for (ProduksiDetailBarang d : groupByBarang) {
                 status = insertStokAndLogBarang(con, date, d.getKodeBarang(), produksi.getKodeGudang(), "Produksi", produksi.getKodeProduksi(),
                         d.getQty(), d.getNilai(), 0, 0, status);
-
             }
 
             if (status.equals("true")) {
@@ -4567,10 +4566,10 @@ public class Service {
                 p.setTglPenyesuaian(tglSql.format(date));
 
                 double qty = p.getQty();
-                double nilai = 0;
-                if (logBarang.getStokAkhir() != 0) {
-                    nilai = logBarang.getNilaiAkhir() / logBarang.getStokAkhir() * p.getQty();
-                }
+                double nilai = p.getNilai();
+//                if (logBarang.getStokAkhir() != 0) {
+//                    nilai = logBarang.getNilaiAkhir() / logBarang.getStokAkhir() * p.getQty();
+//                }
 
                 if (qty < 0) {
                     status = insertStokAndLogBarang(con, date, p.getKodeBarang(), p.getKodeGudang(),

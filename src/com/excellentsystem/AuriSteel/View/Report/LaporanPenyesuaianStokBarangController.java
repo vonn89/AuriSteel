@@ -263,7 +263,7 @@ public class LaporanPenyesuaianStokBarangController {
     }
     private void showDetailPenyesuaianStok(PenyesuaianStokBarang p ){
         Stage child = new Stage();
-        FXMLLoader loader = mainApp.showDialog(mainApp.MainStage, child ,"View/Dialog/Child/PenyesuaianStok.fxml");
+        FXMLLoader loader = mainApp.showDialog(mainApp.MainStage, child ,"View/Dialog/PenyesuaianStok.fxml");
         PenyesuaianStokController controller = loader.getController();
         controller.setMainApp(mainApp, mainApp.MainStage, child);
         controller.setPenyesuaianStokBarang(p.getNoPenyesuaian());

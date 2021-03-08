@@ -373,7 +373,7 @@ public class LaporanBarangController {
         FXMLLoader loader = mainApp.showDialog(mainApp.MainStage, stage, "View/Dialog/PenyesuaianStok.fxml");
         PenyesuaianStokController x = loader.getController();
         x.setMainApp(mainApp, mainApp.MainStage, stage);
-        x.setBarang(s.getKodeBarang(), s.getKodeGudang());
+        x.setBarang(s);
         x.saveButton.setOnAction((event) -> {
             if (Double.parseDouble(x.qtyField.getText().replaceAll(",", "")) <= 0) {
                 mainApp.showMessage(Modality.NONE, "Warning", "Qty tidak boleh kosong");
@@ -385,14 +385,16 @@ public class LaporanBarangController {
                     public String call() throws Exception {
                         try (Connection con = Koneksi.getConnection()) {
                             double qty = -Double.parseDouble(x.qtyField.getText().replaceAll(",", ""));
+                            double nilai = -Double.parseDouble(x.nilaiField.getText().replaceAll(",", ""));
                             if (x.statusCombo.getSelectionModel().getSelectedItem().equals("Penambahan Stok")) {
                                 qty = Double.parseDouble(x.qtyField.getText().replaceAll(",", ""));
+                                nilai = Double.parseDouble(x.nilaiField.getText().replaceAll(",", ""));
                             }
                             PenyesuaianStokBarang p = new PenyesuaianStokBarang();
                             p.setKodeBarang(s.getKodeBarang());
                             p.setKodeGudang(s.getKodeGudang());
                             p.setQty(qty);
-                            p.setNilai(0);
+                            p.setNilai(nilai);
                             p.setCatatan(x.catatanField.getText());
                             p.setKodeUser(sistem.getUser().getKodeUser());
                             p.setStatus("true");

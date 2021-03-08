@@ -27,6 +27,7 @@ import com.excellentsystem.AuriSteel.Model.PindahBarangDetail;
 import com.excellentsystem.AuriSteel.Model.Piutang;
 import com.excellentsystem.AuriSteel.Model.ProduksiDetailBarang;
 import com.excellentsystem.AuriSteel.Model.ProduksiHead;
+import com.excellentsystem.AuriSteel.Model.RencanaProduksi;
 import com.excellentsystem.AuriSteel.Model.StokBahan;
 import com.excellentsystem.AuriSteel.Model.StokBarang;
 import java.util.Collections;
@@ -175,6 +176,22 @@ public class Report {
     public void printSPK(List<PemesananBarangDetail> pemesanan) throws Exception {
         JasperDesign jasperDesign = JRXmlLoader.load(getClass().getResourceAsStream("SPK.jrxml"));
         JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(pemesanan);
+        JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, null, beanColDataSource);
+        JRViewerFx jrViewerFx = new JRViewerFx(jasperPrint);
+    }
+
+    public void printRencanaProduksi(List<RencanaProduksi> rencana) throws Exception {
+        JasperDesign jasperDesign = JRXmlLoader.load(getClass().getResourceAsStream("RencanaProduksi.jrxml"));
+        JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(rencana);
+        JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, null, beanColDataSource);
+        JRViewerFx jrViewerFx = new JRViewerFx(jasperPrint);
+    }
+
+    public void printDeliveryOrder(List<RencanaProduksi> rencana) throws Exception {
+        JasperDesign jasperDesign = JRXmlLoader.load(getClass().getResourceAsStream("DeliveryOrder.jrxml"));
+        JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(rencana);
         JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, null, beanColDataSource);
         JRViewerFx jrViewerFx = new JRViewerFx(jasperPrint);

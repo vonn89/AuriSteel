@@ -76,6 +76,8 @@ public class PermintaanBarangController  {
     @FXML private TableColumn<PemesananBarangDetail, String> tglPemesananColumn;
     @FXML private TableColumn<PemesananBarangDetail, String> namaCustomerColumn;
     @FXML private TableColumn<PemesananBarangDetail, String> alamatCustomerColumn;
+    @FXML private TableColumn<PemesananBarangDetail, String> namaInvoiceColumn;
+    @FXML private TableColumn<PemesananBarangDetail, String> alamatInvoiceColumn;
     @FXML private TableColumn<PemesananBarangDetail, String> kodeBarangColumn;
     @FXML private TableColumn<PemesananBarangDetail, String> namaBarangColumn;
     @FXML private TableColumn<PemesananBarangDetail, String> keteranganColumn;
@@ -116,6 +118,12 @@ public class PermintaanBarangController  {
         
         alamatCustomerColumn.setCellValueFactory(cellData -> cellData.getValue().getPemesananBarangHead().getCustomer().alamatProperty());
         alamatCustomerColumn.setCellFactory(col -> Function.getWrapTableCell(alamatCustomerColumn));
+        
+        namaInvoiceColumn.setCellValueFactory(cellData -> cellData.getValue().getPemesananBarangHead().getCustomerInvoice().namaProperty());
+        namaInvoiceColumn.setCellFactory(col -> Function.getWrapTableCell(namaInvoiceColumn));
+        
+        alamatInvoiceColumn.setCellValueFactory(cellData -> cellData.getValue().getPemesananBarangHead().getCustomerInvoice().alamatProperty());
+        alamatInvoiceColumn.setCellFactory(col -> Function.getWrapTableCell(alamatInvoiceColumn));
         
         kodeBarangColumn.setCellValueFactory(cellData -> cellData.getValue().kodeBarangProperty());
         kodeBarangColumn.setCellFactory(col -> Function.getWrapTableCell(kodeBarangColumn));
@@ -278,6 +286,8 @@ public class PermintaanBarangController  {
                         for(Customer c: allCustomer){
                             if(d.getPemesananBarangHead().getKodeCustomer().equals(c.getKodeCustomer()))
                                 d.getPemesananBarangHead().setCustomer(c);
+                            if(d.getPemesananBarangHead().getKodeCustomerInvoice().equals(c.getKodeCustomer()))
+                                d.getPemesananBarangHead().setCustomerInvoice(c);
                         }
                         for(Pegawai p : allPegawai){
                             if(d.getPemesananBarangHead().getKodeSales().equals(p.getKodePegawai()))

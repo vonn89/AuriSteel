@@ -169,7 +169,7 @@ public class MainAppController {
         menuPembelianBarang.setVisible(false);
 
         menuPermintaanBarang.setVisible(false);
-        menuRencanaProduksiDanPengirimanBarang.setVisible(true);
+        menuRencanaProduksiDanPengirimanBarang.setVisible(false);
         menuProduksiBarang.setVisible(false);
         menuPengirimanBarang.setVisible(false);
         menuPengirimanCoil.setVisible(false);
@@ -236,7 +236,7 @@ public class MainAppController {
                     menuPembelianBarang.setVisible(o.isStatus());
                 }else if(o.getJenis().equals("Permintaan Barang")){
                     menuPermintaanBarang.setVisible(o.isStatus());
-                }else if(o.getJenis().equals("Rencana Produksi Barang")){
+                }else if(o.getJenis().equals("Rencana Produksi")){
                     menuRencanaProduksiDanPengirimanBarang.setVisible(o.isStatus());
                 }else if(o.getJenis().equals("Produksi Barang")){
                     menuProduksiBarang.setVisible(o.isStatus());

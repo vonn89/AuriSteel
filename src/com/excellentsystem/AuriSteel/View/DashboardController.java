@@ -320,8 +320,10 @@ public class DashboardController {
                     }
                     dashboard.setListBestSellingItems(listBestSellingItems);
 
+//                    List<PemesananBarangDetail> listPemesananDetail = PemesananBarangDetailDAO.getAllByDateAndStatus(con,
+//                            LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy")) + "-01-01", tglAkhir, "open");
                     List<PemesananBarangDetail> listPemesananDetail = PemesananBarangDetailDAO.getAllByDateAndStatus(con,
-                            LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy")) + "-01-01", tglAkhir, "open");
+                            "2000-01-01", tglAkhir, "open");
                     System.out.println("getPemesananDetail " + new Date());
                     List<PendingItems> listPendingItems = new ArrayList<>();
                     double totalQtyPendingItems = 0;
@@ -510,9 +512,10 @@ public class DashboardController {
             data.setNode(
                     new HoveredThresholdNode(x)
             );
-            if (x != 0) {
-                series.getData().add(data);
-            }
+//            if (x != 0) {
+//                series.getData().add(data);
+//            }
+            series.getData().add(data);
         }
         return series;
     }

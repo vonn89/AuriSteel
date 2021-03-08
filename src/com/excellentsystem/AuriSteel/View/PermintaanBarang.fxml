@@ -53,6 +53,8 @@
                 <TableColumn fx:id="tglPemesananColumn" prefWidth="75.0" text="Tgl Pemesanan" />
                   <TableColumn fx:id="namaCustomerColumn" prefWidth="75.0" text="Nama Customer" />
                   <TableColumn fx:id="alamatCustomerColumn" maxWidth="7000.0" prefWidth="75.0" text="Alamat Customer" />
+                  <TableColumn fx:id="namaInvoiceColumn" prefWidth="75.0" text="Nama Invoice" visible="false" />
+                  <TableColumn fx:id="alamatInvoiceColumn" maxWidth="7000.0" prefWidth="75.0" text="Alamat Invoice" visible="false" />
                   <TableColumn fx:id="kodeBarangColumn" prefWidth="75.0" text="Kode Barang" />
                   <TableColumn fx:id="namaBarangColumn" prefWidth="75.0" text="Nama Barang" visible="false" />
                   <TableColumn fx:id="satuanColumn" maxWidth="3000.0" prefWidth="75.0" text="Satuan" visible="false" />

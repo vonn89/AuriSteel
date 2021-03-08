@@ -80,6 +80,7 @@ public class LaporanBarangTerjualController  {
     @FXML private TreeTableColumn<PenjualanBarangDetail, String> namaSalesColumn;
     @FXML private TreeTableColumn<PenjualanBarangDetail, String> kodeBarangColumn;
     @FXML private TreeTableColumn<PenjualanBarangDetail, String> namaBarangColumn;
+    @FXML private TreeTableColumn<PenjualanBarangDetail, String> keteranganColumn;
     @FXML private TreeTableColumn<PenjualanBarangDetail, String> satuanColumn;
     @FXML private TreeTableColumn<PenjualanBarangDetail, Number> qtyColumn;
     @FXML private TreeTableColumn<PenjualanBarangDetail, Number> nilaiColumn;
@@ -128,6 +129,9 @@ public class LaporanBarangTerjualController  {
         
         namaBarangColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().namaBarangProperty());
         namaBarangColumn.setCellFactory(col -> Function.getWrapTreeTableCell(namaBarangColumn));
+        
+        keteranganColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().keteranganProperty());
+        keteranganColumn.setCellFactory(col -> Function.getWrapTreeTableCell(keteranganColumn));
         
         satuanColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().satuanProperty());
         satuanColumn.setCellFactory(col -> Function.getWrapTreeTableCell(satuanColumn));
@@ -472,7 +476,7 @@ public class LaporanBarangTerjualController  {
                 
                 Sheet sheet = workbook.createSheet("Laporan Barang Terjual");
                 int rc = 0;
-                int c = 13;
+                int c = 14;
                 createRow(workbook, sheet, rc, c, "Bold");
                 sheet.getRow(rc).getCell(0).setCellValue("Tanggal : "+
                         tgl.format(tglBarang.parse(tglPenjualanMulaiPicker.getValue().toString()))+"-"+
@@ -489,12 +493,13 @@ public class LaporanBarangTerjualController  {
                 sheet.getRow(rc).getCell(4).setCellValue("Sales"); 
                 sheet.getRow(rc).getCell(5).setCellValue("Kode Barang"); 
                 sheet.getRow(rc).getCell(6).setCellValue("Nama Barang"); 
-                sheet.getRow(rc).getCell(7).setCellValue("Satuan"); 
-                sheet.getRow(rc).getCell(8).setCellValue("Qty");
-                sheet.getRow(rc).getCell(9).setCellValue("Nilai");
-                sheet.getRow(rc).getCell(10).setCellValue("Total Nilai");
-                sheet.getRow(rc).getCell(11).setCellValue("Harga"); 
-                sheet.getRow(rc).getCell(12).setCellValue("Total Harga"); 
+                sheet.getRow(rc).getCell(7).setCellValue("Keterangan"); 
+                sheet.getRow(rc).getCell(8).setCellValue("Satuan"); 
+                sheet.getRow(rc).getCell(9).setCellValue("Qty");
+                sheet.getRow(rc).getCell(10).setCellValue("Nilai");
+                sheet.getRow(rc).getCell(11).setCellValue("Total Nilai");
+                sheet.getRow(rc).getCell(12).setCellValue("Harga"); 
+                sheet.getRow(rc).getCell(13).setCellValue("Total Harga"); 
                 rc++;
                 List<String> groupBy = new ArrayList<>();
                 for(PenjualanBarangDetail temp: filterData){
@@ -566,12 +571,13 @@ public class LaporanBarangTerjualController  {
                             sheet.getRow(rc).getCell(4).setCellValue(detail.getPenjualanBarangHead().getSales().getNama());
                             sheet.getRow(rc).getCell(5).setCellValue(detail.getKodeBarang());
                             sheet.getRow(rc).getCell(6).setCellValue(detail.getNamaBarang());
-                            sheet.getRow(rc).getCell(7).setCellValue(detail.getSatuan());
-                            sheet.getRow(rc).getCell(8).setCellValue(detail.getQty());
-                            sheet.getRow(rc).getCell(9).setCellValue(detail.getNilai());
-                            sheet.getRow(rc).getCell(10).setCellValue(detail.getNilai()*detail.getQty());
-                            sheet.getRow(rc).getCell(11).setCellValue(detail.getHargaJual());
-                            sheet.getRow(rc).getCell(12).setCellValue(detail.getTotal());
+                            sheet.getRow(rc).getCell(7).setCellValue(detail.getKeterangan());
+                            sheet.getRow(rc).getCell(8).setCellValue(detail.getSatuan());
+                            sheet.getRow(rc).getCell(9).setCellValue(detail.getQty());
+                            sheet.getRow(rc).getCell(10).setCellValue(detail.getNilai());
+                            sheet.getRow(rc).getCell(11).setCellValue(detail.getNilai()*detail.getQty());
+                            sheet.getRow(rc).getCell(12).setCellValue(detail.getHargaJual());
+                            sheet.getRow(rc).getCell(13).setCellValue(detail.getTotal());
                             rc++;
                             
                             totalQty = totalQty + detail.getQty();
@@ -581,11 +587,11 @@ public class LaporanBarangTerjualController  {
                     }
                     createRow(workbook, sheet, rc, c, "SubHeader");
                     sheet.getRow(rc).getCell(0).setCellValue("Total "+temp);
-                    sheet.getRow(rc).getCell(8).setCellValue(totalQty);
-                    sheet.getRow(rc).getCell(9).setCellValue(totalNilai/totalQty);
-                    sheet.getRow(rc).getCell(10).setCellValue(totalNilai);
-                    sheet.getRow(rc).getCell(11).setCellValue(totalHarga/totalQty);
-                    sheet.getRow(rc).getCell(12).setCellValue(totalHarga);
+                    sheet.getRow(rc).getCell(9).setCellValue(totalQty);
+                    sheet.getRow(rc).getCell(10).setCellValue(totalNilai/totalQty);
+                    sheet.getRow(rc).getCell(11).setCellValue(totalNilai);
+                    sheet.getRow(rc).getCell(12).setCellValue(totalHarga/totalQty);
+                    sheet.getRow(rc).getCell(13).setCellValue(totalHarga);
                     rc++;
                     grandtotalQty = grandtotalQty + totalQty;
                     grandtotalNilai = grandtotalNilai + totalNilai;
@@ -593,11 +599,11 @@ public class LaporanBarangTerjualController  {
                 }
                 createRow(workbook, sheet, rc, c, "Header");
                 sheet.getRow(rc).getCell(0).setCellValue("Total");
-                sheet.getRow(rc).getCell(8).setCellValue(grandtotalQty);
-                sheet.getRow(rc).getCell(9).setCellValue(grandtotalNilai/grandtotalQty);
-                sheet.getRow(rc).getCell(10).setCellValue(grandtotalNilai);
-                sheet.getRow(rc).getCell(11).setCellValue(grandtotalHarga/grandtotalQty);
-                sheet.getRow(rc).getCell(12).setCellValue(grandtotalHarga);
+                sheet.getRow(rc).getCell(9).setCellValue(grandtotalQty);
+                sheet.getRow(rc).getCell(10).setCellValue(grandtotalNilai/grandtotalQty);
+                sheet.getRow(rc).getCell(11).setCellValue(grandtotalNilai);
+                sheet.getRow(rc).getCell(12).setCellValue(grandtotalHarga/grandtotalQty);
+                sheet.getRow(rc).getCell(13).setCellValue(grandtotalHarga);
                 rc++;
                 for(int i=0 ; i<c ; i++){ sheet.autoSizeColumn(i);}
                 try (FileOutputStream outputStream = new FileOutputStream(file)) {

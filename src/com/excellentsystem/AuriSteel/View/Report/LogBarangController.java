@@ -268,10 +268,10 @@ public class LogBarangController  {
     }
     private void showDetailPenyesuaianStok(LogBarang log){
         Stage child = new Stage();
-        FXMLLoader loader = mainApp.showDialog(stage, child ,"View/Dialog/Child/PenyesuaianStok.fxml");
+        FXMLLoader loader = mainApp.showDialog(stage, child ,"View/Dialog/PenyesuaianStok.fxml");
         PenyesuaianStokController controller = loader.getController();
         controller.setMainApp(mainApp, stage, child);
-        controller.setPenyesuaianStokBahan(log.getKeterangan());
+        controller.setPenyesuaianStokBarang(log.getKeterangan());
     }
     @FXML
     private void close(){

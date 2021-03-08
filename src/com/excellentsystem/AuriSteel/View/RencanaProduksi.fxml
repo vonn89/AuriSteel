@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.control.TreeTableColumn?>
+<?import javafx.scene.control.TreeTableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane id="AnchorPane" prefHeight="700.0" prefWidth="1024.0" styleClass="stage" stylesheets="@../Resource/MyTheme.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.excellentsystem.AuriSteel.View.RencanaProduksiController">
+    <children>
+      <GridPane layoutX="30.0" layoutY="78.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+        </rowConstraints>
+         <children>
+            <TabPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" tabClosingPolicy="UNAVAILABLE" tabMinHeight="30.0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+              <tabs>
+                <Tab text="Rencana Produksi &amp; Pengiriman">
+                  <content>
+                    <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" style="-fx-border-color: seccolor2; -fx-background-color: seccolor6;">
+                           <children>
+                              <HBox prefHeight="100.0" prefWidth="200.0" spacing="1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <VBox prefHeight="200.0" prefWidth="100.0" spacing="1.0" style="-fx-background-color: seccolor6;">
+                                       <children>
+                                          <ToggleButton fx:id="seninButton" mnemonicParsing="false" onAction="#filterData" prefHeight="40.0" prefWidth="200.0" selected="true" style="-fx-background-radius: 0;" text="Senin">
+                                             <toggleGroup>
+                                                <ToggleGroup fx:id="hari" />
+                                             </toggleGroup>
+                                          </ToggleButton>
+                                          <ToggleButton fx:id="selasaButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#filterData" prefHeight="40.0" prefWidth="200.0" style="-fx-background-radius: 0;" text="Selasa" toggleGroup="$hari" />
+                                          <ToggleButton fx:id="rabuButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#filterData" prefHeight="40.0" prefWidth="200.0" style="-fx-background-radius: 0;" text="Rabu" toggleGroup="$hari" />
+                                          <ToggleButton fx:id="kamisButton" layoutX="10.0" layoutY="27.0" mnemonicParsing="false" onAction="#filterData" prefHeight="40.0" prefWidth="200.0" style="-fx-background-radius: 0;" text="Kamis" toggleGroup="$hari" />
+                                          <ToggleButton fx:id="jumatButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#filterData" prefHeight="40.0" prefWidth="200.0" style="-fx-background-radius: 0;" text="Jumat" toggleGroup="$hari" />
+                                          <ToggleButton fx:id="sabtuButton" layoutX="10.0" layoutY="27.0" mnemonicParsing="false" onAction="#filterData" prefHeight="40.0" prefWidth="200.0" style="-fx-background-radius: 0;" text="Sabtu" toggleGroup="$hari" />
+                                       </children>
+                                       <HBox.margin>
+                                          <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+                                       </HBox.margin>
+                                       <padding>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </padding>
+                                    </VBox>
+                                    <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                                       <children>
+                                          <TreeTableView fx:id="rencanaProduksiTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" showRoot="false" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
+                                            <columns>
+                                                <TreeTableColumn fx:id="tujuanKirimColumn" prefWidth="75.0" text="Tujuan Kirim" />
+                                              <TreeTableColumn fx:id="noPemesananColumn" prefWidth="75.0" text="No Pemesanan" />
+                                                <TreeTableColumn fx:id="customerColumn" prefWidth="75.0" text="Customer" />
+                                                <TreeTableColumn fx:id="barangColumn" prefWidth="75.0" text="Barang" />
+                                                <TreeTableColumn fx:id="keteranganColumn" prefWidth="75.0" text="Keterangan" />
+                                                <TreeTableColumn fx:id="catatanInternColumn" prefWidth="75.0" text="Catatan Intern" />
+                                                <TreeTableColumn fx:id="salesColumn" prefWidth="75.0" text="Sales" />
+                                                <TreeTableColumn fx:id="qtyColumn" prefWidth="75.0" text="Qty" />
+                                                <TreeTableColumn fx:id="tonaseColumn" prefWidth="75.0" text="Tonase" />
+                                            </columns>
+                                             <columnResizePolicy>
+                                                <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                             </columnResizePolicy>
+                                          </TreeTableView>
+                                          <HBox alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="200.0" spacing="10.0">
+                                             <children>
+                                                <Label text="Total Kirim" />
+                                                <Label fx:id="totalKirimLabel" style="-fx-font-weight: bold;" text="0" />
+                                                <Label layoutX="10.0" layoutY="10.0" text="Total Qty" />
+                                                <Label fx:id="totalQtyLabel" layoutX="67.0" layoutY="10.0" style="-fx-font-weight: bold;" text="0" />
+                                                <Label layoutX="74.0" layoutY="10.0" text="Total Tonase" />
+                                                <Label fx:id="totalTonaseLabel" layoutX="131.0" layoutY="10.0" style="-fx-font-weight: bold;" text="0" />
+                                             </children>
+                                             <padding>
+                                                <Insets right="10.0" />
+                                             </padding>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                           </children>
+                           <padding>
+                              <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                           </padding>
+                        </AnchorPane>
+                  </content>
+                </Tab>
+                  <Tab text="Rencana Produksi - Mesin">
+                     <content>
+                        <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" pannable="true" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: seccolor6; -fx-border-color: seccolor2;">
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding></ScrollPane>
+                     </content>
+                  </Tab>
+              </tabs>
+            </TabPane>
+         </children>
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding>
+      </GridPane>
+   </children>
+</AnchorPane>
