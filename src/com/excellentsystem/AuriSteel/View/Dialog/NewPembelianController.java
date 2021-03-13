@@ -586,6 +586,7 @@ public class NewPembelianController {
                                                 allPembelianDetail.add(detail);
                                             }
                                         } else {
+                                            double qty = pb.getBeratBersih()-pb.getScraft(); 
                                             PembelianBahanDetail detail = new PembelianBahanDetail();
                                             detail.setNoPemesanan(d.getNoPemesanan());
                                             detail.setNoUrut(d.getNoUrut());
@@ -595,10 +596,10 @@ public class NewPembelianController {
                                             detail.setNoKontrak(pemesanan.getNoKontrak());
                                             detail.setNamaBahan(pb.getNamaBahan());
                                             detail.setSpesifikasi(d.getSpesifikasi());
-                                            detail.setQty(pb.getBeratBersih());
-                                            detail.setNilai(pb.getBeratBersih() * d.getHarga());
+                                            detail.setQty(qty);
+                                            detail.setNilai(qty * d.getHarga());
                                             detail.setHargaBeli(d.getHarga());
-                                            detail.setTotal(pb.getBeratBersih() * d.getHarga());
+                                            detail.setTotal(qty * d.getHarga());
                                             allPembelianDetail.add(detail);
                                         }
                                         hitungTotal();

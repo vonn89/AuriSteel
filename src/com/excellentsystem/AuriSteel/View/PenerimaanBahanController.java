@@ -172,9 +172,11 @@ public class PenerimaanBahanController {
         tglMulaiPicker.setConverter(Function.getTglConverter());
         tglMulaiPicker.setValue(LocalDate.now().minusMonths(1));
         tglMulaiPicker.setDayCellFactory((final DatePicker datePicker) -> Function.getDateCellMulai(tglAkhirPicker));
+        
         tglAkhirPicker.setConverter(Function.getTglConverter());
         tglAkhirPicker.setValue(LocalDate.now());
         tglAkhirPicker.setDayCellFactory((final DatePicker datePicker) -> Function.getDateCellAkhir(tglMulaiPicker));
+        
         final ContextMenu rm = new ContextMenu();
         MenuItem addNew = new MenuItem("Add New Penerimaan");
         addNew.setOnAction((ActionEvent e) -> {
