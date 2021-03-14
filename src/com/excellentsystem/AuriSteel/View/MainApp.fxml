@@ -17,7 +17,7 @@
    <left>
       <VBox fx:id="vbox" minHeight="0.0" minWidth="0.0" prefWidth="250.0" style="-fx-background-color: seccolor2;" BorderPane.alignment="CENTER">
          <children>
-            <Label alignment="CENTER" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="0.0" prefHeight="50.0" style="-fx-background-color: seccolor1; -fx-text-fill: seccolor6; -fx-font-size: 20; -fx-font-family: Georgia;" text="Auri Steel Metalindo">
+            <Label alignment="CENTER" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="0.0" prefHeight="50.0" style="-fx-background-color: seccolor1; -fx-text-fill: seccolor6; -fx-font-size: 24; -fx-font-family: serif;" text="AURI STEEL">
                <VBox.margin>
                   <Insets left="20.0" />
                </VBox.margin>
@@ -270,6 +270,8 @@
                               </MenuButton>
                               <MenuButton fx:id="menuLaporanPenjualan" layoutX="21.0" layoutY="21.0" mnemonicParsing="false" popupSide="RIGHT" prefHeight="35.0" prefWidth="270.0" text="Laporan Penjualan">
                                  <items>
+                                    <MenuItem mnemonicParsing="false" onAction="#menuLaporanPemesanan" text="Laporan Pemesanan" />
+                                    <MenuItem mnemonicParsing="false" onAction="#menuLaporanBarangTerpesan" text="Laporan Barang Dipesan" />
                                   <MenuItem mnemonicParsing="false" onAction="#menuLaporanPenjualan" text="Laporan Penjualan" />
                                     <MenuItem mnemonicParsing="false" onAction="#menuLaporanBarangTerjual" text="Laporan Barang Terjual" />
                                     <MenuItem mnemonicParsing="false" onAction="#menuLaporanPenjualanCoil" text="Laporan Penjualan Coil" />

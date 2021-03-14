@@ -16,7 +16,7 @@
 
 <AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="1000.0" styleClass="dialog" stylesheets="@../../Resource/MyTheme.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.excellentsystem.AuriSteel.View.Report.LaporanKartuStokBahanController">
    <children>
-      <GridPane hgap="15.0" layoutX="30.0" layoutY="39.0" vgap="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <GridPane hgap="10.0" layoutX="30.0" layoutY="39.0" vgap="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" />
          </columnConstraints>
@@ -64,9 +64,9 @@
                   <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" HBox.hgrow="ALWAYS">
                      <children>
                         <Label text="Tanggal" />
-                        <DatePicker fx:id="tglAwalPicker" onAction="#getBahan" prefHeight="35.0" prefWidth="140.0" />
+                        <DatePicker fx:id="tglAwalPicker" onAction="#getBahan" prefHeight="35.0" prefWidth="130.0" />
                         <Label text="-" />
-                        <DatePicker fx:id="tglAkhirPicker" onAction="#getBahan" prefHeight="35.0" prefWidth="140.0" />
+                        <DatePicker fx:id="tglAkhirPicker" onAction="#getBahan" prefHeight="35.0" prefWidth="130.0" />
                      </children>
                   </HBox>
                </children>

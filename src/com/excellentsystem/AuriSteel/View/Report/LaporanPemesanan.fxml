@@ -15,13 +15,12 @@
 
 <AnchorPane id="AnchorPane" prefHeight="628.0" prefWidth="1024.0" styleClass="stage" stylesheets="@../../Resource/MyTheme.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.excellentsystem.AuriSteel.View.Report.LaporanPemesananController">
    <children>
-      <GridPane layoutX="28.0" layoutY="26.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <GridPane hgap="10.0" layoutX="28.0" layoutY="26.0" vgap="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints maxHeight="35.0" minHeight="35.0" prefHeight="35.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="15.0" minHeight="15.0" prefHeight="15.0" vgrow="SOMETIMES" />
             <RowConstraints vgrow="SOMETIMES" />
             <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
@@ -31,45 +30,55 @@
                   <Label text="Tanggal">
               
             </Label>
-                  <DatePicker fx:id="tglMulaiPenjualanPicker" editable="false" onAction="#getPenjualan" prefHeight="35.0" prefWidth="140.0" />
+                  <DatePicker fx:id="tglMulaiPemesananPicker" editable="false" onAction="#getPemesanan" prefHeight="35.0" prefWidth="130.0" />
                   <Label text="-">
              
             </Label>
-                  <DatePicker fx:id="tglAkhirPenjualanPicker" editable="false" onAction="#getPenjualan" prefHeight="35.0" prefWidth="140.0" />
+                  <DatePicker fx:id="tglAkhirPemesananPicker" editable="false" onAction="#getPemesanan" prefHeight="35.0" prefWidth="130.0" />
+                  <Label layoutX="378.0" layoutY="19.0" text="Status" />
+                  <ComboBox fx:id="statusCombo" layoutX="438.0" layoutY="10.0" onAction="#getPemesanan" prefHeight="35.0" prefWidth="100.0" />
                   <Label text="Group By" />
-                  <ComboBox fx:id="groupByCombo" onAction="#getPenjualan" prefHeight="35.0" prefWidth="140.0" />
+                  <ComboBox fx:id="groupByCombo" onAction="#getPemesanan" prefHeight="35.0" prefWidth="120.0" />
                </children>
             </HBox>
             <TextField fx:id="searchField" maxWidth="300.0" prefHeight="35.0" promptText="Search..." styleClass="search-field" GridPane.halignment="RIGHT" />
-            <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" style="-fx-background-color: seccolor6;" GridPane.rowIndex="3">
+            <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.rowIndex="2">
                <children>
-                  <Label alignment="CENTER_RIGHT" text="Total Penjualan" HBox.hgrow="ALWAYS">
+                  <Label alignment="CENTER_RIGHT" text="Total Pemesanan" HBox.hgrow="ALWAYS">
                    
                   </Label>
-                  <Label fx:id="totalPenjualanField" alignment="CENTER_RIGHT" style="-fx-font-weight: bold;" text="0" HBox.hgrow="ALWAYS" />
-                  <Label alignment="CENTER_RIGHT" text="Sudah Terbayar" HBox.hgrow="ALWAYS">
+                  <Label fx:id="totalPemesananField" alignment="CENTER_RIGHT" style="-fx-font-weight: bold;" text="0" HBox.hgrow="ALWAYS" />
+                  <Label alignment="CENTER_RIGHT" layoutX="636.0" layoutY="10.0" text="Sisa Pemesanan" />
+                  <Label fx:id="sisaPemesananField" alignment="CENTER_RIGHT" layoutX="737.0" layoutY="10.0" style="-fx-font-weight: bold;" text="0" />
+                  <Label alignment="CENTER_RIGHT" text="Down Payment" HBox.hgrow="ALWAYS">
                   
                   </Label>
-                  <Label fx:id="totalPembayaranField" alignment="CENTER_RIGHT" style="-fx-font-weight: bold;" text="0" HBox.hgrow="ALWAYS" />
-                  <Label alignment="CENTER_RIGHT" text="Belum Terbayar" HBox.hgrow="ALWAYS">
+                  <Label fx:id="totalDownPaymentField" alignment="CENTER_RIGHT" style="-fx-font-weight: bold;" text="0" HBox.hgrow="ALWAYS" />
+                  <Label alignment="CENTER_RIGHT" text="Sisa Down Payment" HBox.hgrow="ALWAYS">
                     
                   </Label>
-                  <Label fx:id="sisaPembayaranField" alignment="CENTER_RIGHT" style="-fx-font-weight: bold;" text="0" HBox.hgrow="ALWAYS" />
+                  <Label fx:id="totalSisaDownPaymentField" alignment="CENTER_RIGHT" style="-fx-font-weight: bold;" text="0" HBox.hgrow="ALWAYS" />
                </children>
                <padding>
                   <Insets right="10.0" />
                </padding>
             </HBox>
-            <TreeTableView fx:id="penjualanTable" prefHeight="200.0" prefWidth="200.0" showRoot="false" tableMenuButtonVisible="true" GridPane.rowIndex="2">
+            <TreeTableView fx:id="pemesananTable" prefHeight="200.0" prefWidth="200.0" showRoot="false" tableMenuButtonVisible="true" GridPane.rowIndex="1">
               <columns>
-                <TreeTableColumn fx:id="noPenjualanColumn" prefWidth="75.0" text="No Penjualan" />
-                <TreeTableColumn fx:id="tglPenjualanColumn" prefWidth="75.0" text="Tgl Penjualan" />
-                  <TreeTableColumn fx:id="gudangColumn" prefWidth="75.0" text="Gudang" />
-                  <TreeTableColumn fx:id="namaCustomerColumn" prefWidth="75.0" text="Customer" />
+                <TreeTableColumn fx:id="noPemesananColumn" prefWidth="75.0" text="No Pemesanan" />
+                <TreeTableColumn fx:id="tglPemesananColumn" prefWidth="75.0" text="Tgl Pemesanan" />
+                  <TreeTableColumn fx:id="namaInvoiceColumn" prefWidth="75.0" text="Nama Invoice" />
+                  <TreeTableColumn fx:id="namaCustomerColumn" prefWidth="75.0" text="Nama Customer" />
+                  <TreeTableColumn fx:id="alamatCustomerColumn" prefWidth="75.0" text="Alamat Customer" visible="false" />
+                  <TreeTableColumn fx:id="paymentTermColumn" prefWidth="75.0" text="Payment Term" />
                   <TreeTableColumn fx:id="namaSalesColumn" prefWidth="75.0" text="Sales" />
-                  <TreeTableColumn fx:id="totalPenjualanColumn" prefWidth="75.0" text="Total Penjualan" />
-                  <TreeTableColumn fx:id="pembayaranColumn" prefWidth="75.0" text="Pembayaran" />
-                  <TreeTableColumn fx:id="sisaPembayaranColumn" prefWidth="75.0" text="Sisa Pembayaran" />
+                  <TreeTableColumn fx:id="totalPemesananColumn" prefWidth="75.0" text="Total Pemesanan" />
+                  <TreeTableColumn fx:id="sisaPemesananColumn" prefWidth="75.0" text="Sisa Pemesanan" />
+                  <TreeTableColumn fx:id="downPaymentColumn" prefWidth="75.0" text="Down Payment" />
+                  <TreeTableColumn fx:id="sisaDownPaymentColumn" prefWidth="75.0" text="Sisa Down Payment" />
+                  <TreeTableColumn fx:id="catatanColumn" prefWidth="75.0" text="Catatan" visible="false" />
+                  <TreeTableColumn fx:id="kodeUserColumn" prefWidth="75.0" text="Kode User" visible="false" />
+                  <TreeTableColumn fx:id="statusColumn" prefWidth="75.0" text="Status" visible="false" />
               </columns>
                <columnResizePolicy>
                   <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

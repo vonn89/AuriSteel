@@ -16,7 +16,7 @@
 
 <AnchorPane id="AnchorPane" prefWidth="351.0" styleClass="dialog" stylesheets="@../../Resource/MyTheme.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.excellentsystem.AuriSteel.View.Dialog.NewPenerimaanBahanController">
    <children>
-      <GridPane hgap="7.0" layoutX="10.0" layoutY="10.0" vgap="7.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <GridPane fx:id="gridPane" hgap="7.0" layoutX="10.0" layoutY="10.0" vgap="7.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" />
@@ -70,7 +70,7 @@
             <HBox alignment="CENTER_RIGHT" prefHeight="100.0" spacing="1.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="13">
                <children>
                   <Button fx:id="saveButton" mnemonicParsing="false" prefHeight="35.0" prefWidth="100.0" styleClass="button2" text="Save" />
-                  <Button mnemonicParsing="false" onAction="#close" prefHeight="35.0" prefWidth="100.0" styleClass="button2" text="Cancel" />
+                  <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#close" prefHeight="35.0" prefWidth="100.0" styleClass="button2" text="Cancel" />
                </children>
             </HBox>
             <Label text="Kategori" GridPane.rowIndex="3" />

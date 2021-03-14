@@ -49,9 +49,9 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableRow;
 import javafx.scene.control.TreeTableView;
 import javafx.stage.FileChooser;
@@ -72,34 +72,36 @@ public class LaporanPemesananController {
     @FXML
     private TreeTableView<PemesananBarangHead> pemesananTable;
     @FXML
-    private TableColumn<PemesananBarangHead, String> noPemesananColumn;
+    private TreeTableColumn<PemesananBarangHead, String> noPemesananColumn;
     @FXML
-    private TableColumn<PemesananBarangHead, String> tglPemesananColumn;
+    private TreeTableColumn<PemesananBarangHead, String> tglPemesananColumn;
     @FXML
-    private TableColumn<PemesananBarangHead, String> namaCustomerColumn;
+    private TreeTableColumn<PemesananBarangHead, String> namaCustomerColumn;
     @FXML
-    private TableColumn<PemesananBarangHead, String> alamatCustomerColumn;
+    private TreeTableColumn<PemesananBarangHead, String> alamatCustomerColumn;
     @FXML
-    private TableColumn<PemesananBarangHead, String> namaInvoiceColumn;
+    private TreeTableColumn<PemesananBarangHead, String> namaInvoiceColumn;
     @FXML
-    private TableColumn<PemesananBarangHead, String> paymentTermColumn;
+    private TreeTableColumn<PemesananBarangHead, String> paymentTermColumn;
     @FXML
-    private TableColumn<PemesananBarangHead, Number> totalPemesananColumn;
+    private TreeTableColumn<PemesananBarangHead, Number> totalPemesananColumn;
     @FXML
-    private TableColumn<PemesananBarangHead, Number> sisaPemesananColumn;
+    private TreeTableColumn<PemesananBarangHead, Number> sisaPemesananColumn;
     @FXML
-    private TableColumn<PemesananBarangHead, Number> downPaymentColumn;
+    private TreeTableColumn<PemesananBarangHead, Number> downPaymentColumn;
     @FXML
-    private TableColumn<PemesananBarangHead, Number> sisaDownPaymentColumn;
+    private TreeTableColumn<PemesananBarangHead, Number> sisaDownPaymentColumn;
     @FXML
-    private TableColumn<PemesananBarangHead, String> statusColumn;
+    private TreeTableColumn<PemesananBarangHead, String> statusColumn;
     @FXML
-    private TableColumn<PemesananBarangHead, String> catatanColumn;
+    private TreeTableColumn<PemesananBarangHead, String> catatanColumn;
     @FXML
-    private TableColumn<PemesananBarangHead, String> namaSalesColumn;
+    private TreeTableColumn<PemesananBarangHead, String> namaSalesColumn;
     @FXML
-    private TableColumn<PemesananBarangHead, String> kodeUserColumn;
+    private TreeTableColumn<PemesananBarangHead, String> kodeUserColumn;
 
+    @FXML
+    private ComboBox<String> statusCombo;
     @FXML
     private ComboBox<String> groupByCombo;
     @FXML
@@ -123,72 +125,72 @@ public class LaporanPemesananController {
     private Main mainApp;
 
     public void initialize() {
-        noPemesananColumn.setCellValueFactory(cellData -> cellData.getValue().noPemesananProperty());
-        noPemesananColumn.setCellFactory(col -> Function.getWrapTableCell(noPemesananColumn));
+        noPemesananColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().noPemesananProperty());
+        noPemesananColumn.setCellFactory(col -> Function.getWrapTreeTableCell(noPemesananColumn));
 
-        namaCustomerColumn.setCellValueFactory(cellData -> cellData.getValue().getCustomer().namaProperty());
-        namaCustomerColumn.setCellFactory(col -> Function.getWrapTableCell(namaCustomerColumn));
+        namaCustomerColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().getCustomer().namaProperty());
+        namaCustomerColumn.setCellFactory(col -> Function.getWrapTreeTableCell(namaCustomerColumn));
 
-        alamatCustomerColumn.setCellValueFactory(cellData -> cellData.getValue().getCustomer().alamatProperty());
-        alamatCustomerColumn.setCellFactory(col -> Function.getWrapTableCell(alamatCustomerColumn));
+        alamatCustomerColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().getCustomer().alamatProperty());
+        alamatCustomerColumn.setCellFactory(col -> Function.getWrapTreeTableCell(alamatCustomerColumn));
 
-        namaInvoiceColumn.setCellValueFactory(cellData -> cellData.getValue().getCustomerInvoice().namaProperty());
-        namaInvoiceColumn.setCellFactory(col -> Function.getWrapTableCell(namaInvoiceColumn));
+        namaInvoiceColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().getCustomerInvoice().namaProperty());
+        namaInvoiceColumn.setCellFactory(col -> Function.getWrapTreeTableCell(namaInvoiceColumn));
 
-        paymentTermColumn.setCellValueFactory(cellData -> cellData.getValue().paymentTermProperty());
-        paymentTermColumn.setCellFactory(col -> Function.getWrapTableCell(paymentTermColumn));
+        paymentTermColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().paymentTermProperty());
+        paymentTermColumn.setCellFactory(col -> Function.getWrapTreeTableCell(paymentTermColumn));
 
-        catatanColumn.setCellValueFactory(cellData -> cellData.getValue().catatanProperty());
-        catatanColumn.setCellFactory(col -> Function.getWrapTableCell(catatanColumn));
+        catatanColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().catatanProperty());
+        catatanColumn.setCellFactory(col -> Function.getWrapTreeTableCell(catatanColumn));
 
-        namaSalesColumn.setCellValueFactory(cellData -> cellData.getValue().getSales().namaProperty());
-        namaSalesColumn.setCellFactory(col -> Function.getWrapTableCell(namaSalesColumn));
+        namaSalesColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().getSales().namaProperty());
+        namaSalesColumn.setCellFactory(col -> Function.getWrapTreeTableCell(namaSalesColumn));
 
-        kodeUserColumn.setCellValueFactory(cellData -> cellData.getValue().kodeUserProperty());
-        kodeUserColumn.setCellFactory(col -> Function.getWrapTableCell(kodeUserColumn));
+        kodeUserColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().kodeUserProperty());
+        kodeUserColumn.setCellFactory(col -> Function.getWrapTreeTableCell(kodeUserColumn));
 
         statusColumn.setCellValueFactory(cellData -> {
-            if (cellData.getValue().getStatus().equals("close")) {
+            if (cellData.getValue().getValue().getStatus().equals("close")) {
                 return new SimpleStringProperty("Done");
-            } else if (cellData.getValue().getStatus().equals("open")) {
+            } else if (cellData.getValue().getValue().getStatus().equals("open")) {
                 return new SimpleStringProperty("Wait");
-            } else if (cellData.getValue().getStatus().equals("false")) {
+            } else if (cellData.getValue().getValue().getStatus().equals("false")) {
                 return new SimpleStringProperty("Cancel");
-            } else if (cellData.getValue().getStatus().equals("wait")) {
+            } else if (cellData.getValue().getValue().getStatus().equals("wait")) {
                 return new SimpleStringProperty("On Review");
             } else {
                 return null;
             }
         });
-        statusColumn.setCellFactory(col -> Function.getWrapTableCell(statusColumn));
+        statusColumn.setCellFactory(col -> Function.getWrapTreeTableCell(statusColumn));
 
         tglPemesananColumn.setCellValueFactory(cellData -> {
             try {
-                return new SimpleStringProperty(tglLengkap.format(tglSql.parse(cellData.getValue().getTglPemesanan())));
+                return new SimpleStringProperty(tglLengkap.format(tglSql.parse(cellData.getValue().getValue().getTglPemesanan())));
             } catch (Exception ex) {
                 return null;
             }
         });
-        tglPemesananColumn.setCellFactory(col -> Function.getWrapTableCell(tglPemesananColumn));
+        tglPemesananColumn.setCellFactory(col -> Function.getWrapTreeTableCell(tglPemesananColumn));
         tglPemesananColumn.setComparator(Function.sortDate(tglLengkap));
 
-        totalPemesananColumn.setCellValueFactory(celldata -> celldata.getValue().totalPemesananProperty());
-        totalPemesananColumn.setCellFactory(col -> Function.getTableCell());
+        totalPemesananColumn.setCellValueFactory(celldata -> celldata.getValue().getValue().totalPemesananProperty());
+        totalPemesananColumn.setCellFactory(col -> Function.getTreeTableCell());
 
         sisaPemesananColumn.setCellValueFactory(celldata -> {
             double sisaPemesanan = 0;
-            for (PemesananBarangDetail d : celldata.getValue().getListPemesananBarangDetail()) {
+            for (PemesananBarangDetail d : celldata.getValue().getValue().getListPemesananBarangDetail()) {
                 sisaPemesanan = sisaPemesanan + ((d.getQty() - d.getQtyTerkirim()) * d.getHargaJual());
             }
             return new SimpleDoubleProperty(sisaPemesanan);
         });
-        sisaPemesananColumn.setCellFactory(col -> Function.getTableCell());
+        sisaPemesananColumn.setCellFactory(col -> Function.getTreeTableCell());
 
-        downPaymentColumn.setCellValueFactory(celldata -> celldata.getValue().downPaymentProperty());
-        downPaymentColumn.setCellFactory(col -> Function.getTableCell());
+        downPaymentColumn.setCellValueFactory(celldata -> celldata.getValue().getValue().downPaymentProperty());
+        downPaymentColumn.setCellFactory(col -> Function.getTreeTableCell());
 
-        sisaDownPaymentColumn.setCellValueFactory(celldata -> celldata.getValue().sisaDownPaymentProperty());
-        sisaDownPaymentColumn.setCellFactory(col -> Function.getTableCell());
+        sisaDownPaymentColumn.setCellValueFactory(celldata -> celldata.getValue().getValue().sisaDownPaymentProperty());
+        sisaDownPaymentColumn.setCellFactory(col -> Function.getTreeTableCell());
 
         tglMulaiPemesananPicker.setConverter(Function.getTglConverter());
         tglMulaiPemesananPicker.setValue(LocalDate.now().minusMonths(1));
@@ -279,6 +281,15 @@ public class LaporanPemesananController {
         groupBy.add("Tahun");
         groupByCombo.setItems(groupBy);
         groupByCombo.getSelectionModel().select("Customer");
+        ObservableList<String> status = FXCollections.observableArrayList();
+        status.clear();
+        status.add("On Review");
+        status.add("Wait");
+        status.add("Done");
+        status.add("Cancel");
+        status.add("Semua");
+        statusCombo.setItems(status);
+        statusCombo.getSelectionModel().select("Wait");
         getPemesanan();
     }
 
@@ -288,16 +299,29 @@ public class LaporanPemesananController {
             @Override
             public List<PemesananBarangHead> call() throws Exception {
                 try (Connection con = Koneksi.getConnection()) {
+                    String status = "%";
+                    if (statusCombo.getSelectionModel().getSelectedItem().equals("Done")) {
+                        status = "close";
+                    } else if (statusCombo.getSelectionModel().getSelectedItem().equals("Wait")) {
+                        status = "open";
+                    } else if (statusCombo.getSelectionModel().getSelectedItem().equals("Cancel")) {
+                        status = "false";
+                    } else if (statusCombo.getSelectionModel().getSelectedItem().equals("On Review")) {
+                        status = "wait";
+                    }
                     List<PemesananBarangHead> allPemesanan = PemesananBarangHeadDAO.getAllByDateAndStatus(con,
-                            tglMulaiPemesananPicker.getValue().toString(), tglAkhirPemesananPicker.getValue().toString(), "true");
+                            tglMulaiPemesananPicker.getValue().toString(), tglAkhirPemesananPicker.getValue().toString(), status);
                     List<PemesananBarangDetail> allDetail = PemesananBarangDetailDAO.getAllByDateAndStatus(con,
-                            tglMulaiPemesananPicker.getValue().toString(), tglAkhirPemesananPicker.getValue().toString(), "true");
+                            tglMulaiPemesananPicker.getValue().toString(), tglAkhirPemesananPicker.getValue().toString(), status);
                     List<Customer> allCustomer = CustomerDAO.getAllByStatus(con, "%");
                     List<Pegawai> allSales = PegawaiDAO.getAllByStatus(con, "%");
                     for (PemesananBarangHead p : allPemesanan) {
                         for (Customer c : allCustomer) {
                             if (p.getKodeCustomer().equals(c.getKodeCustomer())) {
                                 p.setCustomer(c);
+                            }
+                            if (p.getKodeCustomerInvoice().equals(c.getKodeCustomer())) {
+                                p.setCustomerInvoice(c);
                             }
                         }
                         for (Pegawai s : allSales) {
@@ -397,7 +421,9 @@ public class LaporanPemesananController {
             PemesananBarangHead head = new PemesananBarangHead();
             head.setNoPemesanan(temp);
             head.setCustomer(new Customer());
+            head.setCustomerInvoice(new Customer());
             head.setSales(new Pegawai());
+            head.setListPemesananBarangDetail(new ArrayList<>());
             TreeItem<PemesananBarangHead> parent = new TreeItem<>(head);
             double totalPemesanan = 0;
             double totalPembayaran = 0;

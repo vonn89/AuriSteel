@@ -70,6 +70,7 @@ import com.excellentsystem.AuriSteel.View.Report.LaporanHutangController;
 import com.excellentsystem.AuriSteel.View.Report.LaporanKeuanganController;
 import com.excellentsystem.AuriSteel.View.Report.LaporanNeracaController;
 import com.excellentsystem.AuriSteel.View.Report.LaporanPembelianController;
+import com.excellentsystem.AuriSteel.View.Report.LaporanPemesananController;
 import com.excellentsystem.AuriSteel.View.Report.LaporanPenjualanCoilController;
 import com.excellentsystem.AuriSteel.View.Report.LaporanPenjualanController;
 import com.excellentsystem.AuriSteel.View.Report.LaporanPenyesuaianStokBahanController;
@@ -455,7 +456,7 @@ public class Main extends Application {
         setTitle("Permintaan Barang");
         return controller;
     }
-    
+
     public RencanaProduksiController showRencanaProduksiBarang() {
         FXMLLoader loader = changeStage("View/RencanaProduksi.fxml");
         RencanaProduksiController controller = loader.getController();
@@ -597,6 +598,22 @@ public class Main extends Application {
         LaporanPenyesuaianStokBarangController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Laporan Penyesuaian Stok Barang");
+        return controller;
+    }
+
+    public LaporanPemesananController showLaporanPemesanan() {
+        FXMLLoader loader = changeStage("View/Report/LaporanPemesanan.fxml");
+        LaporanPemesananController controller = loader.getController();
+        controller.setMainApp(this);
+        setTitle("Laporan Pemesanan");
+        return controller;
+    }
+
+    public LaporanBarangTerjualController showLaporanBarangTerpesan() {
+        FXMLLoader loader = changeStage("View/Report/LaporanBarangTerjual.fxml");
+        LaporanBarangTerjualController controller = loader.getController();
+        controller.setMainApp(this);
+        setTitle("Laporan Barang Terjual");
         return controller;
     }
 

@@ -406,8 +406,6 @@ public class PemesananController {
                             if (p.getKodeCustomer().equals(c.getKodeCustomer())) {
                                 p.setCustomer(c);
                             }
-                        }
-                        for (Customer c : allCustomer) {
                             if (p.getKodeCustomerInvoice().equals(c.getKodeCustomer())) {
                                 p.setCustomerInvoice(c);
                             }

@@ -381,7 +381,7 @@ public class MainAppController {
     @FXML
     public void showHideMenu(){
         final Animation hideSidebar = new Transition() { 
-            { setCycleDuration(Duration.millis(10)); }
+            { setCycleDuration(Duration.millis(250)); }
             @Override
             protected void interpolate(double frac) {
                 final double curWidth = 220 * (1.0 - frac);
@@ -400,7 +400,7 @@ public class MainAppController {
             vbox.setVisible(false);
         });
         final Animation showSidebar = new Transition() {
-            { setCycleDuration(Duration.millis(10)); }
+            { setCycleDuration(Duration.millis(250)); }
             @Override
             protected void interpolate(double frac) {
               final double curWidth = 220 * frac;
@@ -597,6 +597,14 @@ public class MainAppController {
         mainApp.showLaporanPenyesuaianStokBarang();
     }
 
+    @FXML
+    private void menuLaporanPemesanan() {
+        mainApp.showLaporanPemesanan();
+    }
+    @FXML
+    private void menuLaporanBarangTerpesan() {
+        mainApp.showLaporanBarangTerpesan();
+    }
     @FXML
     private void menuLaporanPenjualan() {
         mainApp.showLaporanPenjualan();

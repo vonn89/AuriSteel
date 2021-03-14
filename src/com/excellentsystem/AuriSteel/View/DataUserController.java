@@ -369,7 +369,8 @@ public class DataUserController  {
                     "Edit Rencana Produksi", 
                     "Delete Rencana Produksi", 
                     "Reset Rencana Produksi", 
-                    "Print Rencana Produksi"
+                    "Print Rencana Produksi",
+                    "Print Delivery Order"
                 )
             ));
             root.getChildren().add(createTreeItem("Produksi Barang",
@@ -400,6 +401,7 @@ public class DataUserController  {
             root.getChildren().add(createTreeItem("Penerimaan Bahan",
                 Arrays.asList(                    
                     "Add New Penerimaan Bahan", 
+                    "Detail Penerimaan Bahan",
                     "Batal Penerimaan Bahan"
                 )
             ));

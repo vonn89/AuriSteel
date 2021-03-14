@@ -11,17 +11,16 @@
 
 <AnchorPane id="AnchorPane" prefHeight="628.0" prefWidth="1024.0" styleClass="stage" stylesheets="@../Resource/MyTheme.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.excellentsystem.AuriSteel.View.DataPegawaiController">
    <children>
-      <GridPane layoutX="41.0" layoutY="63.0" prefHeight="373.0" prefWidth="759.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <GridPane hgap="10.0" layoutX="41.0" layoutY="63.0" prefHeight="373.0" prefWidth="759.0" vgap="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <columnConstraints>
             <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" />
          </columnConstraints>
          <rowConstraints>
             <RowConstraints fillHeight="false" maxHeight="35.0" minHeight="35.0" prefHeight="35.0" vgrow="SOMETIMES" />
-            <RowConstraints fillHeight="false" maxHeight="10.0" minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
             <RowConstraints vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <TableView fx:id="pegawaiTable" prefWidth="2000.0" tableMenuButtonVisible="true" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+            <TableView fx:id="pegawaiTable" prefWidth="2000.0" tableMenuButtonVisible="true" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                <columns>
                   <TableColumn fx:id="kodePegawaiColumn" prefWidth="75.0" text="Kode Pegawai" visible="false" />
                   <TableColumn fx:id="namaColumn" prefWidth="75.0" text="Nama" />

@@ -13,7 +13,7 @@
 
 <AnchorPane id="AnchorPane" prefHeight="700.0" prefWidth="1000.0" styleClass="stage" stylesheets="@../../Resource/MyTheme.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.excellentsystem.AuriSteel.View.Report.LaporanNeracaController">
    <children>
-      <GridPane layoutX="96.0" layoutY="146.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <GridPane hgap="10.0" layoutX="96.0" layoutY="146.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
@@ -30,9 +30,9 @@
             <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                <children>
                   <Label text="Tanggal" />
-                  <DatePicker fx:id="tglAwalPicker" onAction="#getKeuangan" prefHeight="35.0" prefWidth="140.0" />
+                  <DatePicker fx:id="tglAwalPicker" onAction="#getKeuangan" prefHeight="35.0" prefWidth="130.0" />
                   <Label alignment="CENTER" prefWidth="10.0" text="-" />
-                  <DatePicker fx:id="tglAkhirPicker" onAction="#getKeuangan" prefHeight="35.0" prefWidth="140.0" />
+                  <DatePicker fx:id="tglAkhirPicker" onAction="#getKeuangan" prefHeight="35.0" prefWidth="130.0" />
                </children>
             </HBox>
             <ScrollPane fitToHeight="true" fitToWidth="true" pannable="true" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: seccolor6;" GridPane.rowIndex="2">

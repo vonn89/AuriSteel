@@ -124,7 +124,7 @@ public class PenerimaanBahanController {
 
         kodeGudangColumn.setCellValueFactory(cellData -> cellData.getValue().kodeGudangProperty());
         kodeGudangColumn.setCellFactory(col -> Function.getWrapTableCell(kodeGudangColumn));
-        
+
         kodeBahanColumn.setCellValueFactory(cellData -> cellData.getValue().kodeBahanProperty());
         kodeBahanColumn.setCellFactory(col -> Function.getWrapTableCell(kodeBahanColumn));
 
@@ -142,16 +142,16 @@ public class PenerimaanBahanController {
 
         beratKotorColumn.setCellValueFactory(celldata -> celldata.getValue().beratKotorProperty());
         beratKotorColumn.setCellFactory(col -> Function.getTableCell());
-        
+
         beratBersihColumn.setCellValueFactory(celldata -> celldata.getValue().beratBersihProperty());
         beratBersihColumn.setCellFactory(col -> Function.getTableCell());
-        
+
         slitColumn.setCellValueFactory(celldata -> celldata.getValue().slitProperty());
         slitColumn.setCellFactory(col -> Function.getTableCell());
-        
+
         scraftColumn.setCellValueFactory(celldata -> celldata.getValue().scraftProperty());
         scraftColumn.setCellFactory(col -> Function.getTableCell());
-        
+
         kodeUserColumn.setCellValueFactory(cellData -> cellData.getValue().kodeUserProperty());
         kodeUserColumn.setCellFactory(col -> Function.getWrapTableCell(kodeUserColumn));
 
@@ -168,15 +168,14 @@ public class PenerimaanBahanController {
         });
         statusColumn.setCellFactory(col -> Function.getWrapTableCell(statusColumn));
 
-
         tglMulaiPicker.setConverter(Function.getTglConverter());
         tglMulaiPicker.setValue(LocalDate.now().minusMonths(1));
         tglMulaiPicker.setDayCellFactory((final DatePicker datePicker) -> Function.getDateCellMulai(tglAkhirPicker));
-        
+
         tglAkhirPicker.setConverter(Function.getTglConverter());
         tglAkhirPicker.setValue(LocalDate.now());
         tglAkhirPicker.setDayCellFactory((final DatePicker datePicker) -> Function.getDateCellAkhir(tglMulaiPicker));
-        
+
         final ContextMenu rm = new ContextMenu();
         MenuItem addNew = new MenuItem("Add New Penerimaan");
         addNew.setOnAction((ActionEvent e) -> {
@@ -213,6 +212,10 @@ public class PenerimaanBahanController {
                         addNew.setOnAction((ActionEvent e) -> {
                             newPenerimaan();
                         });
+                        MenuItem detail = new MenuItem("Detail Penerimaan");
+                        detail.setOnAction((ActionEvent e) -> {
+                            detailPenerimaan(item);
+                        });
                         MenuItem batal = new MenuItem("Batal Penerimaan");
                         batal.setOnAction((ActionEvent e) -> {
                             batalPenerimaan(item);
@@ -232,6 +235,9 @@ public class PenerimaanBahanController {
                         for (Otoritas o : sistem.getUser().getOtoritas()) {
                             if (o.getJenis().equals("Add New Penerimaan Bahan") && o.isStatus()) {
                                 rm.getItems().add(addNew);
+                            }
+                            if (o.getJenis().equals("Detail Penerimaan Bahan") && o.isStatus()) {
+                                rm.getItems().add(detail);
                             }
                             if (o.getJenis().equals("Batal Penerimaan Bahan") && o.isStatus() && item.getStatus().equals("open")) {
                                 rm.getItems().add(batal);
@@ -359,19 +365,19 @@ public class PenerimaanBahanController {
                 mainApp.showMessage(Modality.NONE, "Warning", "Gudang belum dipilih");
             } else if (controller.kategoriCombo.getSelectionModel().getSelectedItem() == null) {
                 mainApp.showMessage(Modality.NONE, "Warning", "Kategori bahan belum dipilih");
-            } else if (Double.parseDouble(controller.beratKotorField.getText().replaceAll(",", ""))==0) {
+            } else if (Double.parseDouble(controller.beratKotorField.getText().replaceAll(",", "")) == 0) {
                 mainApp.showMessage(Modality.NONE, "Warning", "Berat kotor masih kosong");
-            } else if (Double.parseDouble(controller.beratBersihField.getText().replaceAll(",", ""))==0) {
+            } else if (Double.parseDouble(controller.beratBersihField.getText().replaceAll(",", "")) == 0) {
                 mainApp.showMessage(Modality.NONE, "Warning", "Berat bersih masih kosong");
-            } else if (Double.parseDouble(controller.beratTimbanganField.getText().replaceAll(",", ""))==0) {
+            } else if (Double.parseDouble(controller.beratTimbanganField.getText().replaceAll(",", "")) == 0) {
                 mainApp.showMessage(Modality.NONE, "Warning", "Slit masih kosong");
-            } else if (Double.parseDouble(controller.beratTimbanganField.getText().replaceAll(",", ""))==0) {
+            } else if (Double.parseDouble(controller.beratTimbanganField.getText().replaceAll(",", "")) == 0) {
                 mainApp.showMessage(Modality.NONE, "Warning", "Berat timbangan masih kosong");
-            } else if (Double.parseDouble(controller.beratKotorField.getText().replaceAll(",", ""))<
-                    Double.parseDouble(controller.beratBersihField.getText().replaceAll(",", ""))) {
+            } else if (Double.parseDouble(controller.beratKotorField.getText().replaceAll(",", ""))
+                    < Double.parseDouble(controller.beratBersihField.getText().replaceAll(",", ""))) {
                 mainApp.showMessage(Modality.NONE, "Warning", "Berat bersih tidak boleh lebih besar dari berat kotor");
-            } else if (Double.parseDouble(controller.beratTimbanganField.getText().replaceAll(",", ""))<
-                    Double.parseDouble(controller.beratBersihField.getText().replaceAll(",", ""))) {
+            } else if (Double.parseDouble(controller.beratTimbanganField.getText().replaceAll(",", ""))
+                    < Double.parseDouble(controller.beratBersihField.getText().replaceAll(",", ""))) {
                 mainApp.showMessage(Modality.NONE, "Warning", "Berat timbangan tidak boleh lebih kecil dari berat bersih");
             } else {
                 Task<String> task = new Task<String>() {
@@ -422,10 +428,17 @@ public class PenerimaanBahanController {
         });
     }
 
+    private void detailPenerimaan(PenerimaanBahan p) {
+        Stage stage = new Stage();
+        FXMLLoader loader = mainApp.showDialog(mainApp.MainStage, stage, "View/Dialog/NewPenerimaanBahan.fxml");
+        NewPenerimaanBahanController controller = loader.getController();
+        controller.setMainApp(mainApp, mainApp.MainStage, stage);
+        controller.setPenerimaan(p);
+    }
 
     private void batalPenerimaan(PenerimaanBahan penerimaan) {
         MessageController controller = mainApp.showMessage(Modality.WINDOW_MODAL, "Confirmation",
-                "Batal penerimaan bahan " + penerimaan.getNoPenerimaan()+ " ?");
+                "Batal penerimaan bahan " + penerimaan.getNoPenerimaan() + " ?");
         controller.OK.setOnAction((ActionEvent e) -> {
             mainApp.closeMessage();
             Task<String> task = new Task<String>() {
@@ -478,6 +491,7 @@ public class PenerimaanBahanController {
             mainApp.showMessage(Modality.NONE, "Error", e.toString());
         }
     }
+
     private void exportExcel() {
         try {
             FileChooser fileChooser = new FileChooser();

@@ -23,16 +23,16 @@
 
 <AnchorPane id="AnchorPane" prefHeight="2000.0" prefWidth="1366.0" styleClass="stage" stylesheets="@../Resource/MyTheme.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.excellentsystem.AuriSteel.View.DashboardController">
    <children>
-      <HBox alignment="CENTER_LEFT" fillHeight="false" prefHeight="45.0" spacing="20.0" style="-fx-background-color: seccolor3;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <HBox alignment="CENTER_LEFT" fillHeight="false" prefHeight="45.0" spacing="20.0" style="-fx-background-color: #F5f5f5;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label text="Periode" textFill="WHITE" />
+            <Label text="Periode" />
             <ComboBox fx:id="periodeCombo" onAction="#getData" prefHeight="30.0" prefWidth="150.0">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
             </ComboBox>
-            <CheckBox fx:id="penjualanCheckBox" mnemonicParsing="false" onAction="#getData" selected="true" text="Penjualan" textFill="WHITE" />
-            <CheckBox fx:id="penjualanCoilCheckBox" mnemonicParsing="false" onAction="#getData" selected="true" text="Penjualan Coil" textFill="WHITE" />
+            <CheckBox fx:id="penjualanCheckBox" mnemonicParsing="false" onAction="#getData" selected="true" text="Penjualan" />
+            <CheckBox fx:id="penjualanCoilCheckBox" mnemonicParsing="false" onAction="#getData" selected="true" text="Penjualan Coil" />
          </children>
          <padding>
             <Insets bottom="5.0" left="10.0" right="5.0" top="5.0" />
@@ -152,6 +152,9 @@
                            <columnResizePolicy>
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                            </columnResizePolicy>
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </VBox.margin>
                         </TableView>
                      </children>
                      <padding>
@@ -192,6 +195,9 @@
                            <columnResizePolicy>
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                            </columnResizePolicy>
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </VBox.margin>
                         </TableView>
                         <HBox alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="200.0" spacing="10.0">
                            <children>
@@ -244,6 +250,9 @@
                            <columnResizePolicy>
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                            </columnResizePolicy>
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </VBox.margin>
                         </TableView>
                         <HBox alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="200.0" spacing="10.0">
                            <children>
@@ -263,9 +272,6 @@
                      </padding>
                   </VBox>
                </children>
-               <effect>
-                  <DropShadow color="#0000001a" />
-               </effect>
             </GridPane>
          </content>
       </ScrollPane>

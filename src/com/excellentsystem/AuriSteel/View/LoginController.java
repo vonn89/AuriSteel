@@ -12,12 +12,7 @@ import com.excellentsystem.AuriSteel.Main;
 import static com.excellentsystem.AuriSteel.Main.key;
 import static com.excellentsystem.AuriSteel.Main.sistem;
 import com.excellentsystem.AuriSteel.Model.User;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import javafx.fxml.FXML;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -33,7 +28,6 @@ public class LoginController  {
     @FXML private Label warning;
     @FXML private TextField username;
     @FXML private PasswordField password;
-    @FXML private CheckBox rememberMeCheck;
     private Main mainApp;
     private int attempt = 0;
     @FXML 
@@ -58,19 +52,6 @@ public class LoginController  {
                     warning.setText("Password masih salah");
                     attempt = attempt +1;
                 }else{
-                    if(rememberMeCheck.isSelected()){
-                        try (FileWriter fw = new FileWriter(new File("password"), false)) {
-                            fw.write(user.getKodeUser());
-                            fw.write(System.lineSeparator());
-                            fw.write(user.getPassword());
-                            fw.write(System.lineSeparator());
-                            fw.write(String.valueOf(rememberMeCheck.isSelected()));
-                        }
-                    }else{
-                        try (FileWriter fw = new FileWriter(new File("password"), false)) {
-                            fw.write("");
-                        }
-                    }
                     sistem.setUser(user);
                     mainApp.showMainScene();
                 }
@@ -84,15 +65,6 @@ public class LoginController  {
         try{
             this.mainApp = mainApp;
             versionLabel.setText("Ver. "+mainApp.version);
-            
-            BufferedReader text = new BufferedReader(new FileReader("password"));
-            String user = text.readLine();
-            if(user!=null){
-                username.setText(user);
-                password.setText(decrypt(text.readLine(), key));
-                rememberMeCheck.setSelected(Boolean.valueOf(text.readLine()));
-            }
-            
             warning.setText("");
         } catch (Exception ex) {
             ex.printStackTrace();
