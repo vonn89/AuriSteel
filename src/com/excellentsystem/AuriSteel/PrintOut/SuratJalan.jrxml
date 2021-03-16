@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="648" pageHeight="396" columnWidth="588" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="eda4239d-62e6-4e51-acfb-cc520d3652da">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="612" pageHeight="396" columnWidth="552" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="eda4239d-62e6-4e51-acfb-cc520d3652da">
 	<property name="ireport.zoom" value="1.2100000000000006"/>
-	<property name="ireport.x" value="60"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="nama" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["PT. Auri Steel Metalindo"]]></defaultValueExpression>
@@ -144,14 +144,14 @@
 	<title>
 		<band height="95" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="588" height="30" forecolor="#000000" uuid="24fee588-1b3b-411a-8a1d-2de8c88d2939"/>
+				<reportElement x="0" y="0" width="552" height="30" forecolor="#000000" uuid="24fee588-1b3b-411a-8a1d-2de8c88d2939"/>
 				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="16" isBold="true" isUnderline="false"/>
 				</textElement>
 				<text><![CDATA[SURAT JALAN]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="460" y="19" width="128" height="13" uuid="37a10146-f1bd-4a01-b26e-ba5000ecfe98"/>
+				<reportElement x="460" y="19" width="92" height="13" uuid="37a10146-f1bd-4a01-b26e-ba5000ecfe98"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10" isBold="false"/>
 				</textElement>
@@ -186,7 +186,7 @@
 				<text><![CDATA[Nama Supir]]></text>
 			</staticText>
 			<textField pattern="dd MMMMM yyyy" isBlankWhenNull="true">
-				<reportElement x="460" y="31" width="128" height="13" uuid="91ca920d-3560-4919-a3e8-e0ed43977dcb"/>
+				<reportElement x="460" y="31" width="92" height="13" uuid="91ca920d-3560-4919-a3e8-e0ed43977dcb"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10" isBold="false"/>
 				</textElement>
@@ -195,14 +195,14 @@ new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse($F{tglPenjualan}) :
 new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse($F{tglPengiriman}) )]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="460" y="44" width="128" height="24" uuid="fd1bb687-e094-4eaa-8d81-f19817797cdf"/>
+				<reportElement x="460" y="44" width="92" height="24" uuid="fd1bb687-e094-4eaa-8d81-f19817797cdf"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{tujuanKirim}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="460" y="68" width="128" height="13" uuid="5414e5c0-f087-40ed-9112-d57cc349d179"/>
+				<reportElement x="460" y="68" width="92" height="13" uuid="5414e5c0-f087-40ed-9112-d57cc349d179"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10" isBold="false"/>
 				</textElement>
@@ -366,7 +366,7 @@ new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse($F{tglPengiriman}) )]]></textF
 				<text><![CDATA[Qty]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="397" y="0" width="191" height="15" uuid="7b1f73f2-2e82-4bc9-833a-2a7e01252f9f"/>
+				<reportElement mode="Opaque" x="397" y="0" width="155" height="15" uuid="7b1f73f2-2e82-4bc9-833a-2a7e01252f9f"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif" isBold="true"/>
 				</textElement>
@@ -387,10 +387,10 @@ new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse($F{tglPengiriman}) )]]></textF
 				<text><![CDATA[Satuan]]></text>
 			</staticText>
 			<line>
-				<reportElement x="0" y="0" width="588" height="1" forecolor="#000000" uuid="0ae4babe-aede-4c45-a145-424d4ff4a243"/>
+				<reportElement x="0" y="0" width="552" height="1" forecolor="#000000" uuid="0ae4babe-aede-4c45-a145-424d4ff4a243"/>
 			</line>
 			<line>
-				<reportElement x="0" y="14" width="588" height="1" forecolor="#000000" uuid="dd456dcc-8fc2-464b-8bde-9d5d358e1f6a"/>
+				<reportElement x="0" y="14" width="552" height="1" forecolor="#000000" uuid="dd456dcc-8fc2-464b-8bde-9d5d358e1f6a"/>
 			</line>
 		</band>
 	</columnHeader>
@@ -432,7 +432,7 @@ new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse($F{tglPengiriman}) )]]></textF
 				<textFieldExpression><![CDATA[$F{satuan}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="397" y="0" width="191" height="13" uuid="d2ebc0d2-c47b-492c-a463-371419f824cb"/>
+				<reportElement x="397" y="0" width="155" height="13" uuid="d2ebc0d2-c47b-492c-a463-371419f824cb"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif"/>
 				</textElement>
@@ -468,14 +468,14 @@ new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse($F{tglPengiriman}) )]]></textF
 				<text><![CDATA[( Penerima )]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="159" y="90" width="139" height="13" uuid="7b0c8713-7cd1-4fb4-990d-2579217f8bff"/>
+				<reportElement x="185" y="90" width="110" height="13" uuid="7b0c8713-7cd1-4fb4-990d-2579217f8bff"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif"/>
 				</textElement>
 				<text><![CDATA[( Supir )]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="305" y="90" width="135" height="13" uuid="39aa1cb4-6481-4ca4-a9a1-92e6d3c25196"/>
+				<reportElement x="323" y="90" width="104" height="13" uuid="39aa1cb4-6481-4ca4-a9a1-92e6d3c25196"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif"/>
 				</textElement>
@@ -489,18 +489,18 @@ new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse($F{tglPengiriman}) )]]></textF
 				<text><![CDATA[Tgl Penerimaan :]]></text>
 			</staticText>
 			<line>
-				<reportElement x="0" y="0" width="588" height="1" forecolor="#000000" uuid="855ee8c7-5de5-4a0d-8103-1bb33df85508"/>
+				<reportElement x="0" y="0" width="552" height="1" forecolor="#000000" uuid="855ee8c7-5de5-4a0d-8103-1bb33df85508"/>
 			</line>
 			<staticText>
-				<reportElement x="452" y="90" width="135" height="13" uuid="1519dc93-eac0-444c-9a52-bcf895b1f155"/>
+				<reportElement x="452" y="90" width="100" height="13" uuid="1519dc93-eac0-444c-9a52-bcf895b1f155"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif"/>
 				</textElement>
 				<text><![CDATA[( Bag. Keuangan )]]></text>
 			</staticText>
 			<textField pattern="#,##0" isBlankWhenNull="true">
-				<reportElement x="530" y="1" width="58" height="12" uuid="9d4ecd68-f0dd-4476-929c-acd762fe6763"/>
-				<textElement>
+				<reportElement x="494" y="1" width="58" height="12" uuid="9d4ecd68-f0dd-4476-929c-acd762fe6763"/>
+				<textElement textAlignment="Right">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{tonase}]]></textFieldExpression>

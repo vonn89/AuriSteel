@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="648" pageHeight="396" columnWidth="608" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="3c97d51a-e6b3-4142-85c8-87cdee42aad2">
-	<property name="ireport.zoom" value="1.6105100000000052"/>
-	<property name="ireport.x" value="0"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="612" pageHeight="396" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="3c97d51a-e6b3-4142-85c8-87cdee42aad2">
+	<property name="ireport.zoom" value="1.3310000000000046"/>
+	<property name="ireport.x" value="80"/>
 	<property name="ireport.y" value="0"/>
 	<style name="detail" mode="Opaque">
 		<box leftPadding="3" rightPadding="3">
 			<topPen lineWidth="1.0" lineColor="#000000"/>
-			<leftPen lineWidth="1.0" lineColor="#000000"/>
+			<leftPen lineWidth="0.0" lineColor="#000000"/>
 			<bottomPen lineWidth="1.0" lineColor="#000000"/>
-			<rightPen lineWidth="1.0" lineColor="#000000"/>
+			<rightPen lineWidth="0.0" lineColor="#000000"/>
 		</box>
 	</style>
 	<style name="noBorder" mode="Opaque">
@@ -61,32 +61,42 @@
 	<group name="noPemesanan">
 		<groupExpression><![CDATA[$F{noPemesanan}]]></groupExpression>
 		<groupHeader>
-			<band height="15">
+			<band height="36">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="noBorder" stretchType="RelativeToBandHeight" mode="Opaque" x="0" y="0" width="572" height="20" uuid="a94f957b-da02-4420-ad70-db9ba7d6ac68"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{noPemesanan}+" - "+$F{customer}+" ("+$F{sales}+")"]]></textFieldExpression>
+				</textField>
 				<staticText>
-					<reportElement style="detail" x="0" y="0" width="608" height="15" uuid="5b16ee38-5f04-4217-a1f5-6079e95c5a29"/>
-					<text><![CDATA[]]></text>
+					<reportElement style="detail" x="0" y="19" width="150" height="15" uuid="e0e392c4-8cf4-4b6e-9330-11ca222154ba"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Barang]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="noBorder" stretchType="RelativeToBandHeight" mode="Transparent" x="0" y="0" width="75" height="15" uuid="2f44c0cf-2a0e-4f5c-8e4b-bfb8c7d6c7c0"/>
+				<staticText>
+					<reportElement style="detail" x="200" y="19" width="120" height="15" uuid="86c62137-1914-41fb-b040-172a365f7f4a"/>
 					<textElement verticalAlignment="Middle">
-						<font fontName="SansSerif" isBold="true"/>
+						<font fontName="SansSerif" isBold="false"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{noPemesanan}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="noBorder" stretchType="RelativeToBandHeight" mode="Transparent" x="75" y="0" width="360" height="15" uuid="a94f957b-da02-4420-ad70-db9ba7d6ac68"/>
+					<text><![CDATA[Keterangan]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="detail" x="320" y="19" width="252" height="15" uuid="ca0f1e71-f186-45b4-b7c1-e531ffcce8a8"/>
 					<textElement verticalAlignment="Middle">
-						<font fontName="SansSerif" isBold="true"/>
+						<font fontName="SansSerif" isBold="false"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{customer}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="noBorder" stretchType="RelativeToBandHeight" mode="Transparent" x="435" y="0" width="173" height="15" uuid="0e9fae06-3695-49f9-81de-c5f981a30677"/>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="SansSerif" isBold="true"/>
+					<text><![CDATA[Catatan]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="detail" x="150" y="19" width="50" height="15" uuid="80e51309-8d2f-4c87-b097-4abca29b53c3"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" isBold="false"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{sales}]]></textFieldExpression>
-				</textField>
+					<text><![CDATA[Qty]]></text>
+				</staticText>
 			</band>
 		</groupHeader>
 	</group>
@@ -96,16 +106,16 @@
 	<title>
 		<band height="31" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="608" height="31" uuid="2f598b23-4da4-4465-b487-8cd1c454bb36"/>
+				<reportElement x="0" y="0" width="572" height="31" uuid="2f598b23-4da4-4465-b487-8cd1c454bb36"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="18" isBold="false"/>
+					<font fontName="SansSerif" size="16" isBold="true"/>
 				</textElement>
 				<text><![CDATA[DELIVERY ORDER]]></text>
 			</staticText>
 		</band>
 	</title>
 	<columnHeader>
-		<band height="118">
+		<band height="92">
 			<staticText>
 				<reportElement x="0" y="0" width="80" height="15" uuid="b78b912c-5226-4a24-9e04-0cc34178a368"/>
 				<textElement verticalAlignment="Middle">
@@ -170,34 +180,6 @@
 				<text><![CDATA[:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="detail" x="0" y="103" width="200" height="15" uuid="e0e392c4-8cf4-4b6e-9330-11ca222154ba"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif" isBold="false"/>
-				</textElement>
-				<text><![CDATA[Barang]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="detail" x="250" y="103" width="185" height="15" uuid="86c62137-1914-41fb-b040-172a365f7f4a"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif" isBold="false"/>
-				</textElement>
-				<text><![CDATA[Keterangan]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="detail" x="435" y="103" width="173" height="15" uuid="ca0f1e71-f186-45b4-b7c1-e531ffcce8a8"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif" isBold="false"/>
-				</textElement>
-				<text><![CDATA[Catatan]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="detail" x="200" y="103" width="50" height="15" uuid="80e51309-8d2f-4c87-b097-4abca29b53c3"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="SansSerif" isBold="false"/>
-				</textElement>
-				<text><![CDATA[Qty]]></text>
-			</staticText>
-			<staticText>
 				<reportElement x="0" y="63" width="80" height="15" uuid="fe8ab260-954d-4477-98f9-be9b77953e7e"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif"/>
@@ -216,28 +198,28 @@
 	<detail>
 		<band height="15" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="detail" stretchType="RelativeToBandHeight" x="0" y="0" width="200" height="15" uuid="e6196671-198f-4653-a1ce-e55b64427a0c"/>
+				<reportElement style="noBorder" stretchType="RelativeToBandHeight" x="0" y="0" width="150" height="15" uuid="e6196671-198f-4653-a1ce-e55b64427a0c"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{barang}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="detail" stretchType="RelativeToBandHeight" x="250" y="0" width="185" height="15" uuid="0c8e1e2b-4874-433d-b0d2-227e07b1c426"/>
+				<reportElement style="noBorder" stretchType="RelativeToBandHeight" x="200" y="0" width="120" height="15" uuid="0c8e1e2b-4874-433d-b0d2-227e07b1c426"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{keterangan}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="detail" stretchType="RelativeToBandHeight" x="435" y="0" width="173" height="15" uuid="9dd91dd7-a6b6-4d24-a41e-b32388a86b5b"/>
+				<reportElement style="noBorder" stretchType="RelativeToBandHeight" x="320" y="0" width="252" height="15" uuid="9dd91dd7-a6b6-4d24-a41e-b32388a86b5b"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{catatan}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
-				<reportElement style="detail" stretchType="RelativeToBandHeight" x="200" y="0" width="50" height="15" uuid="33b103f3-2810-4080-a4f8-a9328d495f92"/>
+				<reportElement style="noBorder" stretchType="RelativeToBandHeight" x="150" y="0" width="50" height="15" uuid="33b103f3-2810-4080-a4f8-a9328d495f92"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif"/>
 				</textElement>
@@ -246,49 +228,52 @@
 		</band>
 	</detail>
 	<summary>
-		<band height="82">
+		<band height="98">
 			<staticText>
-				<reportElement x="0" y="5" width="79" height="15" uuid="b0604229-fc97-4ce1-a322-15e2be88792e"/>
+				<reportElement x="0" y="15" width="79" height="15" uuid="b0604229-fc97-4ce1-a322-15e2be88792e"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif"/>
 				</textElement>
 				<text><![CDATA[Ongkos Kirim]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="29" width="100" height="15" uuid="e1ddae30-aa23-4eb9-9fd4-d531f9b4a055"/>
+				<reportElement x="0" y="43" width="100" height="15" uuid="e1ddae30-aa23-4eb9-9fd4-d531f9b4a055"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif"/>
 				</textElement>
 				<text><![CDATA[Yang mengajukan]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="168" y="29" width="100" height="15" uuid="d73b4c14-cd9a-44ff-9e93-49586dec22e9"/>
+				<reportElement x="168" y="43" width="100" height="15" uuid="d73b4c14-cd9a-44ff-9e93-49586dec22e9"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif"/>
 				</textElement>
 				<text><![CDATA[Mengetahui]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="335" y="29" width="100" height="15" uuid="e03d70ce-7764-4637-b1cb-16867351a757"/>
+				<reportElement x="322" y="43" width="100" height="15" uuid="e03d70ce-7764-4637-b1cb-16867351a757"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif"/>
 				</textElement>
 				<text><![CDATA[Mengetahui]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="508" y="29" width="100" height="15" uuid="a47ad48a-ec1c-46d1-9c1d-72514822818d"/>
+				<reportElement x="472" y="43" width="100" height="15" uuid="a47ad48a-ec1c-46d1-9c1d-72514822818d"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif"/>
 				</textElement>
 				<text><![CDATA[Ekspedisi]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="78" y="5" width="10" height="15" uuid="df607b5a-1396-45db-aac0-9aabd3cd3d48"/>
+				<reportElement x="79" y="15" width="10" height="15" uuid="df607b5a-1396-45db-aac0-9aabd3cd3d48"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif"/>
 				</textElement>
 				<text><![CDATA[:]]></text>
 			</staticText>
+			<line>
+				<reportElement x="0" y="0" width="572" height="1" uuid="2a15dea5-acf3-403f-86cb-798ac97a8666"/>
+			</line>
 		</band>
 	</summary>
 </jasperReport>

@@ -182,6 +182,7 @@ public class Report {
     }
 
     public void printRencanaProduksi(List<RencanaProduksi> rencana) throws Exception {
+            rencana.sort(Comparator.comparing(RencanaProduksi::getTujuanKirim));
         JasperDesign jasperDesign = JRXmlLoader.load(getClass().getResourceAsStream("RencanaProduksi.jrxml"));
         JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(rencana);
         JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
