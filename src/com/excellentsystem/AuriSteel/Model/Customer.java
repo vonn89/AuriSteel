@@ -26,14 +26,50 @@ public class Customer {
     private final StringProperty noTelp = new SimpleStringProperty();
     private final StringProperty noHandphone = new SimpleStringProperty();
     private final StringProperty kodeSales = new SimpleStringProperty();
-    private final StringProperty bank = new SimpleStringProperty();
-    private final StringProperty atasNamaRekening = new SimpleStringProperty();
-    private final StringProperty noRekening = new SimpleStringProperty();
+    private final StringProperty noNpwp = new SimpleStringProperty();
+    private final StringProperty namaNpwp = new SimpleStringProperty();
+    private final StringProperty alamatNpwp = new SimpleStringProperty();
     private final DoubleProperty limitHutang = new SimpleDoubleProperty();
     private final DoubleProperty hutang = new SimpleDoubleProperty();
     private final DoubleProperty deposit = new SimpleDoubleProperty();
     private final StringProperty status = new SimpleStringProperty();
     private Pegawai sales;
+
+    public String getAlamatNpwp() {
+        return alamatNpwp.get();
+    }
+
+    public void setAlamatNpwp(String value) {
+        alamatNpwp.set(value);
+    }
+
+    public StringProperty alamatNpwpProperty() {
+        return alamatNpwp;
+    }
+
+    public String getNamaNpwp() {
+        return namaNpwp.get();
+    }
+
+    public void setNamaNpwp(String value) {
+        namaNpwp.set(value);
+    }
+
+    public StringProperty namaNpwpProperty() {
+        return namaNpwp;
+    }
+
+    public String getNoNpwp() {
+        return noNpwp.get();
+    }
+
+    public void setNoNpwp(String value) {
+        noNpwp.set(value);
+    }
+
+    public StringProperty noNpwpProperty() {
+        return noNpwp;
+    }
 
     public Pegawai getSales() {
         return sales;
@@ -210,41 +246,6 @@ public class Customer {
         return kodeSales;
     }
 
-    public String getBank() {
-        return bank.get();
-    }
-
-    public void setBank(String value) {
-        bank.set(value);
-    }
-
-    public StringProperty bankProperty() {
-        return bank;
-    }
-
-    public String getAtasNamaRekening() {
-        return atasNamaRekening.get();
-    }
-
-    public void setAtasNamaRekening(String value) {
-        atasNamaRekening.set(value);
-    }
-
-    public StringProperty atasNamaRekeningProperty() {
-        return atasNamaRekening;
-    }
-
-    public String getNoRekening() {
-        return noRekening.get();
-    }
-
-    public void setNoRekening(String value) {
-        noRekening.set(value);
-    }
-
-    public StringProperty noRekeningProperty() {
-        return noRekening;
-    }
 
     public String getStatus() {
         return status.get();

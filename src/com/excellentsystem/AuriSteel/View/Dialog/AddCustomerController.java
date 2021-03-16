@@ -48,9 +48,9 @@ public class AddCustomerController  {
     @FXML private TableColumn<Customer, String> noHandphoneColumn;
     @FXML private TableColumn<Customer, String> kodeSalesColumn;
     @FXML private TableColumn<Customer, String> namaSalesColumn;
-    @FXML private TableColumn<Customer, String> bankColumn;
-    @FXML private TableColumn<Customer, String> atasNamaRekeningColumn;
-    @FXML private TableColumn<Customer, String> noRekeningColumn;
+    @FXML private TableColumn<Customer, String> noNpwpColumn;
+    @FXML private TableColumn<Customer, String> namaNpwpColumn;
+    @FXML private TableColumn<Customer, String> alamatNpwpColumn;
     @FXML private TableColumn<Customer, Number> limitHutangColumn;
     @FXML private TableColumn<Customer, Number> hutangColumn;
     @FXML private TableColumn<Customer, Number> depositColumn;
@@ -73,9 +73,9 @@ public class AddCustomerController  {
         noHandphoneColumn.setCellValueFactory(cellData ->cellData.getValue().noHandphoneProperty());
         kodeSalesColumn.setCellValueFactory(cellData ->cellData.getValue().kodeSalesProperty());
         namaSalesColumn.setCellValueFactory(cellData ->cellData.getValue().getSales().namaProperty());
-        bankColumn.setCellValueFactory(cellData -> cellData.getValue().bankProperty());
-        atasNamaRekeningColumn.setCellValueFactory(cellData -> cellData.getValue().atasNamaRekeningProperty());
-        noRekeningColumn.setCellValueFactory(cellData -> cellData.getValue().noRekeningProperty());
+        noNpwpColumn.setCellValueFactory(cellData -> cellData.getValue().noNpwpProperty());
+        namaNpwpColumn.setCellValueFactory(cellData -> cellData.getValue().namaNpwpProperty());
+        alamatNpwpColumn.setCellValueFactory(cellData -> cellData.getValue().alamatNpwpProperty());
         limitHutangColumn.setCellValueFactory(cellData -> cellData.getValue().limitHutangProperty());
         limitHutangColumn.setCellFactory(col -> Function.getTableCell());
         hutangColumn.setCellValueFactory(cellData -> cellData.getValue().hutangProperty());
@@ -161,9 +161,9 @@ public class AddCustomerController  {
                     checkColumn(temp.getNoHandphone())||
                     checkColumn(temp.getKodeSales())||
                     checkColumn(temp.getSales().getNama())||
-                    checkColumn(temp.getBank())||
-                    checkColumn(temp.getAtasNamaRekening())||
-                    checkColumn(temp.getNoRekening())||
+                    checkColumn(temp.getNoNpwp())||
+                    checkColumn(temp.getNamaNpwp())||
+                    checkColumn(temp.getAlamatNpwp())||
                     checkColumn(df.format(temp.getLimitHutang()))||
                     checkColumn(df.format(temp.getHutang()))||
                     checkColumn(df.format(temp.getDeposit()))

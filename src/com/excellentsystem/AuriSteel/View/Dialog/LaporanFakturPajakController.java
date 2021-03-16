@@ -387,9 +387,9 @@ public class LaporanFakturPajakController {
                         sheet.getRow(rc).getCell(4).setCellValue(new SimpleDateFormat("MM").format(tglSql.parse(p.getTglPenjualan())));
                         sheet.getRow(rc).getCell(5).setCellValue(new SimpleDateFormat("yyyy").format(tglSql.parse(p.getTglPenjualan())));
                         sheet.getRow(rc).getCell(6).setCellValue(new SimpleDateFormat("dd/MM/yyyy").format(tglSql.parse(p.getTglPenjualan())));
-                        sheet.getRow(rc).getCell(7).setCellValue(p.getCustomer().getNoRekening());
-                        sheet.getRow(rc).getCell(8).setCellValue(p.getCustomer().getBank());
-                        sheet.getRow(rc).getCell(9).setCellValue(p.getCustomer().getAtasNamaRekening());
+                        sheet.getRow(rc).getCell(7).setCellValue(p.getCustomer().getNoNpwp());
+                        sheet.getRow(rc).getCell(8).setCellValue(p.getCustomer().getNamaNpwp());
+                        sheet.getRow(rc).getCell(9).setCellValue(p.getCustomer().getAlamatNpwp());
                         sheet.getRow(rc).getCell(10).setCellValue(p.getTotalPenjualan() / 1.1);
                         sheet.getRow(rc).getCell(11).setCellValue(p.getTotalPenjualan() / 1.1 * 0.1);
                         sheet.getRow(rc).getCell(12).setCellValue("");

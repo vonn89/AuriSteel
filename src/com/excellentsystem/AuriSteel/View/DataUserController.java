@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.excellentsystem.AuriSteel.View;
 
 import com.excellentsystem.AuriSteel.DAO.OtoritasDAO;
@@ -52,65 +51,78 @@ import javafx.stage.Modality;
  *
  * @author Xtreme
  */
-public class DataUserController  {
+public class DataUserController {
 
-    
-    @FXML private TableView<User> userTable;
-    @FXML private TableColumn<User, String> kodeUserColumn;
-    @FXML private TableColumn<User, String> namaColumn;
-    @FXML private TableColumn<User, String> levelColumn;
-    
-    @FXML private TreeTableView<Otoritas> otoritasTable;
-    @FXML private TreeTableColumn<Otoritas, String> jenisColumn;
-    @FXML private TreeTableColumn<Otoritas, Boolean> statusColumn;
+    @FXML
+    private TableView<User> userTable;
+    @FXML
+    private TableColumn<User, String> kodeUserColumn;
+    @FXML
+    private TableColumn<User, String> namaColumn;
+    @FXML
+    private TableColumn<User, String> levelColumn;
 
-    @FXML private CheckBox checkOtoritas;
-    @FXML private TextField usernameField;
-    @FXML private PasswordField passwordField;
-    @FXML private TextField namaField;
-    @FXML private ComboBox<String> levelCombo;
-    @FXML private Button saveButton;
-    @FXML private Button cancelButton;
-    
+    @FXML
+    private TreeTableView<Otoritas> otoritasTable;
+    @FXML
+    private TreeTableColumn<Otoritas, String> jenisColumn;
+    @FXML
+    private TreeTableColumn<Otoritas, Boolean> statusColumn;
+
+    @FXML
+    private CheckBox checkOtoritas;
+    @FXML
+    private TextField usernameField;
+    @FXML
+    private PasswordField passwordField;
+    @FXML
+    private TextField namaField;
+    @FXML
+    private ComboBox<String> levelCombo;
+    @FXML
+    private Button saveButton;
+    @FXML
+    private Button cancelButton;
+
     private final TreeItem<Otoritas> root = new TreeItem<>();
     private ObservableList<User> allUser = FXCollections.observableArrayList();
     private List<Otoritas> otoritas = new ArrayList<>();
-    private Main mainApp;  
+    private Main mainApp;
     private String status;
+
     public void initialize() {
         kodeUserColumn.setCellValueFactory(cellData -> cellData.getValue().kodeUserProperty());
         kodeUserColumn.setCellFactory(col -> Function.getWrapTableCell(kodeUserColumn));
-        
+
         namaColumn.setCellValueFactory(cellData -> cellData.getValue().namaProperty());
         namaColumn.setCellFactory(col -> Function.getWrapTableCell(namaColumn));
-        
+
         levelColumn.setCellValueFactory(cellData -> cellData.getValue().levelProperty());
         levelColumn.setCellFactory(col -> Function.getWrapTableCell(levelColumn));
-        
+
         jenisColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().jenisProperty());
         jenisColumn.setCellFactory(col -> Function.getWrapTreeTableCell(jenisColumn));
-        
+
         statusColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<Otoritas, Boolean> param) -> {
             SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(param.getValue().getValue().isStatus());
             booleanProp.addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
                 param.getValue().getValue().setStatus(newValue);
-                for(TreeItem<Otoritas> child : param.getValue().getChildren()){
+                for (TreeItem<Otoritas> child : param.getValue().getChildren()) {
                     child.getValue().setStatus(newValue);
                 }
                 otoritasTable.refresh();
             });
             return booleanProp;
         });
-        statusColumn.setCellFactory((TreeTableColumn<Otoritas,Boolean> p) -> {
-            CheckBoxTreeTableCell<Otoritas,Boolean> cell = new CheckBoxTreeTableCell<>();
+        statusColumn.setCellFactory((TreeTableColumn<Otoritas, Boolean> p) -> {
+            CheckBoxTreeTableCell<Otoritas, Boolean> cell = new CheckBoxTreeTableCell<>();
             cell.setAlignment(Pos.CENTER);
             return cell;
         });
-        
+
         userTable.getSelectionModel().selectedItemProperty().addListener(
-            (observable, oldValue, newValue) -> selectUser(newValue));
-        
-        
+                (observable, oldValue, newValue) -> selectUser(newValue));
+
         final ContextMenu rm = new ContextMenu();
         MenuItem addNew = new MenuItem("Add New User");
         addNew.setOnAction((ActionEvent event) -> {
@@ -123,13 +135,13 @@ public class DataUserController  {
         rm.getItems().addAll(addNew, refresh);
         userTable.setContextMenu(rm);
         userTable.setRowFactory(table -> {
-            TableRow<User> row = new TableRow<User>(){
+            TableRow<User> row = new TableRow<User>() {
                 @Override
                 public void updateItem(User item, boolean empty) {
                     super.updateItem(item, empty);
                     if (empty) {
                         setContextMenu(rm);
-                    }else{
+                    } else {
                         final ContextMenu rm = new ContextMenu();
                         MenuItem addNew = new MenuItem("Add New User");
                         addNew.setOnAction((ActionEvent event) -> {
@@ -151,10 +163,12 @@ public class DataUserController  {
             return row;
         });
         usernameField.setOnKeyPressed((KeyEvent keyEvent) -> {
-            if (keyEvent.getCode() == KeyCode.ENTER)  
+            if (keyEvent.getCode() == KeyCode.ENTER) {
                 passwordField.requestFocus();
+            }
         });
     }
+
     public void setMainApp(Main mainApp) {
         this.mainApp = mainApp;
         userTable.setItems(allUser);
@@ -169,30 +183,33 @@ public class DataUserController  {
         levelCombo.setItems(allLevel);
         getUser();
     }
+
     @FXML
-    private void checkOtoritas(){
-        for(TreeItem<Otoritas> head : otoritasTable.getRoot().getChildren()){
+    private void checkOtoritas() {
+        for (TreeItem<Otoritas> head : otoritasTable.getRoot().getChildren()) {
             head.getValue().setStatus(checkOtoritas.isSelected());
-            for(TreeItem<Otoritas> child : head.getChildren()){
+            for (TreeItem<Otoritas> child : head.getChildren()) {
                 child.getValue().setStatus(checkOtoritas.isSelected());
             }
         }
         otoritasTable.refresh();
     }
+
     @FXML
-    private void getUser(){
+    private void getUser() {
         Task<List<User>> task = new Task<List<User>>() {
-            @Override 
-            public List<User> call() throws Exception{
-                try(Connection con = Koneksi.getConnection()){
+            @Override
+            public List<User> call() throws Exception {
+                try (Connection con = Koneksi.getConnection()) {
                     List<User> allUser = UserDAO.getAll(con);
                     List<Otoritas> allOtoritas = OtoritasDAO.getAll(con);
-                    for(User u : allUser){
+                    for (User u : allUser) {
                         u.setPassword(Function.decrypt(u.getPassword(), key));
                         List<Otoritas> otoritas = new ArrayList<>();
-                        for(Otoritas o : allOtoritas){
-                            if(u.getKodeUser().equals(o.getKodeUser()))
+                        for (Otoritas o : allOtoritas) {
+                            if (u.getKodeUser().equals(o.getKodeUser())) {
                                 otoritas.add(o);
+                            }
                         }
                         u.setOtoritas(otoritas);
                     }
@@ -216,292 +233,298 @@ public class DataUserController  {
         });
         new Thread(task).start();
     }
-    private TreeItem<Otoritas> createTreeItem(String head, List<String> child){
+
+    private TreeItem<Otoritas> createTreeItem(String head, List<String> child) {
         Otoritas temp = new Otoritas();
         temp.setJenis(head);
         temp.setStatus(false);
-        for(Otoritas o : otoritas){
-            if(o.getJenis().equals(temp.getJenis()))
+        for (Otoritas o : otoritas) {
+            if (o.getJenis().equals(temp.getJenis())) {
                 temp.setStatus(o.isStatus());
+            }
         }
         TreeItem<Otoritas> parent = new TreeItem<>(temp);
-        for(String s : child){
+        for (String s : child) {
             Otoritas temp2 = new Otoritas();
             temp2.setJenis(s);
             temp2.setStatus(false);
-            for(Otoritas o : otoritas){
-                if(o.getJenis().equals(temp2.getJenis()))
+            for (Otoritas o : otoritas) {
+                if (o.getJenis().equals(temp2.getJenis())) {
                     temp2.setStatus(o.isStatus());
+                }
             }
             parent.getChildren().addAll(new TreeItem<>(temp2));
         }
         return parent;
     }
-    private void setTable(){
-        try{
-            if(otoritasTable.getRoot()!=null)
+
+    private void setTable() {
+        try {
+            if (otoritasTable.getRoot() != null) {
                 otoritasTable.getRoot().getChildren().clear();
-            
+            }
+
             root.getChildren().add(createTreeItem("Dashboard",
-                new ArrayList<>()
+                    new ArrayList<>()
             ));
-            root.getChildren().add(createTreeItem("Data Customer", 
-                Arrays.asList(
-                    "Add New Customer", 
-                    "Edit Customer", 
-                    "Delete Customer"
-                )
+            root.getChildren().add(createTreeItem("Data Customer",
+                    Arrays.asList(
+                            "Add New Customer",
+                            "Edit Customer",
+                            "Delete Customer"
+                    )
             ));
             root.getChildren().add(createTreeItem("Data Supplier",
-                Arrays.asList(
-                    "Add New Supplier",
-                    "Edit Supplier",
-                    "Delete Supplier"
-                )
+                    Arrays.asList(
+                            "Add New Supplier",
+                            "Edit Supplier",
+                            "Delete Supplier"
+                    )
             ));
             root.getChildren().add(createTreeItem("Data Pegawai",
-                Arrays.asList(
-                    "Add New Pegawai",
-                    "Edit Pegawai",
-                    "Delete Pegawai"
-                )
+                    Arrays.asList(
+                            "Add New Pegawai",
+                            "Edit Pegawai",
+                            "Delete Pegawai"
+                    )
             ));
             root.getChildren().add(createTreeItem("Data Bahan",
-                Arrays.asList(
-                    "Edit Bahan",
-                    "Cetak Barcode"
-                )
+                    Arrays.asList(
+                            "Edit Bahan",
+                            "Cetak Barcode"
+                    )
             ));
             root.getChildren().add(createTreeItem("Data Barang",
-                Arrays.asList(
-                    "Add New Barang",
-                    "Edit Barang",
-                    "Delete Barang"
-                )
+                    Arrays.asList(
+                            "Add New Barang",
+                            "Edit Barang",
+                            "Delete Barang"
+                    )
             ));
             root.getChildren().add(createTreeItem("Pemesanan",
-                Arrays.asList(
-                    "Add New Pemesanan",
-                    "Detail Pemesanan",
-                    "Edit Pemesanan",
-                    "Batal Pemesanan",
-                    "Approve Pemesanan",
-                    "Pemesanan Selesai",
-                    "Terima Pembayaran DP",
-                    "Detail Terima Pembayaran DP",
-                    "Batal Terima Pembayaran DP",
-                    "Print Order Confirmation"
-                )
+                    Arrays.asList(
+                            "Add New Pemesanan",
+                            "Detail Pemesanan",
+                            "Edit Pemesanan",
+                            "Batal Pemesanan",
+                            "Approve Pemesanan",
+                            "Pemesanan Selesai",
+                            "Terima Pembayaran DP",
+                            "Detail Terima Pembayaran DP",
+                            "Batal Terima Pembayaran DP",
+                            "Print Order Confirmation"
+                    )
             ));
             root.getChildren().add(createTreeItem("Pemesanan Coil",
-                Arrays.asList(
-                    "Add New Pemesanan Coil",
-                    "Detail Pemesanan Coil",
-                    "Batal Pemesanan Coil",
-                    "Pemesanan Coil Selesai",
-                    "Terima Pembayaran DP Coil",
-                    "Detail Terima Pembayaran DP Coil",
-                    "Batal Terima Pembayaran DP Coil",
-                    "Print Order Confirmation Coil"
-                )
+                    Arrays.asList(
+                            "Add New Pemesanan Coil",
+                            "Detail Pemesanan Coil",
+                            "Batal Pemesanan Coil",
+                            "Pemesanan Coil Selesai",
+                            "Terima Pembayaran DP Coil",
+                            "Detail Terima Pembayaran DP Coil",
+                            "Batal Terima Pembayaran DP Coil",
+                            "Print Order Confirmation Coil"
+                    )
             ));
             root.getChildren().add(createTreeItem("Penjualan",
-                Arrays.asList(
-                    "Detail Penjualan",
-                    "Detail Pembayaran Penjualan",
-                    "Terima Pembayaran",
-                    "Batal Terima Pembayaran",
-                    "Set Jatuh Tempo Penjualan",
-                    "Print Invoice"
-                )
+                    Arrays.asList(
+                            "Detail Penjualan",
+                            "Detail Pembayaran Penjualan",
+                            "Terima Pembayaran",
+                            "Batal Terima Pembayaran",
+                            "Set Jatuh Tempo Penjualan",
+                            "Print Invoice"
+                    )
             ));
             root.getChildren().add(createTreeItem("Penjualan Coil",
-                Arrays.asList(                    
-                    "Detail Penjualan Coil",
-                    "Detail Pembayaran Penjualan Coil",
-                    "Terima Pembayaran Coil",
-                    "Batal Terima Pembayaran Coil",
-                    "Set Jatuh Tempo Penjualan Coil",
-                    "Print Invoice Coil"
-                )
+                    Arrays.asList(
+                            "Detail Penjualan Coil",
+                            "Detail Pembayaran Penjualan Coil",
+                            "Terima Pembayaran Coil",
+                            "Batal Terima Pembayaran Coil",
+                            "Set Jatuh Tempo Penjualan Coil",
+                            "Print Invoice Coil"
+                    )
             ));
             root.getChildren().add(createTreeItem("Pemesanan Pembelian Bahan",
-                Arrays.asList(                    
-                    "Add New Pemesanan Pembelian Bahan",
-                    "Detail Pemesanan Pembelian Bahan",
-                    "Pemesanan Pembelian Bahan Selesai",
-                    "Batal Pemesanan Pembelian Bahan",
-                    "Detail Pembayaran DP Pembelian Bahan",
-                    "Pembayaran DP Pembelian Bahan",
-                    "Batal Pembayaran DP Pembelian Bahan"
-                )
+                    Arrays.asList(
+                            "Add New Pemesanan Pembelian Bahan",
+                            "Detail Pemesanan Pembelian Bahan",
+                            "Pemesanan Pembelian Bahan Selesai",
+                            "Batal Pemesanan Pembelian Bahan",
+                            "Detail Pembayaran DP Pembelian Bahan",
+                            "Pembayaran DP Pembelian Bahan",
+                            "Batal Pembayaran DP Pembelian Bahan"
+                    )
             ));
             root.getChildren().add(createTreeItem("Pembelian Bahan",
-                Arrays.asList(                    
-                    "Add New Pembelian Bahan",
-                    "Detail Pembelian Bahan",
-                    "Batal Pembelian Bahan",
-                    "Detail Pembayaran Pembelian Bahan",
-                    "Pembayaran Pembelian Bahan",
-                    "Batal Pembayaran Pembelian Bahan",
-                    "Set Jatuh Tempo Pembelian Bahan"
-                )
+                    Arrays.asList(
+                            "Add New Pembelian Bahan",
+                            "Detail Pembelian Bahan",
+                            "Batal Pembelian Bahan",
+                            "Detail Pembayaran Pembelian Bahan",
+                            "Pembayaran Pembelian Bahan",
+                            "Batal Pembayaran Pembelian Bahan",
+                            "Set Jatuh Tempo Pembelian Bahan"
+                    )
             ));
             root.getChildren().add(createTreeItem("Pembelian Barang",
-                Arrays.asList(                    
-                    "Add New Pembelian Barang",
-                    "Detail Pembelian Barang",
-                    "Batal Pembelian Barang",
-                    "Detail Pembayaran Pembelian Barang",
-                    "Pembayaran Pembelian Barang",
-                    "Batal Pembayaran Pembelian Barang",
-                    "Set Jatuh Tempo Pembelian Barang"
-                )
+                    Arrays.asList(
+                            "Add New Pembelian Barang",
+                            "Detail Pembelian Barang",
+                            "Batal Pembelian Barang",
+                            "Detail Pembayaran Pembelian Barang",
+                            "Pembayaran Pembelian Barang",
+                            "Batal Pembayaran Pembelian Barang",
+                            "Set Jatuh Tempo Pembelian Barang"
+                    )
             ));
             root.getChildren().add(createTreeItem("Permintaan Barang",
-                Arrays.asList(                    
-                    "Print SPK"
-                )
+                    Arrays.asList(
+                            "Print SPK"
+                    )
             ));
             root.getChildren().add(createTreeItem("Rencana Produksi",
-                Arrays.asList(                    
-                    "Add Rencana Produksi", 
-                    "Edit Rencana Produksi", 
-                    "Delete Rencana Produksi", 
-                    "Reset Rencana Produksi", 
-                    "Print Rencana Produksi",
-                    "Print Delivery Order"
-                )
+                    Arrays.asList(
+                            "Add Rencana Produksi",
+                            "Edit Rencana Produksi",
+                            "Delete Rencana Produksi",
+                            "Reset Rencana Produksi",
+                            "Print Rencana Produksi",
+                            "Print Delivery Order"
+                    )
             ));
             root.getChildren().add(createTreeItem("Produksi Barang",
-                Arrays.asList(          
-                    "Add New Produksi",
-                    "Detail Produksi",
-                    "Verifikasi Produksi",
-                    "Batal Produksi"
-                )
+                    Arrays.asList(
+                            "Add New Produksi",
+                            "Detail Produksi",
+                            "Verifikasi Produksi",
+                            "Batal Produksi"
+                    )
             ));
             root.getChildren().add(createTreeItem("Pengiriman Barang",
-                Arrays.asList(                    
-                    "Add New Pengiriman",
-                    "Detail Pengiriman",
-                    "Verifikasi Pengiriman",
-                    "Batal Pengiriman",
-                    "Print Surat Jalan"
-                )
+                    Arrays.asList(
+                            "Add New Pengiriman",
+                            "Detail Pengiriman",
+                            "Verifikasi Pengiriman",
+                            "Batal Pengiriman",
+                            "Print Surat Jalan"
+                    )
             ));
             root.getChildren().add(createTreeItem("Pengiriman Coil",
-                Arrays.asList(                    
-                    "Add New Pengiriman Coil",
-                    "Detail Pengiriman Coil",
-                    "Batal Pengiriman Coil",
-                    "Print Surat Jalan Coil"
-                )
+                    Arrays.asList(
+                            "Add New Pengiriman Coil",
+                            "Detail Pengiriman Coil",
+                            "Batal Pengiriman Coil",
+                            "Print Surat Jalan Coil"
+                    )
             ));
             root.getChildren().add(createTreeItem("Penerimaan Bahan",
-                Arrays.asList(                    
-                    "Add New Penerimaan Bahan", 
-                    "Detail Penerimaan Bahan",
-                    "Batal Penerimaan Bahan"
-                )
+                    Arrays.asList(
+                            "Add New Penerimaan Bahan",
+                            "Detail Penerimaan Bahan",
+                            "Batal Penerimaan Bahan"
+                    )
             ));
             root.getChildren().add(createTreeItem("Pindah Bahan",
-                Arrays.asList(                    
-                    "Add New Pindah Bahan",
-                    "Detail Pindah Bahan",
-                    "Batal Pindah Bahan",
-                    "Print Surat Jalan Pindah Bahan"
-                )
+                    Arrays.asList(
+                            "Add New Pindah Bahan",
+                            "Detail Pindah Bahan",
+                            "Batal Pindah Bahan",
+                            "Print Surat Jalan Pindah Bahan"
+                    )
             ));
             root.getChildren().add(createTreeItem("Pindah Barang",
-                Arrays.asList(                    
-                    "Add New Pindah Barang",
-                    "Detail Pindah Barang",
-                    "Batal Pindah Barang",
-                    "Print Surat Jalan Pindah Barang"
-                )
+                    Arrays.asList(
+                            "Add New Pindah Barang",
+                            "Detail Pindah Barang",
+                            "Batal Pindah Barang",
+                            "Print Surat Jalan Pindah Barang"
+                    )
             ));
             root.getChildren().add(createTreeItem("Keuangan",
-                Arrays.asList(                    
-                    "Add New Transaksi",    
-                    "Detail Transaksi",
-                    "Transfer Keuangan",
-                    "Batal Transaksi"
-                )
+                    Arrays.asList(
+                            "Add New Transaksi",
+                            "Detail Transaksi",
+                            "Transfer Keuangan",
+                            "Batal Transaksi"
+                    )
             ));
             root.getChildren().add(createTreeItem("Hutang",
-                Arrays.asList(                    
-                    "Add New Hutang",
-                    "Detail Hutang",
-                    "Pembayaran Hutang",
-                    "Batal Pembayaran Hutang",
-                    "Set Jatuh Tempo Hutang"
-                )
+                    Arrays.asList(
+                            "Add New Hutang",
+                            "Detail Hutang",
+                            "Pembayaran Hutang",
+                            "Batal Pembayaran Hutang",
+                            "Set Jatuh Tempo Hutang"
+                    )
             ));
             root.getChildren().add(createTreeItem("Piutang",
-                Arrays.asList(                    
-                    "Add New Piutang",
-                    "Detail Piutang",
-                    "Terima Pembayaran Piutang",
-                    "Batal Terima Pembayaran Piutang",
-                    "Set Jatuh Tempo Piutang"
-                )
+                    Arrays.asList(
+                            "Add New Piutang",
+                            "Detail Piutang",
+                            "Terima Pembayaran Piutang",
+                            "Batal Terima Pembayaran Piutang",
+                            "Set Jatuh Tempo Piutang"
+                    )
             ));
             root.getChildren().add(createTreeItem("Modal",
-                Arrays.asList(                    
-                    "Tambah Modal",
-                    "Ambil Modal"
-                )
+                    Arrays.asList(
+                            "Tambah Modal",
+                            "Ambil Modal"
+                    )
             ));
             root.getChildren().add(createTreeItem("Aset Tetap",
-                Arrays.asList(                    
-                    "Pembelian Aset Tetap",
-                    "Penjualan Aset Tetap",
-                    "Detail Aset Tetap"
-                )
+                    Arrays.asList(
+                            "Pembelian Aset Tetap",
+                            "Penjualan Aset Tetap",
+                            "Detail Aset Tetap"
+                    )
             ));
             root.getChildren().add(createTreeItem("Laporan Barang",
-                new ArrayList<>()
+                    new ArrayList<>()
             ));
             root.getChildren().add(createTreeItem("Laporan Penjualan",
-                new ArrayList<>()
+                    new ArrayList<>()
             ));
             root.getChildren().add(createTreeItem("Laporan Pembelian",
-                new ArrayList<>()
+                    new ArrayList<>()
             ));
             root.getChildren().add(createTreeItem("Laporan Keuangan",
-                new ArrayList<>()
+                    new ArrayList<>()
             ));
             root.getChildren().add(createTreeItem("Laporan Managerial",
-                new ArrayList<>()
+                    new ArrayList<>()
             ));
             root.getChildren().add(createTreeItem("Pengaturan Umum",
-                Arrays.asList(                    
-                    "Data User",          
-                    "Data User App",  
-                    "Data Mesin",
-                    "Data Gudang",
-                    "Print Laporan",
-                    "Export Excel",
-                    "Export Faktur Pajak",
-                    "Penyesuaian Stok Bahan",
-                    "Penyesuaian Stok Barang",
-                    "Kategori Bahan",
-                    "Kategori Barang",
-                    "Kategori Hutang",
-                    "Kategori Piutang",
-                    "Kategori Keuangan",
-                    "Kategori Transaksi"
-                )
+                    Arrays.asList(
+                            "Data User",
+                            "Data User App",
+                            "Data Mesin",
+                            "Data Gudang",
+                            "Print Laporan",
+                            "Export Excel",
+                            "Export Faktur Pajak",
+                            "Penyesuaian Stok Bahan",
+                            "Penyesuaian Stok Barang",
+                            "Kategori Bahan",
+                            "Kategori Barang",
+                            "Kategori Hutang",
+                            "Kategori Piutang",
+                            "Kategori Keuangan",
+                            "Kategori Transaksi"
+                    )
             ));
-            
+
             otoritasTable.setRoot(root);
-        }catch(Exception e){
+        } catch (Exception e) {
             mainApp.showMessage(Modality.NONE, "Error", e.toString());
         }
-    } 
+    }
+
     @FXML
-    private void reset(){
+    private void reset() {
         otoritas.clear();
         usernameField.setText("");
         passwordField.setText("");
@@ -513,12 +536,13 @@ public class DataUserController  {
         levelCombo.setDisable(true);
         saveButton.setDisable(true);
         cancelButton.setDisable(true);
-        status="";
+        status = "";
         setTable();
     }
-    public void selectUser(User u){
-        if(u!=null){
-            status="update";
+
+    public void selectUser(User u) {
+        if (u != null) {
+            status = "update";
             otoritas.clear();
             otoritas.addAll(u.getOtoritas());
             usernameField.setText(u.getKodeUser());
@@ -534,7 +558,8 @@ public class DataUserController  {
             setTable();
         }
     }
-    public void newUser(){
+
+    public void newUser() {
         status = "new";
         usernameField.setText("");
         passwordField.setText("");
@@ -549,13 +574,14 @@ public class DataUserController  {
 
         setTable();
     }
-    public void saveUser(){
-        if(usernameField.getText().equals("")){
+
+    public void saveUser() {
+        if (usernameField.getText().equals("")) {
             mainApp.showMessage(Modality.NONE, "Warning", "User masih kosong");
-        }else{
+        } else {
             Task<String> task = new Task<String>() {
-                @Override 
-                public String call() throws Exception{
+                @Override
+                public String call() throws Exception {
                     try (Connection con = Koneksi.getConnection()) {
                         User user = new User();
                         user.setKodeUser(usernameField.getText());
@@ -564,24 +590,25 @@ public class DataUserController  {
                         user.setLevel(levelCombo.getSelectionModel().getSelectedItem());
                         user.setStatus("true");
                         List<Otoritas> listOtoritas = new ArrayList<>();
-                        for(TreeItem<Otoritas> head : otoritasTable.getRoot().getChildren()){
+                        for (TreeItem<Otoritas> head : otoritasTable.getRoot().getChildren()) {
                             Otoritas o = head.getValue();
                             o.setKodeUser(usernameField.getText());
                             listOtoritas.add(o);
-                            for(TreeItem<Otoritas> child : head.getChildren()){
+                            for (TreeItem<Otoritas> child : head.getChildren()) {
                                 Otoritas o2 = child.getValue();
                                 o2.setKodeUser(usernameField.getText());
                                 listOtoritas.add(o2);
                             }
                         }
                         user.setOtoritas(listOtoritas);
-                        
-                        if(status.equals("update"))
+
+                        if (status.equals("update")) {
                             return Service.updateUser(con, user);
-                        else if(status.equals("new"))
+                        } else if (status.equals("new")) {
                             return Service.newUser(con, user);
-                        else
+                        } else {
                             return "false";
+                        }
                     }
                 }
             };
@@ -591,11 +618,12 @@ public class DataUserController  {
             task.setOnSucceeded((WorkerStateEvent ex) -> {
                 mainApp.closeLoading();
                 getUser();
-                if(task.getValue().equals("true")){
+                if (task.getValue().equals("true")) {
                     mainApp.showMessage(Modality.NONE, "Success", "Data user berhasil disimpan");
                     reset();
-                }else
+                } else {
                     mainApp.showMessage(Modality.NONE, "Failed", task.getValue());
+                }
             });
             task.setOnFailed((ex) -> {
                 mainApp.showMessage(Modality.NONE, "Error", task.getException().toString());
@@ -604,14 +632,15 @@ public class DataUserController  {
             new Thread(task).start();
         }
     }
-    public void delete(User user){
+
+    public void delete(User user) {
         MessageController controller = mainApp.showMessage(Modality.WINDOW_MODAL, "Confirmation",
-                "Delete user "+user.getKodeUser()+" ?");
+                "Delete user " + user.getKodeUser() + " ?");
         controller.OK.setOnAction((ActionEvent ev) -> {
             Task<String> task = new Task<String>() {
-                @Override 
-                public String call() throws Exception{
-                    try(Connection con = Koneksi.getConnection()){
+                @Override
+                public String call() throws Exception {
+                    try (Connection con = Koneksi.getConnection()) {
                         return Service.deleteUser(con, user);
                     }
                 }
@@ -623,10 +652,11 @@ public class DataUserController  {
                 mainApp.closeLoading();
                 getUser();
                 String message = task.getValue();
-                if(message.equals("true")){
+                if (message.equals("true")) {
                     mainApp.showMessage(Modality.NONE, "Success", "Data user berhasil dihapus");
-                }else
+                } else {
                     mainApp.showMessage(Modality.NONE, "Failed", message);
+                }
             });
             task.setOnFailed((e) -> {
                 mainApp.closeLoading();
@@ -635,5 +665,5 @@ public class DataUserController  {
             new Thread(task).start();
         });
     }
-    
+
 }

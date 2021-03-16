@@ -41,9 +41,9 @@
                   <TableColumn fx:id="noHandphoneColumn" prefWidth="75.0" text="No Handphone" visible="false" />
                   <TableColumn fx:id="kodeSalesColumn" prefWidth="75.0" text="Kode Sales" visible="false" />
                   <TableColumn fx:id="namaSalesColumn" prefWidth="75.0" text="Nama Sales" />
-                  <TableColumn fx:id="bankColumn" prefWidth="75.0" text="Bank" visible="false" />
-                  <TableColumn fx:id="atasNamaRekeningColumn" prefWidth="75.0" text="Atas Nama Rekening" visible="false" />
-                  <TableColumn fx:id="noRekeningColumn" prefWidth="75.0" text="No Rekening" visible="false" />
+                  <TableColumn fx:id="noNpwpColumn" prefWidth="75.0" text="No NPWP" visible="false" />
+                  <TableColumn fx:id="namaNpwpColumn" prefWidth="75.0" text="Nama NPWP" visible="false" />
+                  <TableColumn fx:id="alamatNpwpColumn" prefWidth="75.0" text="Alamat NPWP" visible="false" />
                   <TableColumn fx:id="limitHutangColumn" prefWidth="75.0" text="Limit Hutang" />
                   <TableColumn fx:id="hutangColumn" prefWidth="75.0" text="Hutang" />
                   <TableColumn fx:id="depositColumn" prefWidth="75.0" text="Deposit" />

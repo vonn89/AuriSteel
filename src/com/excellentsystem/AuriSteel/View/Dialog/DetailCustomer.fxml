@@ -65,9 +65,9 @@
             <TextField fx:id="noTelpField" prefHeight="40.0" GridPane.columnIndex="4" GridPane.rowIndex="3" />
             <TextField fx:id="noHandphoneField" prefHeight="40.0" GridPane.columnIndex="4" GridPane.rowIndex="4" />
             <ComboBox fx:id="kodeSalesCombo" maxWidth="1.7976931348623157E308" prefHeight="40.0" GridPane.columnIndex="4" GridPane.rowIndex="10" />
-            <TextField fx:id="bankField" prefHeight="40.0" GridPane.columnIndex="4" GridPane.rowIndex="7" />
-            <TextField fx:id="atasNamaRekeningField" prefHeight="40.0" GridPane.columnIndex="4" GridPane.rowIndex="8" />
-            <TextField fx:id="noRekeningField" prefHeight="40.0" GridPane.columnIndex="4" GridPane.rowIndex="6" />
+            <TextField fx:id="namaNpwpField" prefHeight="40.0" GridPane.columnIndex="4" GridPane.rowIndex="7" />
+            <TextField fx:id="alamatNpwpField" prefHeight="40.0" GridPane.columnIndex="4" GridPane.rowIndex="8" />
+            <TextField fx:id="noNpwpField" prefHeight="40.0" GridPane.columnIndex="4" GridPane.rowIndex="6" />
             <Label text="Limit Hutang" GridPane.columnIndex="3" GridPane.rowIndex="11" />
             <TextField fx:id="limitHutangField" prefHeight="40.0" text="0" GridPane.columnIndex="4" GridPane.rowIndex="11" />
             <Label prefHeight="30.0" styleClass="label-header" text="Detail Customer" GridPane.columnSpan="2147483647" />

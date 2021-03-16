@@ -331,8 +331,7 @@ public class DataUserAppController {
         }
         verifikasi.clear();
         verifikasi.addAll(tempVerifikasi);
-        
-        
+
         List<UserMesinApp> tempMesin = new ArrayList<>();
         for (Mesin m : allMesin) {
             UserMesinApp temp = new UserMesinApp();

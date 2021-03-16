@@ -322,24 +322,24 @@ public class PemesananController {
                     }
                 }
             };
-            row.itemProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue != null) {
-                    double hutang = newValue.getCustomer().getHutang();
-                    double limitHutang = newValue.getCustomer().getLimitHutang();
-                    double sisaPemesanan = 0;
-                    double dp = newValue.getSisaDownPayment();
-                    for (PemesananBarangDetail d : newValue.getListPemesananBarangDetail()) {
-                        sisaPemesanan = sisaPemesanan + ((d.getQty() - d.getQtyTerkirim()) * d.getHargaJual());
-                    }
-                    if (limitHutang - hutang - sisaPemesanan + dp < 0) {
-                        row.setStyle("-fx-background-color: #FFD8D1");//red
-                    } else {
-                        row.setStyle("");
-                    }
-                } else {
-                    row.setStyle("");
-                }
-            });
+//            row.itemProperty().addListener((observable, oldValue, newValue) -> {
+//                if (newValue != null) {
+//                    double hutang = newValue.getCustomer().getHutang();
+//                    double limitHutang = newValue.getCustomer().getLimitHutang();
+//                    double sisaPemesanan = 0;
+//                    double dp = newValue.getSisaDownPayment();
+//                    for (PemesananBarangDetail d : newValue.getListPemesananBarangDetail()) {
+//                        sisaPemesanan = sisaPemesanan + ((d.getQty() - d.getQtyTerkirim()) * d.getHargaJual());
+//                    }
+//                    if (limitHutang - hutang - sisaPemesanan + dp < 0) {
+//                        row.setStyle("-fx-background-color: #FFD8D1");//red
+//                    } else {
+//                        row.setStyle("");
+//                    }
+//                } else {
+//                    row.setStyle("");
+//                }
+//            });
 
             row.setOnMouseClicked((MouseEvent mouseEvent) -> {
                 if (mouseEvent.getButton().equals(MouseButton.PRIMARY) && mouseEvent.getClickCount() == 2) {

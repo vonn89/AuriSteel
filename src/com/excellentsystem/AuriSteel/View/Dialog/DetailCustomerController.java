@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.excellentsystem.AuriSteel.View.Dialog;
 
 import com.excellentsystem.AuriSteel.DAO.PegawaiDAO;
@@ -33,28 +32,45 @@ import javafx.stage.Stage;
  *
  * @author Xtreme
  */
-public class DetailCustomerController  {
+public class DetailCustomerController {
 
-    @FXML public TextField kodeCustomerField;
-    @FXML public TextField namaField;
-    @FXML public TextArea alamatField;
-    @FXML public TextField kotaField;
-    @FXML public TextField negaraField;
-    @FXML public TextField kodePosField;
-    @FXML public TextField emailField;
-    @FXML public TextField kontakPersonField;
-    @FXML public TextField noTelpField;
-    @FXML public TextField noHandphoneField;
-    @FXML public ComboBox<String> kodeSalesCombo;
-    @FXML public TextField bankField;
-    @FXML public TextField atasNamaRekeningField;
-    @FXML public TextField noRekeningField;
-    @FXML public TextField limitHutangField;
-    @FXML public Button saveButton;
-    private Main mainApp;  
+    @FXML
+    public TextField kodeCustomerField;
+    @FXML
+    public TextField namaField;
+    @FXML
+    public TextArea alamatField;
+    @FXML
+    public TextField kotaField;
+    @FXML
+    public TextField negaraField;
+    @FXML
+    public TextField kodePosField;
+    @FXML
+    public TextField emailField;
+    @FXML
+    public TextField kontakPersonField;
+    @FXML
+    public TextField noTelpField;
+    @FXML
+    public TextField noHandphoneField;
+    @FXML
+    public ComboBox<String> kodeSalesCombo;
+    @FXML
+    public TextField noNpwpField;
+    @FXML
+    public TextField namaNpwpField;
+    @FXML
+    public TextField alamatNpwpField;
+    @FXML
+    public TextField limitHutangField;
+    @FXML
+    public Button saveButton;
+    private Main mainApp;
     private Stage stage;
     private Stage owner;
-    public void setMainApp(Main mainApp,Stage owner,Stage stage) {
+
+    public void setMainApp(Main mainApp, Stage owner, Stage stage) {
         this.mainApp = mainApp;
         this.owner = owner;
         this.stage = stage;
@@ -64,12 +80,13 @@ public class DetailCustomerController  {
         });
         getPegawai();
     }
-    private void getPegawai(){
+
+    private void getPegawai() {
         Task<List<Pegawai>> task = new Task<List<Pegawai>>() {
-            @Override 
-            public List<Pegawai> call() throws Exception{
+            @Override
+            public List<Pegawai> call() throws Exception {
                 try (Connection con = Koneksi.getConnection()) {
-                    return PegawaiDAO.getAllByJabatanAndStatus(con, "Marketing","true");
+                    return PegawaiDAO.getAllByJabatanAndStatus(con, "Marketing", "true");
                 }
             }
         };
@@ -79,8 +96,8 @@ public class DetailCustomerController  {
         task.setOnSucceeded((WorkerStateEvent e) -> {
             mainApp.closeLoading();
             ObservableList<String> allSales = FXCollections.observableArrayList();
-            for(Pegawai temp : task.getValue()){
-                allSales.add(temp.getKodePegawai()+" - "+temp.getNama());
+            for (Pegawai temp : task.getValue()) {
+                allSales.add(temp.getKodePegawai() + " - " + temp.getNama());
             }
             kodeSalesCombo.setItems(allSales);
         });
@@ -90,7 +107,8 @@ public class DetailCustomerController  {
         });
         new Thread(task).start();
     }
-    public void setCustomerDetail(Customer customer){
+
+    public void setCustomerDetail(Customer customer) {
         kodeCustomerField.setText("");
         namaField.setText("");
         alamatField.setText("");
@@ -102,11 +120,11 @@ public class DetailCustomerController  {
         noTelpField.setText("");
         noHandphoneField.setText("");
         kodeSalesCombo.getSelectionModel().select("");
-        bankField.setText("");
-        atasNamaRekeningField.setText("");
-        noRekeningField.setText("");
+        noNpwpField.setText("");
+        namaNpwpField.setText("");
+        alamatNpwpField.setText("");
         limitHutangField.setText("0");
-        if(customer!=null){
+        if (customer != null) {
             kodeCustomerField.setText(customer.getKodeCustomer());
             namaField.setText(customer.getNama());
             alamatField.setText(customer.getAlamat());
@@ -117,18 +135,19 @@ public class DetailCustomerController  {
             kontakPersonField.setText(customer.getKontakPerson());
             noTelpField.setText(customer.getNoTelp());
             noHandphoneField.setText(customer.getNoHandphone());
-            kodeSalesCombo.getSelectionModel().select(customer.getKodeSales()+" - "+customer.getSales().getNama());
-            bankField.setText(customer.getBank());
-            atasNamaRekeningField.setText(customer.getAtasNamaRekening());
-            noRekeningField.setText(customer.getNoRekening());
+            kodeSalesCombo.getSelectionModel().select(customer.getKodeSales() + " - " + customer.getSales().getNama());
+            noNpwpField.setText(customer.getNoNpwp());
+            namaNpwpField.setText(customer.getNamaNpwp());
+            alamatNpwpField.setText(customer.getAlamatNpwp());
             limitHutangField.setText(df.format(customer.getLimitHutang()));
-            if(!"Manager".equals(sistem.getUser().getLevel()))
+            if (!"Manager".equals(sistem.getUser().getLevel())) {
                 limitHutangField.setDisable(true);
+            }
         }
     }
-    public void close(){
+
+    public void close() {
         mainApp.closeDialog(owner, stage);
     }
-        
-    
+
 }

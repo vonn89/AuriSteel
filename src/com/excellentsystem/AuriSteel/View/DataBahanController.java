@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.excellentsystem.AuriSteel.View;
 
 import com.excellentsystem.AuriSteel.DAO.BahanDAO;
@@ -58,97 +57,116 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  *
  * @author Xtreme
  */
-public class DataBahanController  {
-    @FXML private TreeTableView<Bahan> bahanTable;
-    @FXML private TreeTableColumn<Bahan, String> kodeBahanColumn;
-    @FXML private TreeTableColumn<Bahan, String> namaBahanColumn;
-    @FXML private TreeTableColumn<Bahan, Number> beratKotorColumn;
-    @FXML private TreeTableColumn<Bahan, Number> beratBersihColumn;
-    @FXML private TreeTableColumn<Bahan, Number> panjangColumn;
-    @FXML private TreeTableColumn<Bahan, Number> hargaBeliColumn;
-    
-    @FXML private TextField searchField;
-    @FXML private ComboBox<String> groupByCombo;
-    @FXML private ComboBox<String> statusCombo;
-    @FXML private Label totalBeratKotorLabel;
-    @FXML private Label totalBeratBersihLabel;
-    @FXML private Label totalPanjangLabel;
-    @FXML private Label totalHargaLabel;
-    
+public class DataBahanController {
+
+    @FXML
+    private TreeTableView<Bahan> bahanTable;
+    @FXML
+    private TreeTableColumn<Bahan, String> kodeBahanColumn;
+    @FXML
+    private TreeTableColumn<Bahan, String> namaBahanColumn;
+    @FXML
+    private TreeTableColumn<Bahan, Number> beratKotorColumn;
+    @FXML
+    private TreeTableColumn<Bahan, Number> beratBersihColumn;
+    @FXML
+    private TreeTableColumn<Bahan, Number> panjangColumn;
+    @FXML
+    private TreeTableColumn<Bahan, Number> hargaBeliColumn;
+
+    @FXML
+    private TextField searchField;
+    @FXML
+    private ComboBox<String> groupByCombo;
+    @FXML
+    private ComboBox<String> statusCombo;
+    @FXML
+    private Label totalBeratKotorLabel;
+    @FXML
+    private Label totalBeratBersihLabel;
+    @FXML
+    private Label totalPanjangLabel;
+    @FXML
+    private Label totalHargaLabel;
+
     private final TreeItem<Bahan> root = new TreeItem<>();
     private final ObservableList<Bahan> allBahan = FXCollections.observableArrayList();
     private final ObservableList<Bahan> filterData = FXCollections.observableArrayList();
-    private Main mainApp; 
+    private Main mainApp;
+
     public void initialize() {
         kodeBahanColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().kodeBahanProperty());
         kodeBahanColumn.setCellFactory(col -> Function.getWrapTreeTableCell(kodeBahanColumn));
-        
+
         namaBahanColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().namaBahanProperty());
         namaBahanColumn.setCellFactory(col -> Function.getWrapTreeTableCell(namaBahanColumn));
-        
+
         hargaBeliColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().hargaBeliProperty());
         hargaBeliColumn.setCellFactory(col -> Function.getTreeTableCell());
-        
+
         beratKotorColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().beratKotorProperty());
         beratKotorColumn.setCellFactory(col -> Function.getTreeTableCell());
-        
+
         beratBersihColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().beratBersihProperty());
         beratBersihColumn.setCellFactory(col -> Function.getTreeTableCell());
-        
+
         panjangColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().panjangProperty());
         panjangColumn.setCellFactory(col -> Function.getTreeTableCell());
-        
+
         allBahan.addListener((ListChangeListener.Change<? extends Bahan> change) -> {
             searchBahan();
         });
         searchField.textProperty().addListener(
-            (ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            searchBahan();
-        });
+                (ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+                    searchBahan();
+                });
         filterData.addAll(allBahan);
-        
+
         final ContextMenu rm = new ContextMenu();
         MenuItem export = new MenuItem("Export Excel");
-        export.setOnAction((ActionEvent e)->{
+        export.setOnAction((ActionEvent e) -> {
             exportExcel();
         });
         MenuItem refresh = new MenuItem("Refresh");
-        refresh.setOnAction((ActionEvent e)->{
+        refresh.setOnAction((ActionEvent e) -> {
             getBahan();
         });
-        for(Otoritas o : sistem.getUser().getOtoritas()){
-            if(o.getJenis().equals("Export Excel")&&o.isStatus())
+        for (Otoritas o : sistem.getUser().getOtoritas()) {
+            if (o.getJenis().equals("Export Excel") && o.isStatus()) {
                 rm.getItems().add(export);
+            }
         }
         rm.getItems().addAll(refresh);
         bahanTable.setContextMenu(rm);
         bahanTable.setRowFactory((TreeTableView<Bahan> tableView) -> {
-            final TreeTableRow<Bahan> row = new TreeTableRow<Bahan>(){
+            final TreeTableRow<Bahan> row = new TreeTableRow<Bahan>() {
                 @Override
                 public void updateItem(Bahan item, boolean empty) {
                     super.updateItem(item, empty);
                     if (empty) {
                         setContextMenu(rm);
-                    } else{
+                    } else {
                         final ContextMenu rm = new ContextMenu();
                         MenuItem edit = new MenuItem("Edit Bahan");
-                        edit.setOnAction((ActionEvent e)->{
+                        edit.setOnAction((ActionEvent e) -> {
                             editBahan(item);
                         });
                         MenuItem export = new MenuItem("Export Excel");
-                        export.setOnAction((ActionEvent e)->{
+                        export.setOnAction((ActionEvent e) -> {
                             exportExcel();
                         });
                         MenuItem refresh = new MenuItem("Refresh");
-                        refresh.setOnAction((ActionEvent e)->{
+                        refresh.setOnAction((ActionEvent e) -> {
                             getBahan();
                         });
-                        if(item.getNamaBahan()!=null){
-                            for(Otoritas o : sistem.getUser().getOtoritas()){
-                                if(o.getJenis().equals("Edit Bahan")&&o.isStatus())
+                        if (item.getNamaBahan() != null) {
+                            for (Otoritas o : sistem.getUser().getOtoritas()) {
+                                if (o.getJenis().equals("Edit Bahan") && o.isStatus()) {
                                     rm.getItems().add(edit);
-                                if(o.getJenis().equals("Export Excel")&&o.isStatus())
+                                }
+                                if (o.getJenis().equals("Export Excel") && o.isStatus()) {
                                     rm.getItems().add(export);
+                                }
                             }
                         }
                         rm.getItems().addAll(refresh);
@@ -157,11 +175,12 @@ public class DataBahanController  {
                 }
             };
             row.setOnMouseClicked((MouseEvent mouseEvent) -> {
-                if(mouseEvent.getButton().equals(MouseButton.PRIMARY)&&mouseEvent.getClickCount() == 2){
-                    if(row.getItem()!=null && row.getItem().getNamaBahan()!=null){
-                        for(Otoritas o : sistem.getUser().getOtoritas()){
-                            if(o.getJenis().equals("Edit Barang")&&o.isStatus())
+                if (mouseEvent.getButton().equals(MouseButton.PRIMARY) && mouseEvent.getClickCount() == 2) {
+                    if (row.getItem() != null && row.getItem().getNamaBahan() != null) {
+                        for (Otoritas o : sistem.getUser().getOtoritas()) {
+                            if (o.getJenis().equals("Edit Barang") && o.isStatus()) {
                                 editBahan(row.getItem());
+                            }
                         }
                     }
                 }
@@ -169,6 +188,7 @@ public class DataBahanController  {
             return row;
         });
     }
+
     public void setMainApp(Main mainApp) {
         this.mainApp = mainApp;
         ObservableList<String> status = FXCollections.observableArrayList();
@@ -184,16 +204,18 @@ public class DataBahanController  {
         groupByCombo.getSelectionModel().select("Kode Kategori");
         getBahan();
     }
+
     @FXML
-    private void getBahan(){
+    private void getBahan() {
         Task<List<Bahan>> task = new Task<List<Bahan>>() {
-            @Override 
-            public List<Bahan> call() throws Exception{
+            @Override
+            public List<Bahan> call() throws Exception {
                 String status = "%";
-                if(statusCombo.getSelectionModel().getSelectedItem().equals("Tersedia"))
+                if (statusCombo.getSelectionModel().getSelectedItem().equals("Tersedia")) {
                     status = "true";
-                else if(statusCombo.getSelectionModel().getSelectedItem().equals("Sudah Diproduksi/Dijual"))
+                } else if (statusCombo.getSelectionModel().getSelectedItem().equals("Sudah Diproduksi/Dijual")) {
                     status = "false";
+                }
                 try (Connection con = Koneksi.getConnection()) {
                     return BahanDAO.getAllByStatus(con, status);
                 }
@@ -213,63 +235,71 @@ public class DataBahanController  {
         });
         new Thread(task).start();
     }
-    private Boolean checkColumn(String column){
-        if(column!=null){
-            if(column.toLowerCase().contains(searchField.getText().toLowerCase()))
+
+    private Boolean checkColumn(String column) {
+        if (column != null) {
+            if (column.toLowerCase().contains(searchField.getText().toLowerCase())) {
                 return true;
+            }
         }
         return false;
     }
+
     private void searchBahan() {
         filterData.clear();
         for (Bahan temp : allBahan) {
-            if (searchField.getText() == null || searchField.getText().equals(""))
+            if (searchField.getText() == null || searchField.getText().equals("")) {
                 filterData.add(temp);
-            else{
-                if(checkColumn(temp.getKodeBahan())||
-                    checkColumn(temp.getNoKontrak())||
-                    checkColumn(temp.getKodeKategori())||
-                    checkColumn(temp.getNamaBahan())||
-                    checkColumn(temp.getSpesifikasi())||
-                    checkColumn(temp.getKeterangan())||
-                    checkColumn(df.format(temp.getBeratBersih()))||
-                    checkColumn(df.format(temp.getBeratKotor()))||
-                    checkColumn(df.format(temp.getPanjang()))||
-                    checkColumn(df.format(temp.getHargaBeli())))
+            } else {
+                if (checkColumn(temp.getKodeBahan())
+                        || checkColumn(temp.getNoKontrak())
+                        || checkColumn(temp.getKodeKategori())
+                        || checkColumn(temp.getNamaBahan())
+                        || checkColumn(temp.getSpesifikasi())
+                        || checkColumn(temp.getKeterangan())
+                        || checkColumn(df.format(temp.getBeratBersih()))
+                        || checkColumn(df.format(temp.getBeratKotor()))
+                        || checkColumn(df.format(temp.getPanjang()))
+                        || checkColumn(df.format(temp.getHargaBeli()))) {
                     filterData.add(temp);
+                }
             }
         }
         hitungTotal();
         setTable();
     }
-    private void setTable(){
-        if(bahanTable.getRoot()!=null)
+
+    private void setTable() {
+        if (bahanTable.getRoot() != null) {
             bahanTable.getRoot().getChildren().clear();
+        }
         List<String> groupBy = new ArrayList<>();
-        for(Bahan b : filterData){
-            if(groupByCombo.getSelectionModel().getSelectedItem().equals("Kode Kategori")){
-                if(!groupBy.contains(b.getKodeKategori()))
+        for (Bahan b : filterData) {
+            if (groupByCombo.getSelectionModel().getSelectedItem().equals("Kode Kategori")) {
+                if (!groupBy.contains(b.getKodeKategori())) {
                     groupBy.add(b.getKodeKategori());
-            }else if(groupByCombo.getSelectionModel().getSelectedItem().equals("No Kontrak")){
-                if(!groupBy.contains(b.getNoKontrak()))
+                }
+            } else if (groupByCombo.getSelectionModel().getSelectedItem().equals("No Kontrak")) {
+                if (!groupBy.contains(b.getNoKontrak())) {
                     groupBy.add(b.getNoKontrak());
+                }
             }
         }
-        for(String kategori : groupBy){
+        for (String kategori : groupBy) {
             double totalBeratKotorKategori = 0;
             double totalBeratBersihKategori = 0;
             double totalPanjangKategori = 0;
             double hargaBeliKategori = 0;
             TreeItem<Bahan> parentKategori = new TreeItem<>(new Bahan());
-            
-            for(Bahan b: filterData){
+
+            for (Bahan b : filterData) {
                 boolean status = false;
-                if(groupByCombo.getSelectionModel().getSelectedItem().equals("Kode Kategori") && kategori.equals(b.getKodeKategori())){
+                if (groupByCombo.getSelectionModel().getSelectedItem().equals("Kode Kategori") && kategori.equals(b.getKodeKategori())) {
                     status = true;
-                }else if(groupByCombo.getSelectionModel().getSelectedItem().equals("No Kontrak") && kategori.equals(b.getNoKontrak())){
+                } else if (groupByCombo.getSelectionModel().getSelectedItem().equals("No Kontrak") && kategori.equals(b.getNoKontrak())) {
                     status = true;
                 }
-                if(status){
+                if (status) {
                     TreeItem<Bahan> child = new TreeItem<>(b);
                     parentKategori.getChildren().add(child);
 
@@ -279,7 +309,7 @@ public class DataBahanController  {
                     hargaBeliKategori = hargaBeliKategori + b.getHargaBeli();
                 }
             }
-            
+
             parentKategori.getValue().setKodeBahan(kategori);
             parentKategori.getValue().setBeratKotor(totalBeratKotorKategori);
             parentKategori.getValue().setBeratBersih(totalBeratBersihKategori);
@@ -289,12 +319,13 @@ public class DataBahanController  {
         }
         bahanTable.setRoot(root);
     }
-    private void hitungTotal(){
+
+    private void hitungTotal() {
         double totalBeratKotor = 0;
         double totalBeratBersih = 0;
         double totalPanjang = 0;
         double totalHarga = 0;
-        for(Bahan b : filterData){
+        for (Bahan b : filterData) {
             totalBeratKotor = totalBeratKotor + b.getBeratKotor();
             totalBeratBersih = totalBeratBersih + b.getBeratBersih();
             totalPanjang = totalPanjang + b.getPanjang();
@@ -305,16 +336,17 @@ public class DataBahanController  {
         totalPanjangLabel.setText(df.format(totalPanjang));
         totalHargaLabel.setText(df.format(totalHarga));
     }
-    private void editBahan(Bahan b){
+
+    private void editBahan(Bahan b) {
         Stage stage = new Stage();
         FXMLLoader loader = mainApp.showDialog(mainApp.MainStage, stage, "View/Dialog/DetailBahanBaku.fxml");
         DetailBahanBakuController controller = loader.getController();
-        controller.setMainApp(mainApp,mainApp.MainStage, stage);
+        controller.setMainApp(mainApp, mainApp.MainStage, stage);
         controller.setBahan(b);
         controller.saveButton.setOnAction((ActionEvent event) -> {
             Task<String> task = new Task<String>() {
-                @Override 
-                public String call() throws Exception{
+                @Override
+                public String call() throws Exception {
                     try (Connection con = Koneksi.getConnection()) {
                         b.setNamaBahan(controller.namaBahanField.getText());
                         b.setSpesifikasi(controller.spesifikasiField.getText());
@@ -329,10 +361,10 @@ public class DataBahanController  {
             task.setOnSucceeded((e) -> {
                 mainApp.closeLoading();
                 getBahan();
-                if(task.getValue().equals("true")){
+                if (task.getValue().equals("true")) {
                     mainApp.showMessage(Modality.NONE, "Success", "Data bahan baku berhasil disimpan");
-                    mainApp.closeDialog(mainApp.MainStage,stage);
-                }else{
+                    mainApp.closeDialog(mainApp.MainStage, stage);
+                } else {
                     mainApp.showMessage(Modality.NONE, "Error", task.getValue());
                 }
             });
@@ -343,8 +375,9 @@ public class DataBahanController  {
             new Thread(task).start();
         });
     }
+
     private void exportExcel() {
-        try{
+        try {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Select location to export");
             fileChooser.getExtensionFilters().addAll(
@@ -363,33 +396,33 @@ public class DataBahanController  {
                 }
                 Font bold = workbook.createFont();
                 bold.setBold(true);
-                
+
                 CellStyle H1 = workbook.createCellStyle();
                 H1.setFont(bold);
                 CellStyle H2 = workbook.createCellStyle();
                 H2.setFont(bold);
                 H2.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
                 H2.setFillPattern(CellStyle.SOLID_FOREGROUND);
-                
+
                 Sheet sheet = workbook.createSheet("Data Bahan");
                 int rc = 0;
                 int c = 10;
                 createRow(workbook, sheet, rc, c, "Bold");
-                sheet.getRow(rc).getCell(0).setCellValue("Status : "+statusCombo.getSelectionModel().getSelectedItem());
+                sheet.getRow(rc).getCell(0).setCellValue("Status : " + statusCombo.getSelectionModel().getSelectedItem());
                 rc++;
                 createRow(workbook, sheet, rc, c, "Bold");
-                sheet.getRow(rc).getCell(0).setCellValue("Filter : "+searchField.getText());
+                sheet.getRow(rc).getCell(0).setCellValue("Filter : " + searchField.getText());
                 rc++;
                 createRow(workbook, sheet, rc, c, "Header");
-                sheet.getRow(rc).getCell(0).setCellValue("No Kontrak"); 
-                sheet.getRow(rc).getCell(1).setCellValue("Kode Bahan"); 
-                sheet.getRow(rc).getCell(2).setCellValue("Nama Bahan"); 
-                sheet.getRow(rc).getCell(3).setCellValue("Spesifikasi"); 
-                sheet.getRow(rc).getCell(4).setCellValue("Keterangan"); 
-                sheet.getRow(rc).getCell(5).setCellValue("Berat Kotor"); 
-                sheet.getRow(rc).getCell(6).setCellValue("Berat Bersih"); 
-                sheet.getRow(rc).getCell(7).setCellValue("Panjang"); 
-                sheet.getRow(rc).getCell(8).setCellValue("Harga Beli"); 
+                sheet.getRow(rc).getCell(0).setCellValue("No Kontrak");
+                sheet.getRow(rc).getCell(1).setCellValue("Kode Bahan");
+                sheet.getRow(rc).getCell(2).setCellValue("Nama Bahan");
+                sheet.getRow(rc).getCell(3).setCellValue("Spesifikasi");
+                sheet.getRow(rc).getCell(4).setCellValue("Keterangan");
+                sheet.getRow(rc).getCell(5).setCellValue("Berat Kotor");
+                sheet.getRow(rc).getCell(6).setCellValue("Berat Bersih");
+                sheet.getRow(rc).getCell(7).setCellValue("Panjang");
+                sheet.getRow(rc).getCell(8).setCellValue("Harga Beli");
                 rc++;
                 double beratKotor = 0;
                 double beratBersih = 0;
@@ -407,7 +440,7 @@ public class DataBahanController  {
                     sheet.getRow(rc).getCell(7).setCellValue(b.getPanjang());
                     sheet.getRow(rc).getCell(8).setCellValue(b.getHargaBeli());
                     rc++;
-                    
+
                     beratKotor = beratKotor + b.getBeratKotor();
                     beratBersih = beratBersih + b.getBeratBersih();
                     panjang = panjang + b.getPanjang();
@@ -419,12 +452,14 @@ public class DataBahanController  {
                 sheet.getRow(rc).getCell(6).setCellValue(beratBersih);
                 sheet.getRow(rc).getCell(7).setCellValue(panjang);
                 sheet.getRow(rc).getCell(8).setCellValue(hargaBeli);
-                for(int i=0 ; i<c ; i++){ sheet.autoSizeColumn(i);}
+                for (int i = 0; i < c; i++) {
+                    sheet.autoSizeColumn(i);
+                }
                 try (FileOutputStream outputStream = new FileOutputStream(file)) {
                     workbook.write(outputStream);
                 }
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             mainApp.showMessage(Modality.NONE, "Error", e.toString());
             e.printStackTrace();
         }

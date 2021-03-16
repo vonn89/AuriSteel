@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.excellentsystem.AuriSteel.View;
 
 import com.excellentsystem.AuriSteel.DAO.HutangDAO;
@@ -70,52 +69,73 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  *
  * @author Xtreme
  */
-public class PembelianBarangController  {
+public class PembelianBarangController {
 
-    @FXML private TableView<PembelianBarangHead> pembelianTable;
-    @FXML private TableColumn<PembelianBarangHead, String> noPembelianColumn;
-    @FXML private TableColumn<PembelianBarangHead, String> tglPembelianColumn;
-    @FXML private TableColumn<PembelianBarangHead, String> gudangColumn;
-    @FXML private TableColumn<PembelianBarangHead, String> namaSupplierColumn;
-    @FXML private TableColumn<PembelianBarangHead, String> paymentTermColumn;
-    @FXML private TableColumn<PembelianBarangHead, Number> totalPembelianColumn;
-    @FXML private TableColumn<PembelianBarangHead, Number> totalBebanPembelianColumn;
-    @FXML private TableColumn<PembelianBarangHead, Number> grandTotalColumn;
-    @FXML private TableColumn<PembelianBarangHead, Number> pembayaranColumn;
-    @FXML private TableColumn<PembelianBarangHead, Number> sisaPembayaranColumn;
-    @FXML private TableColumn<PembelianBarangHead, String> catatanColumn;
-    @FXML private TableColumn<PembelianBarangHead, String> kodeUserColumn;
-    
-    @FXML private TextField searchField;
-    @FXML private Label totalPembelianField;
-    @FXML private Label belumTerbayarField;
-    @FXML private Label sudahTerbayarField;
-    @FXML private DatePicker tglMulaiPicker;
-    @FXML private DatePicker tglAkhirPicker;
-    @FXML private ComboBox<String> groupByCombo;
+    @FXML
+    private TableView<PembelianBarangHead> pembelianTable;
+    @FXML
+    private TableColumn<PembelianBarangHead, String> noPembelianColumn;
+    @FXML
+    private TableColumn<PembelianBarangHead, String> tglPembelianColumn;
+    @FXML
+    private TableColumn<PembelianBarangHead, String> gudangColumn;
+    @FXML
+    private TableColumn<PembelianBarangHead, String> namaSupplierColumn;
+    @FXML
+    private TableColumn<PembelianBarangHead, String> paymentTermColumn;
+    @FXML
+    private TableColumn<PembelianBarangHead, Number> totalPembelianColumn;
+    @FXML
+    private TableColumn<PembelianBarangHead, Number> totalBebanPembelianColumn;
+    @FXML
+    private TableColumn<PembelianBarangHead, Number> grandTotalColumn;
+    @FXML
+    private TableColumn<PembelianBarangHead, Number> pembayaranColumn;
+    @FXML
+    private TableColumn<PembelianBarangHead, Number> sisaPembayaranColumn;
+    @FXML
+    private TableColumn<PembelianBarangHead, String> catatanColumn;
+    @FXML
+    private TableColumn<PembelianBarangHead, String> kodeUserColumn;
+
+    @FXML
+    private TextField searchField;
+    @FXML
+    private Label totalPembelianField;
+    @FXML
+    private Label belumTerbayarField;
+    @FXML
+    private Label sudahTerbayarField;
+    @FXML
+    private DatePicker tglMulaiPicker;
+    @FXML
+    private DatePicker tglAkhirPicker;
+    @FXML
+    private ComboBox<String> groupByCombo;
     private ObservableList<PembelianBarangHead> allPembelian = FXCollections.observableArrayList();
     private ObservableList<PembelianBarangHead> filterData = FXCollections.observableArrayList();
-    private Main mainApp;   
+    private Main mainApp;
+
     public void initialize() {
         noPembelianColumn.setCellValueFactory(cellData -> cellData.getValue().noPembelianProperty());
         noPembelianColumn.setCellFactory(col -> Function.getWrapTableCell(noPembelianColumn));
-        
+
         gudangColumn.setCellValueFactory(cellData -> cellData.getValue().kodeGudangProperty());
         gudangColumn.setCellFactory(col -> Function.getWrapTableCell(gudangColumn));
-        
+
         namaSupplierColumn.setCellValueFactory(cellData -> cellData.getValue().getSupplier().namaProperty());
         namaSupplierColumn.setCellFactory(col -> Function.getWrapTableCell(namaSupplierColumn));
-        
+
         paymentTermColumn.setCellValueFactory(cellData -> cellData.getValue().paymentTermProperty());
         paymentTermColumn.setCellFactory(col -> Function.getWrapTableCell(paymentTermColumn));
-        
+
         catatanColumn.setCellValueFactory(cellData -> cellData.getValue().catatanProperty());
         catatanColumn.setCellFactory(col -> Function.getWrapTableCell(catatanColumn));
-        
-        kodeUserColumn.setCellValueFactory(cellData ->cellData.getValue().kodeUserProperty());
+
+        kodeUserColumn.setCellValueFactory(cellData -> cellData.getValue().kodeUserProperty());
         kodeUserColumn.setCellFactory(col -> Function.getWrapTableCell(kodeUserColumn));
-        
-        tglPembelianColumn.setCellValueFactory(cellData -> { 
+
+        tglPembelianColumn.setCellValueFactory(cellData -> {
             try {
                 return new SimpleStringProperty(tglLengkap.format(tglSql.parse(cellData.getValue().getTglPembelian())));
             } catch (Exception ex) {
@@ -124,22 +144,22 @@ public class PembelianBarangController  {
         });
         tglPembelianColumn.setCellFactory(col -> Function.getWrapTableCell(tglPembelianColumn));
         tglPembelianColumn.setComparator(Function.sortDate(tglLengkap));
-        
-        totalPembelianColumn.setCellValueFactory(cellData ->cellData.getValue().totalPembelianProperty());
+
+        totalPembelianColumn.setCellValueFactory(cellData -> cellData.getValue().totalPembelianProperty());
         totalPembelianColumn.setCellFactory(col -> Function.getTableCell());
-        
-        totalBebanPembelianColumn.setCellValueFactory(cellData ->cellData.getValue().totalBebanPembelianProperty());
+
+        totalBebanPembelianColumn.setCellValueFactory(cellData -> cellData.getValue().totalBebanPembelianProperty());
         totalBebanPembelianColumn.setCellFactory(col -> Function.getTableCell());
-        
-        grandTotalColumn.setCellValueFactory(cellData ->cellData.getValue().grandtotalProperty());
+
+        grandTotalColumn.setCellValueFactory(cellData -> cellData.getValue().grandtotalProperty());
         grandTotalColumn.setCellFactory(col -> Function.getTableCell());
-        
-        pembayaranColumn.setCellValueFactory(cellData ->cellData.getValue().pembayaranProperty());
+
+        pembayaranColumn.setCellValueFactory(cellData -> cellData.getValue().pembayaranProperty());
         pembayaranColumn.setCellFactory(col -> Function.getTableCell());
-        
-        sisaPembayaranColumn.setCellValueFactory(cellData ->cellData.getValue().sisaPembayaranProperty());
+
+        sisaPembayaranColumn.setCellValueFactory(cellData -> cellData.getValue().sisaPembayaranProperty());
         sisaPembayaranColumn.setCellFactory(col -> Function.getTableCell());
-        
+
         tglMulaiPicker.setConverter(Function.getTglConverter());
         tglMulaiPicker.setValue(LocalDate.now().minusMonths(1));
         tglMulaiPicker.setDayCellFactory((final DatePicker datePicker) -> Function.getDateCellMulai(tglAkhirPicker));
@@ -148,81 +168,90 @@ public class PembelianBarangController  {
         tglAkhirPicker.setDayCellFactory((final DatePicker datePicker) -> Function.getDateCellAkhir(tglMulaiPicker));
         final ContextMenu rm = new ContextMenu();
         MenuItem addNew = new MenuItem("Add New Pembelian");
-        addNew.setOnAction((ActionEvent e)->{
+        addNew.setOnAction((ActionEvent e) -> {
             newPembelian();
         });
         MenuItem export = new MenuItem("Export Excel");
-        export.setOnAction((ActionEvent e)->{
+        export.setOnAction((ActionEvent e) -> {
             exportExcel();
         });
         MenuItem refresh = new MenuItem("Refresh");
-        refresh.setOnAction((ActionEvent e)->{
+        refresh.setOnAction((ActionEvent e) -> {
             getPembelian();
         });
-        for(Otoritas o : sistem.getUser().getOtoritas()){
-            if(o.getJenis().equals("Add New Pembelian Barang")&&o.isStatus())
+        for (Otoritas o : sistem.getUser().getOtoritas()) {
+            if (o.getJenis().equals("Add New Pembelian Barang") && o.isStatus()) {
                 rm.getItems().add(addNew);
-            if(o.getJenis().equals("Export Excel")&&o.isStatus())
+            }
+            if (o.getJenis().equals("Export Excel") && o.isStatus()) {
                 rm.getItems().add(export);
+            }
         }
         rm.getItems().addAll(refresh);
         pembelianTable.setContextMenu(rm);
         pembelianTable.setRowFactory((TableView<PembelianBarangHead> tableView) -> {
-            final TableRow<PembelianBarangHead> row = new TableRow<PembelianBarangHead>(){
+            final TableRow<PembelianBarangHead> row = new TableRow<PembelianBarangHead>() {
                 @Override
                 public void updateItem(PembelianBarangHead item, boolean empty) {
                     super.updateItem(item, empty);
                     if (empty) {
                         setContextMenu(rm);
-                    } else{
+                    } else {
                         final ContextMenu rm = new ContextMenu();
                         MenuItem addNew = new MenuItem("Add New Pembelian");
-                        addNew.setOnAction((ActionEvent e)->{
+                        addNew.setOnAction((ActionEvent e) -> {
                             newPembelian();
                         });
                         MenuItem detail = new MenuItem("Detail Pembelian");
-                        detail.setOnAction((ActionEvent e)->{
+                        detail.setOnAction((ActionEvent e) -> {
                             lihatDetailPembelian(item);
                         });
                         MenuItem batal = new MenuItem("Batal Pembelian");
-                        batal.setOnAction((ActionEvent e)->{
+                        batal.setOnAction((ActionEvent e) -> {
                             batalPembelian(item);
                         });
                         MenuItem pembayaran = new MenuItem("Detail Pembayaran");
-                        pembayaran.setOnAction((ActionEvent e)->{
+                        pembayaran.setOnAction((ActionEvent e) -> {
                             showDetailHutang(item);
                         });
                         MenuItem bayar = new MenuItem("Pembayaran Pembelian");
-                        bayar.setOnAction((ActionEvent e)->{
+                        bayar.setOnAction((ActionEvent e) -> {
                             showPembayaran(item);
                         });
                         MenuItem tempo = new MenuItem("Set Jatuh Tempo");
-                        tempo.setOnAction((ActionEvent e)->{
+                        tempo.setOnAction((ActionEvent e) -> {
                             setJatuhTempo(item);
                         });
                         MenuItem export = new MenuItem("Export Excel");
-                        export.setOnAction((ActionEvent e)->{
+                        export.setOnAction((ActionEvent e) -> {
                             exportExcel();
                         });
                         MenuItem refresh = new MenuItem("Refresh");
-                        refresh.setOnAction((ActionEvent e)->{
+                        refresh.setOnAction((ActionEvent e) -> {
                             getPembelian();
                         });
-                        for(Otoritas o : sistem.getUser().getOtoritas()){
-                            if(o.getJenis().equals("Add New Pembelian Barang")&&o.isStatus())
+                        for (Otoritas o : sistem.getUser().getOtoritas()) {
+                            if (o.getJenis().equals("Add New Pembelian Barang") && o.isStatus()) {
                                 rm.getItems().add(addNew);
-                            if(o.getJenis().equals("Detail Pembelian Barang")&&o.isStatus())
+                            }
+                            if (o.getJenis().equals("Detail Pembelian Barang") && o.isStatus()) {
                                 rm.getItems().add(detail);
-                            if(o.getJenis().equals("Batal Pembelian Barang")&&o.isStatus())
+                            }
+                            if (o.getJenis().equals("Batal Pembelian Barang") && o.isStatus()) {
                                 rm.getItems().add(batal);
-                            if(o.getJenis().equals("Detail Pembayaran Pembelian Barang")&&o.isStatus()&&item.getPembayaran()>0)
+                            }
+                            if (o.getJenis().equals("Detail Pembayaran Pembelian Barang") && o.isStatus() && item.getPembayaran() > 0) {
                                 rm.getItems().add(pembayaran);
-                            if(o.getJenis().equals("Pembayaran Pembelian Barang")&&o.isStatus()&&item.getSisaPembayaran()>0)
+                            }
+                            if (o.getJenis().equals("Pembayaran Pembelian Barang") && o.isStatus() && item.getSisaPembayaran() > 0) {
                                 rm.getItems().add(bayar);
-                            if(o.getJenis().equals("Set Jatuh Tempo Pembelian Barang")&&o.isStatus()&&item.getSisaPembayaran()>0)
+                            }
+                            if (o.getJenis().equals("Set Jatuh Tempo Pembelian Barang") && o.isStatus() && item.getSisaPembayaran() > 0) {
                                 rm.getItems().add(tempo);
-                            if(o.getJenis().equals("Export Excel")&&o.isStatus())
+                            }
+                            if (o.getJenis().equals("Export Excel") && o.isStatus()) {
                                 rm.getItems().add(export);
+                            }
                         }
                         rm.getItems().addAll(refresh);
                         setContextMenu(rm);
@@ -230,11 +259,12 @@ public class PembelianBarangController  {
                 }
             };
             row.setOnMouseClicked((MouseEvent mouseEvent) -> {
-                if(mouseEvent.getButton().equals(MouseButton.PRIMARY)&&mouseEvent.getClickCount() == 2){
-                    if(row.getItem()!=null){
-                        for(Otoritas o : sistem.getUser().getOtoritas()){
-                            if(o.getJenis().equals("Detail Pembelian Barang")&&o.isStatus())
+                if (mouseEvent.getButton().equals(MouseButton.PRIMARY) && mouseEvent.getClickCount() == 2) {
+                    if (row.getItem() != null) {
+                        for (Otoritas o : sistem.getUser().getOtoritas()) {
+                            if (o.getJenis().equals("Detail Pembelian Barang") && o.isStatus()) {
                                 lihatDetailPembelian(row.getItem());
+                            }
                         }
                     }
                 }
@@ -245,11 +275,12 @@ public class PembelianBarangController  {
             searchPembelian();
         });
         searchField.textProperty().addListener(
-            (ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            searchPembelian();
-        });
+                (ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+                    searchPembelian();
+                });
         filterData.addAll(allPembelian);
     }
+
     public void setMainApp(Main mainApp) {
         this.mainApp = mainApp;
         ObservableList<String> groupBy = FXCollections.observableArrayList();
@@ -262,27 +293,30 @@ public class PembelianBarangController  {
         getPembelian();
         pembelianTable.setItems(filterData);
     }
+
     @FXML
-    private void getPembelian(){
+    private void getPembelian() {
         Task<List<PembelianBarangHead>> task = new Task<List<PembelianBarangHead>>() {
-            @Override 
-            public List<PembelianBarangHead> call()throws Exception {
+            @Override
+            public List<PembelianBarangHead> call() throws Exception {
                 try (Connection con = Koneksi.getConnection()) {
                     List<Supplier> allSupplier = SupplierDAO.getAllByStatus(con, "%");
-                    List<PembelianBarangHead> temp = PembelianBarangHeadDAO.getAllByDateAndStatus(con, 
-                                    tglMulaiPicker.getValue().toString(), tglAkhirPicker.getValue().toString(), "true");
+                    List<PembelianBarangHead> temp = PembelianBarangHeadDAO.getAllByDateAndStatus(con,
+                            tglMulaiPicker.getValue().toString(), tglAkhirPicker.getValue().toString(), "true");
                     List<PembelianBarangHead> listPembelian = new ArrayList<>();
-                    for(PembelianBarangHead p : temp){
-                        for(Supplier s : allSupplier){
-                            if(p.getKodeSupplier().equals(s.getKodeSupplier()))
+                    for (PembelianBarangHead p : temp) {
+                        for (Supplier s : allSupplier) {
+                            if (p.getKodeSupplier().equals(s.getKodeSupplier())) {
                                 p.setSupplier(s);
+                            }
                         }
-                        if(groupByCombo.getSelectionModel().getSelectedItem().equals("Semua"))
+                        if (groupByCombo.getSelectionModel().getSelectedItem().equals("Semua")) {
                             listPembelian.add(p);
-                        else if(groupByCombo.getSelectionModel().getSelectedItem().equals("Belum Lunas")&&p.getSisaPembayaran()!=0)
+                        } else if (groupByCombo.getSelectionModel().getSelectedItem().equals("Belum Lunas") && p.getSisaPembayaran() != 0) {
                             listPembelian.add(p);
-                        else if(groupByCombo.getSelectionModel().getSelectedItem().equals("Lunas")&&p.getSisaPembayaran()==0)
+                        } else if (groupByCombo.getSelectionModel().getSelectedItem().equals("Lunas") && p.getSisaPembayaran() == 0) {
                             listPembelian.add(p);
+                        }
                     }
                     return listPembelian;
                 }
@@ -302,46 +336,51 @@ public class PembelianBarangController  {
         });
         new Thread(task).start();
     }
-    private Boolean checkColumn(String column){
-        if(column!=null){
-            if(column.toLowerCase().contains(searchField.getText().toLowerCase()))
+
+    private Boolean checkColumn(String column) {
+        if (column != null) {
+            if (column.toLowerCase().contains(searchField.getText().toLowerCase())) {
                 return true;
+            }
         }
         return false;
     }
+
     private void searchPembelian() {
-        try{
+        try {
             filterData.clear();
             for (PembelianBarangHead temp : allPembelian) {
-                if (searchField.getText() == null || searchField.getText().equals(""))
+                if (searchField.getText() == null || searchField.getText().equals("")) {
                     filterData.add(temp);
-                else{
-                    if(checkColumn(temp.getNoPembelian())||
-                        checkColumn(tglLengkap.format(tglSql.parse(temp.getTglPembelian())))||
-                        checkColumn(temp.getKodeSupplier())||
-                        checkColumn(temp.getKodeGudang())||
-                        checkColumn(temp.getSupplier().getNama())||
-                        checkColumn(temp.getSupplier().getAlamat())||
-                        checkColumn(temp.getPaymentTerm())||
-                        checkColumn(df.format(temp.getTotalPembelian()))||
-                        checkColumn(df.format(temp.getPembayaran()))||
-                        checkColumn(df.format(temp.getSisaPembayaran()))||
-                        checkColumn(df.format(temp.getGrandtotal()))||
-                        checkColumn(df.format(temp.getTotalBebanPembelian()))||
-                        checkColumn(temp.getCatatan()))
-                            filterData.add(temp);
+                } else {
+                    if (checkColumn(temp.getNoPembelian())
+                            || checkColumn(tglLengkap.format(tglSql.parse(temp.getTglPembelian())))
+                            || checkColumn(temp.getKodeSupplier())
+                            || checkColumn(temp.getKodeGudang())
+                            || checkColumn(temp.getSupplier().getNama())
+                            || checkColumn(temp.getSupplier().getAlamat())
+                            || checkColumn(temp.getPaymentTerm())
+                            || checkColumn(df.format(temp.getTotalPembelian()))
+                            || checkColumn(df.format(temp.getPembayaran()))
+                            || checkColumn(df.format(temp.getSisaPembayaran()))
+                            || checkColumn(df.format(temp.getGrandtotal()))
+                            || checkColumn(df.format(temp.getTotalBebanPembelian()))
+                            || checkColumn(temp.getCatatan())) {
+                        filterData.add(temp);
+                    }
                 }
             }
             hitungTotal();
-        }catch(Exception e){
+        } catch (Exception e) {
             mainApp.showMessage(Modality.NONE, "Error", e.toString());
         }
     }
-    private void hitungTotal(){
+
+    private void hitungTotal() {
         double total = 0;
         double terbayar = 0;
         double belumterbayar = 0;
-        for(PembelianBarangHead temp : filterData){
+        for (PembelianBarangHead temp : filterData) {
             total = total + temp.getGrandtotal();
             terbayar = terbayar + temp.getPembayaran();
             belumterbayar = belumterbayar + temp.getSisaPembayaran();
@@ -350,23 +389,24 @@ public class PembelianBarangController  {
         sudahTerbayarField.setText(df.format(terbayar));
         belumTerbayarField.setText(df.format(belumterbayar));
     }
-    private void newPembelian(){
+
+    private void newPembelian() {
         Stage stage = new Stage();
         FXMLLoader loader = mainApp.showDialog(mainApp.MainStage, stage, "View/Dialog/NewPembelianBarang.fxml");
         NewPembelianBarangController controller = loader.getController();
-        controller.setMainApp(mainApp,mainApp.MainStage, stage);
+        controller.setMainApp(mainApp, mainApp.MainStage, stage);
         controller.setNewPembelian();
         controller.saveButton.setOnAction((event) -> {
-            if(controller.supplier==null){
+            if (controller.supplier == null) {
                 mainApp.showMessage(Modality.NONE, "Warning", "Supplier belum dipilih");
-            }else if(controller.allPembelianBarangDetail.isEmpty()){
+            } else if (controller.allPembelianBarangDetail.isEmpty()) {
                 mainApp.showMessage(Modality.NONE, "Warning", "Barang belum diinput");
-            }else if(controller.gudangCombo.getSelectionModel().getSelectedItem()==null){
+            } else if (controller.gudangCombo.getSelectionModel().getSelectedItem() == null) {
                 mainApp.showMessage(Modality.NONE, "Warning", "Gudang belum dipilih");
-            }else{
+            } else {
                 Task<String> task = new Task<String>() {
-                    @Override 
-                    public String call() throws Exception{
+                    @Override
+                    public String call() throws Exception {
                         try (Connection con = Koneksi.getConnection()) {
                             PembelianBarangHead p = new PembelianBarangHead();
                             p.setKodeGudang(controller.gudangCombo.getSelectionModel().getSelectedItem());
@@ -392,12 +432,12 @@ public class PembelianBarangController  {
                     mainApp.showLoadingScreen();
                 });
                 task.setOnSucceeded((WorkerStateEvent ex) -> {
-                    mainApp.closeLoading();    
+                    mainApp.closeLoading();
                     getPembelian();
-                    if(task.getValue().equals("true")){
+                    if (task.getValue().equals("true")) {
                         mainApp.showMessage(Modality.NONE, "Success", "Data pembelian berhasil disimpan");
                         mainApp.closeDialog(mainApp.MainStage, stage);
-                    }else{
+                    } else {
                         mainApp.showMessage(Modality.NONE, "Error", task.getValue());
                     }
                 });
@@ -409,14 +449,15 @@ public class PembelianBarangController  {
             }
         });
     }
-    private void batalPembelian(PembelianBarangHead p){
+
+    private void batalPembelian(PembelianBarangHead p) {
         MessageController controller = mainApp.showMessage(Modality.WINDOW_MODAL, "Confirmation",
-                "Batal pembelian "+p.getNoPembelian()+" ?");
+                "Batal pembelian " + p.getNoPembelian() + " ?");
         controller.OK.setOnAction((ActionEvent e) -> {
             mainApp.closeMessage();
             Task<String> task = new Task<String>() {
-                @Override 
-                public String call() throws Exception{
+                @Override
+                public String call() throws Exception {
                     try (Connection con = Koneksi.getConnection()) {
                         return Service.batalPembelianBarang(con, p);
                     }
@@ -428,9 +469,9 @@ public class PembelianBarangController  {
             task.setOnSucceeded((WorkerStateEvent ex) -> {
                 mainApp.closeLoading();
                 getPembelian();
-                if(task.getValue().equals("true")){
+                if (task.getValue().equals("true")) {
                     mainApp.showMessage(Modality.NONE, "Success", "Data pembelian berhasil dibatal");
-                }else{
+                } else {
                     mainApp.showMessage(Modality.NONE, "Warning", task.getValue());
                 }
             });
@@ -441,35 +482,38 @@ public class PembelianBarangController  {
             new Thread(task).start();
         });
     }
-    private void lihatDetailPembelian(PembelianBarangHead p){
+
+    private void lihatDetailPembelian(PembelianBarangHead p) {
         Stage stage = new Stage();
         FXMLLoader loader = mainApp.showDialog(mainApp.MainStage, stage, "View/Dialog/NewPembelianBarang.fxml");
         NewPembelianBarangController controller = loader.getController();
-        controller.setMainApp(mainApp,mainApp.MainStage, stage);
+        controller.setMainApp(mainApp, mainApp.MainStage, stage);
         controller.setDetailPembelian(p.getNoPembelian());
     }
-    private void showDetailHutang(PembelianBarangHead p){
+
+    private void showDetailHutang(PembelianBarangHead p) {
         Stage stage = new Stage();
         FXMLLoader loader = mainApp.showDialog(mainApp.MainStage, stage, "View/Dialog/DetailHutang.fxml");
         DetailHutangController x = loader.getController();
-        x.setMainApp(mainApp,mainApp.MainStage, stage);
+        x.setMainApp(mainApp, mainApp.MainStage, stage);
         x.setDetailPembelianBarang(p);
         x.pembayaranHutangTable.setRowFactory((TableView<Pembayaran> tableView) -> {
-            final TableRow<Pembayaran> row = new TableRow<Pembayaran>(){
+            final TableRow<Pembayaran> row = new TableRow<Pembayaran>() {
                 @Override
                 public void updateItem(Pembayaran item, boolean empty) {
                     super.updateItem(item, empty);
                     if (empty) {
                         setContextMenu(null);
-                    } else{
+                    } else {
                         final ContextMenu rm = new ContextMenu();
                         MenuItem batal = new MenuItem("Batal Pembayaran Pembelian");
-                        batal.setOnAction((ActionEvent e)->{
+                        batal.setOnAction((ActionEvent e) -> {
                             batalPembayaran(item, stage);
                         });
-                        for(Otoritas o : sistem.getUser().getOtoritas()){
-                            if(o.getJenis().equals("Batal Pembayaran Pembelian Barang")&&o.isStatus())
+                        for (Otoritas o : sistem.getUser().getOtoritas()) {
+                            if (o.getJenis().equals("Batal Pembayaran Pembelian Barang") && o.isStatus()) {
                                 rm.getItems().add(batal);
+                            }
                         }
                         setContextMenu(rm);
                     }
@@ -478,14 +522,15 @@ public class PembelianBarangController  {
             return row;
         });
     }
-    private void batalPembayaran(Pembayaran pembayaran, Stage stage){
+
+    private void batalPembayaran(Pembayaran pembayaran, Stage stage) {
         MessageController controller = mainApp.showMessage(Modality.WINDOW_MODAL, "Confirmation",
-            "Batal pembayaran "+pembayaran.getNoPembayaran()+" ?");
+                "Batal pembayaran " + pembayaran.getNoPembayaran() + " ?");
         controller.OK.setOnAction((ActionEvent e) -> {
             mainApp.closeMessage();
             Task<String> task = new Task<String>() {
-                @Override 
-                public String call()throws Exception {
+                @Override
+                public String call() throws Exception {
                     try (Connection con = Koneksi.getConnection()) {
                         return Service.batalPembayaranHutang(con, pembayaran);
                     }
@@ -497,10 +542,10 @@ public class PembelianBarangController  {
             task.setOnSucceeded((WorkerStateEvent ex) -> {
                 mainApp.closeLoading();
                 getPembelian();
-                if(task.getValue().equals("true")){
+                if (task.getValue().equals("true")) {
                     mainApp.closeDialog(mainApp.MainStage, stage);
                     mainApp.showMessage(Modality.NONE, "Success", "Data pembayaran berhasil dibatal");
-                }else{
+                } else {
                     mainApp.showMessage(Modality.NONE, "Error", task.getValue());
                 }
             });
@@ -511,6 +556,7 @@ public class PembelianBarangController  {
             new Thread(task).start();
         });
     }
+
     private void showPembayaran(PembelianBarangHead p) {
         Stage stage = new Stage();
         FXMLLoader loader = mainApp.showDialog(mainApp.MainStage, stage, "View/Dialog/NewPembayaran.fxml");
@@ -519,14 +565,14 @@ public class PembelianBarangController  {
         controller.setPembayaranPembelianBarang(p.getNoPembelian());
         controller.saveButton.setOnAction((event) -> {
             double jumlahBayar = Double.parseDouble(controller.jumlahPembayaranField.getText().replaceAll(",", ""));
-            if(jumlahBayar>p.getSisaPembayaran())
+            if (jumlahBayar > p.getSisaPembayaran()) {
                 mainApp.showMessage(Modality.NONE, "Warning", "Jumlah yang dibayar melebihi dari sisa pembayaran");
-            else if(controller.tipeKeuanganCombo.getSelectionModel().getSelectedItem()==null)
+            } else if (controller.tipeKeuanganCombo.getSelectionModel().getSelectedItem() == null) {
                 mainApp.showMessage(Modality.NONE, "Warning", "Tipe keuangan belum dipilih");
-            else{
+            } else {
                 Task<String> task = new Task<String>() {
-                    @Override 
-                    public String call() throws Exception{
+                    @Override
+                    public String call() throws Exception {
                         try (Connection con = Koneksi.getConnection()) {
                             Hutang h = HutangDAO.getByKategoriAndKeteranganAndStatus(
                                     con, "Hutang Pembelian", p.getNoPembelian(), "open");
@@ -551,11 +597,12 @@ public class PembelianBarangController  {
                 task.setOnSucceeded((e) -> {
                     mainApp.closeLoading();
                     getPembelian();
-                    if(task.getValue().equals("true")){
+                    if (task.getValue().equals("true")) {
                         mainApp.closeDialog(mainApp.MainStage, stage);
                         mainApp.showMessage(Modality.NONE, "Success", "Pembayaran pembelian berhasil disimpan");
-                    }else
+                    } else {
                         mainApp.showMessage(Modality.NONE, "Error", task.getValue());
+                    }
                 });
                 task.setOnFailed((e) -> {
                     mainApp.closeLoading();
@@ -565,16 +612,17 @@ public class PembelianBarangController  {
             }
         });
     }
+
     private void setJatuhTempo(PembelianBarangHead p) {
         Stage stage = new Stage();
         FXMLLoader loader = mainApp.showDialog(mainApp.MainStage, stage, "View/Dialog/JatuhTempo.fxml");
         JatuhTempoController controller = loader.getController();
-        controller.setMainApp(mainApp,mainApp.MainStage, stage);
+        controller.setMainApp(mainApp, mainApp.MainStage, stage);
         controller.saveButton.setOnAction((event) -> {
             String jatuhTempo = controller.jatuhTempoPicker.getValue().toString();
             Task<String> task = new Task<String>() {
-                @Override 
-                public String call() throws Exception{
+                @Override
+                public String call() throws Exception {
                     try (Connection con = Koneksi.getConnection()) {
                         Hutang h = HutangDAO.getByKategoriAndKeteranganAndStatus(
                                 con, "Hutang Pembelian", p.getNoPembelian(), "open");
@@ -589,11 +637,12 @@ public class PembelianBarangController  {
             task.setOnSucceeded((e) -> {
                 mainApp.closeLoading();
                 getPembelian();
-                if(task.getValue().equals("true")){
+                if (task.getValue().equals("true")) {
                     mainApp.closeDialog(mainApp.MainStage, stage);
                     mainApp.showMessage(Modality.NONE, "Success", "Jatuh tempo pembelian berhasil disimpan");
-                }else
+                } else {
                     mainApp.showMessage(Modality.NONE, "Error", task.getValue());
+                }
             });
             task.setOnFailed((e) -> {
                 mainApp.closeLoading();
@@ -602,8 +651,9 @@ public class PembelianBarangController  {
             new Thread(task).start();
         });
     }
-    private void exportExcel(){
-        try{
+
+    private void exportExcel() {
+        try {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Select location to export");
             fileChooser.getExtensionFilters().addAll(
@@ -624,27 +674,27 @@ public class PembelianBarangController  {
                 int rc = 0;
                 int c = 10;
                 createRow(workbook, sheet, rc, c, "Bold");
-                sheet.getRow(rc).getCell(0).setCellValue("Tanggal : "+
-                        tgl.format(tglBarang.parse(tglMulaiPicker.getValue().toString()))+"-"+
-                        tgl.format(tglBarang.parse(tglAkhirPicker.getValue().toString())));
+                sheet.getRow(rc).getCell(0).setCellValue("Tanggal : "
+                        + tgl.format(tglBarang.parse(tglMulaiPicker.getValue().toString())) + "-"
+                        + tgl.format(tglBarang.parse(tglAkhirPicker.getValue().toString())));
                 rc++;
                 createRow(workbook, sheet, rc, c, "Bold");
-                sheet.getRow(rc).getCell(0).setCellValue("Status : "+groupByCombo.getSelectionModel().getSelectedItem());
+                sheet.getRow(rc).getCell(0).setCellValue("Status : " + groupByCombo.getSelectionModel().getSelectedItem());
                 rc++;
                 createRow(workbook, sheet, rc, c, "Bold");
-                sheet.getRow(rc).getCell(0).setCellValue("Filter : "+searchField.getText());
+                sheet.getRow(rc).getCell(0).setCellValue("Filter : " + searchField.getText());
                 rc++;
                 createRow(workbook, sheet, rc, c, "Header");
-                sheet.getRow(rc).getCell(0).setCellValue("No Pembelian"); 
-                sheet.getRow(rc).getCell(1).setCellValue("Tgl Pembelian");  
-                sheet.getRow(rc).getCell(2).setCellValue("Gudang"); 
-                sheet.getRow(rc).getCell(3).setCellValue("Supplier"); 
-                sheet.getRow(rc).getCell(4).setCellValue("Payment Term"); 
-                sheet.getRow(rc).getCell(5).setCellValue("Total Pembelian"); 
-                sheet.getRow(rc).getCell(6).setCellValue("Total Beban Pembelian"); 
-                sheet.getRow(rc).getCell(7).setCellValue("Grandtotal"); 
-                sheet.getRow(rc).getCell(8).setCellValue("Pembayaran"); 
-                sheet.getRow(rc).getCell(9).setCellValue("Sisa Pembayaran"); 
+                sheet.getRow(rc).getCell(0).setCellValue("No Pembelian");
+                sheet.getRow(rc).getCell(1).setCellValue("Tgl Pembelian");
+                sheet.getRow(rc).getCell(2).setCellValue("Gudang");
+                sheet.getRow(rc).getCell(3).setCellValue("Supplier");
+                sheet.getRow(rc).getCell(4).setCellValue("Payment Term");
+                sheet.getRow(rc).getCell(5).setCellValue("Total Pembelian");
+                sheet.getRow(rc).getCell(6).setCellValue("Total Beban Pembelian");
+                sheet.getRow(rc).getCell(7).setCellValue("Grandtotal");
+                sheet.getRow(rc).getCell(8).setCellValue("Pembayaran");
+                sheet.getRow(rc).getCell(9).setCellValue("Sisa Pembayaran");
                 rc++;
                 double pembelian = 0;
                 double bebanPembelian = 0;
@@ -677,12 +727,14 @@ public class PembelianBarangController  {
                 sheet.getRow(rc).getCell(7).setCellValue(grandtotal);
                 sheet.getRow(rc).getCell(8).setCellValue(pembayaran);
                 sheet.getRow(rc).getCell(9).setCellValue(sisaPembayaran);
-                for(int i=0 ; i<c ; i++){ sheet.autoSizeColumn(i);}
+                for (int i = 0; i < c; i++) {
+                    sheet.autoSizeColumn(i);
+                }
                 try (FileOutputStream outputStream = new FileOutputStream(file)) {
                     workbook.write(outputStream);
                 }
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             mainApp.showMessage(Modality.NONE, "Error", e.toString());
             e.printStackTrace();
         }

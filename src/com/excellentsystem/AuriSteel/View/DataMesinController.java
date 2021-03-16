@@ -155,7 +155,6 @@ public class DataMesinController {
         getMesin();
     }
 
-
     @FXML
     private void checkBarang() {
         for (MesinDetailBarang d : allMesinProduksi) {
@@ -169,7 +168,7 @@ public class DataMesinController {
             @Override
             public List<Barang> call() throws Exception {
                 try (Connection con = Koneksi.getConnection()) {
-                    return BarangDAO.getAllByStatus(con,"true");
+                    return BarangDAO.getAllByStatus(con, "true");
                 }
             }
         };
@@ -262,7 +261,7 @@ public class DataMesinController {
         kapasitasField.setDisable(false);
         saveButton.setDisable(false);
         cancelButton.setDisable(false);
-        
+
         List<MesinDetailBarang> tempMesin = new ArrayList<>();
         for (Barang b : listBarang) {
             MesinDetailBarang temp = new MesinDetailBarang();

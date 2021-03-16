@@ -39,9 +39,9 @@ public class CustomerDAO {
             c.setNoTelp(rs.getString(9));
             c.setNoHandphone(rs.getString(10));
             c.setKodeSales(rs.getString(11));
-            c.setBank(rs.getString(12));
-            c.setAtasNamaRekening(rs.getString(13));
-            c.setNoRekening(rs.getString(14));
+            c.setNoNpwp(rs.getString(12));
+            c.setNamaNpwp(rs.getString(13));
+            c.setAlamatNpwp(rs.getString(14));
             c.setLimitHutang(rs.getDouble(15));
             c.setHutang(rs.getDouble(16));
             c.setDeposit(rs.getDouble(17));
@@ -68,9 +68,9 @@ public class CustomerDAO {
             c.setNoTelp(rs.getString(9));
             c.setNoHandphone(rs.getString(10));
             c.setKodeSales(rs.getString(11));
-            c.setBank(rs.getString(12));
-            c.setAtasNamaRekening(rs.getString(13));
-            c.setNoRekening(rs.getString(14));
+            c.setNoNpwp(rs.getString(12));
+            c.setNamaNpwp(rs.getString(13));
+            c.setAlamatNpwp(rs.getString(14));
             c.setLimitHutang(rs.getDouble(15));
             c.setHutang(rs.getDouble(16));
             c.setDeposit(rs.getDouble(17));
@@ -99,9 +99,9 @@ public class CustomerDAO {
         ps.setString(9, c.getNoTelp());
         ps.setString(10, c.getNoHandphone());
         ps.setString(11, c.getKodeSales());
-        ps.setString(12, c.getBank());
-        ps.setString(13, c.getAtasNamaRekening());
-        ps.setString(14, c.getNoRekening());
+        ps.setString(12, c.getNoNpwp());
+        ps.setString(13, c.getNamaNpwp());
+        ps.setString(14, c.getAlamatNpwp());
         ps.setDouble(15, c.getLimitHutang());
         ps.setDouble(16, c.getHutang());
         ps.setDouble(17, c.getDeposit());
@@ -110,7 +110,7 @@ public class CustomerDAO {
     }
     public static void update(Connection con, Customer c)throws Exception{
         PreparedStatement ps = con.prepareStatement("update tm_customer set nama=?, alamat=?, kota=?, negara=?, kode_pos=?,"
-            + " email=?, kontak_person=?, no_telp=?, no_handphone=?, kode_sales=?, bank=?, atas_nama_rekening=?, no_rekening=?"
+            + " email=?, kontak_person=?, no_telp=?, no_handphone=?, kode_sales=?, no_npwp=?, nama_npwp=?, alamat_npwp=?"
             + " ,limit_hutang =?, hutang=?, deposit=?, status=? where kode_customer=?");
         ps.setString(1, c.getNama());
         ps.setString(2, c.getAlamat());
@@ -122,9 +122,9 @@ public class CustomerDAO {
         ps.setString(8, c.getNoTelp());
         ps.setString(9, c.getNoHandphone());
         ps.setString(10, c.getKodeSales());
-        ps.setString(11, c.getBank());
-        ps.setString(12, c.getAtasNamaRekening());
-        ps.setString(13, c.getNoRekening());
+        ps.setString(11, c.getNoNpwp());
+        ps.setString(12, c.getNamaNpwp());
+        ps.setString(13, c.getAlamatNpwp());
         ps.setDouble(14, c.getLimitHutang());
         ps.setDouble(15, c.getHutang());
         ps.setDouble(16, c.getDeposit());

@@ -384,7 +384,7 @@ public class MainAppController {
             { setCycleDuration(Duration.millis(250)); }
             @Override
             protected void interpolate(double frac) {
-                final double curWidth = 220 * (1.0 - frac);
+                final double curWidth = 240 * (1.0 - frac);
                 vbox.setPrefWidth(curWidth);
                 masterPane.setExpanded(false);
                 penjualanPane.setExpanded(false);
@@ -403,7 +403,7 @@ public class MainAppController {
             { setCycleDuration(Duration.millis(250)); }
             @Override
             protected void interpolate(double frac) {
-              final double curWidth = 220 * frac;
+              final double curWidth = 240 * frac;
               vbox.setPrefWidth(curWidth);
             }
         };

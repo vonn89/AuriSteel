@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.excellentsystem.AuriSteel.View.Dialog;
 
 import com.excellentsystem.AuriSteel.Main;
@@ -22,22 +21,35 @@ import javafx.stage.Stage;
  *
  * @author Xtreme
  */
-public class DetailPegawaiController  {
-    @FXML public TextField kodePegawaiField;
-    @FXML public TextField namaField;
-    @FXML public ComboBox<String> jabatanCombo;
-    @FXML public TextArea alamatField;
-    @FXML public TextField kotaField;
-    @FXML public TextField identitasField;
-    @FXML public TextField noIdentitasField;
-    @FXML public TextField emailField;
-    @FXML public TextField noTelpField;
-    @FXML public TextField noHandphoneField;
-    @FXML public Button saveButton;
-    private Main mainApp;  
+public class DetailPegawaiController {
+
+    @FXML
+    public TextField kodePegawaiField;
+    @FXML
+    public TextField namaField;
+    @FXML
+    public ComboBox<String> jabatanCombo;
+    @FXML
+    public TextArea alamatField;
+    @FXML
+    public TextField kotaField;
+    @FXML
+    public TextField identitasField;
+    @FXML
+    public TextField noIdentitasField;
+    @FXML
+    public TextField emailField;
+    @FXML
+    public TextField noTelpField;
+    @FXML
+    public TextField noHandphoneField;
+    @FXML
+    public Button saveButton;
+    private Main mainApp;
     private Stage owner;
     private Stage stage;
-    public void setMainApp(Main mainApp,Stage owner,Stage stage) {
+
+    public void setMainApp(Main mainApp, Stage owner, Stage stage) {
         this.mainApp = mainApp;
         this.owner = owner;
         this.stage = stage;
@@ -53,7 +65,8 @@ public class DetailPegawaiController  {
             mainApp.closeDialog(owner, stage);
         });
     }
-    public void setPegawaiDetail(Pegawai pegawai){
+
+    public void setPegawaiDetail(Pegawai pegawai) {
         kodePegawaiField.setText("");
         namaField.setText("");
         jabatanCombo.getSelectionModel().select("");
@@ -77,8 +90,9 @@ public class DetailPegawaiController  {
             noHandphoneField.setText(pegawai.getNoHandphone());
         }
     }
-    public void close(){
+
+    public void close() {
         mainApp.closeDialog(owner, stage);
     }
-    
+
 }

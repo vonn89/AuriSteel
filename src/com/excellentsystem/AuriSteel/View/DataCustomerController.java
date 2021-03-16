@@ -86,11 +86,11 @@ public class DataCustomerController {
     @FXML
     private TableColumn<Customer, String> namaSalesColumn;
     @FXML
-    private TableColumn<Customer, String> bankColumn;
+    private TableColumn<Customer, String> noNpwpColumn;
     @FXML
-    private TableColumn<Customer, String> atasNamaRekeningColumn;
+    private TableColumn<Customer, String> namaNpwpColumn;
     @FXML
-    private TableColumn<Customer, String> noRekeningColumn;
+    private TableColumn<Customer, String> alamatNpwpColumn;
     @FXML
     private TableColumn<Customer, Number> limitHutangColumn;
     @FXML
@@ -144,14 +144,14 @@ public class DataCustomerController {
         namaSalesColumn.setCellValueFactory(cellData -> cellData.getValue().getSales().namaProperty());
         namaSalesColumn.setCellFactory(col -> Function.getWrapTableCell(namaSalesColumn));
 
-        bankColumn.setCellValueFactory(cellData -> cellData.getValue().bankProperty());
-        bankColumn.setCellFactory(col -> Function.getWrapTableCell(bankColumn));
+        noNpwpColumn.setCellValueFactory(cellData -> cellData.getValue().noNpwpProperty());
+        noNpwpColumn.setCellFactory(col -> Function.getWrapTableCell(noNpwpColumn));
 
-        atasNamaRekeningColumn.setCellValueFactory(cellData -> cellData.getValue().atasNamaRekeningProperty());
-        atasNamaRekeningColumn.setCellFactory(col -> Function.getWrapTableCell(atasNamaRekeningColumn));
+        namaNpwpColumn.setCellValueFactory(cellData -> cellData.getValue().namaNpwpProperty());
+        namaNpwpColumn.setCellFactory(col -> Function.getWrapTableCell(namaNpwpColumn));
 
-        noRekeningColumn.setCellValueFactory(cellData -> cellData.getValue().noRekeningProperty());
-        noRekeningColumn.setCellFactory(col -> Function.getWrapTableCell(noRekeningColumn));
+        alamatNpwpColumn.setCellValueFactory(cellData -> cellData.getValue().alamatNpwpProperty());
+        alamatNpwpColumn.setCellFactory(col -> Function.getWrapTableCell(alamatNpwpColumn));
 
         limitHutangColumn.setCellValueFactory(cellData -> cellData.getValue().limitHutangProperty());
         limitHutangColumn.setCellFactory(col -> Function.getTableCell());
@@ -322,9 +322,9 @@ public class DataCustomerController {
                         || checkColumn(temp.getNoHandphone())
                         || checkColumn(temp.getKodeSales())
                         || checkColumn(temp.getSales().getNama())
-                        || checkColumn(temp.getBank())
-                        || checkColumn(temp.getAtasNamaRekening())
-                        || checkColumn(temp.getNoRekening())
+                        || checkColumn(temp.getNoNpwp())
+                        || checkColumn(temp.getNamaNpwp())
+                        || checkColumn(temp.getAlamatNpwp())
                         || checkColumn(df.format(temp.getLimitHutang()))
                         || checkColumn(df.format(temp.getHutang()))
                         || checkColumn(df.format(temp.getDeposit()))) {
@@ -374,9 +374,9 @@ public class DataCustomerController {
                             customer.setNoTelp(x.noTelpField.getText());
                             customer.setNoHandphone(x.noHandphoneField.getText());
                             customer.setKodeSales(x.kodeSalesCombo.getSelectionModel().getSelectedItem().split(" - ")[0]);
-                            customer.setBank(x.bankField.getText());
-                            customer.setAtasNamaRekening(x.atasNamaRekeningField.getText());
-                            customer.setNoRekening(x.noRekeningField.getText());
+                            customer.setNoNpwp(x.noNpwpField.getText());
+                            customer.setNamaNpwp(x.namaNpwpField.getText());
+                            customer.setAlamatNpwp(x.alamatNpwpField.getText());
                             customer.setLimitHutang(Double.parseDouble(x.limitHutangField.getText().replaceAll(",", "")));
                             customer.setHutang(0);
                             customer.setDeposit(0);
@@ -433,9 +433,9 @@ public class DataCustomerController {
                             c.setNoTelp(x.noTelpField.getText());
                             c.setNoHandphone(x.noHandphoneField.getText());
                             c.setKodeSales(x.kodeSalesCombo.getSelectionModel().getSelectedItem().split(" - ")[0]);
-                            c.setBank(x.bankField.getText());
-                            c.setAtasNamaRekening(x.atasNamaRekeningField.getText());
-                            c.setNoRekening(x.noRekeningField.getText());
+                            c.setNoNpwp(x.noNpwpField.getText());
+                            c.setNamaNpwp(x.namaNpwpField.getText());
+                            c.setAlamatNpwp(x.alamatNpwpField.getText());
                             c.setLimitHutang(Double.parseDouble(x.limitHutangField.getText().replaceAll(",", "")));
                             return Service.updateCustomer(con, c);
                         }
@@ -541,9 +541,9 @@ public class DataCustomerController {
                 sheet.getRow(rc).getCell(8).setCellValue("No Telp");
                 sheet.getRow(rc).getCell(9).setCellValue("No Handphone");
                 sheet.getRow(rc).getCell(10).setCellValue("Sales");
-                sheet.getRow(rc).getCell(11).setCellValue("Bank");
-                sheet.getRow(rc).getCell(12).setCellValue("Atas Nama Rekening");
-                sheet.getRow(rc).getCell(13).setCellValue("No Rekening");
+                sheet.getRow(rc).getCell(11).setCellValue("No NPWP");
+                sheet.getRow(rc).getCell(12).setCellValue("Nama NPWP");
+                sheet.getRow(rc).getCell(13).setCellValue("Alamat NPWP");
                 sheet.getRow(rc).getCell(14).setCellValue("Limit Hutang");
                 sheet.getRow(rc).getCell(15).setCellValue("Hutang");
                 sheet.getRow(rc).getCell(16).setCellValue("Deposit");
@@ -563,9 +563,9 @@ public class DataCustomerController {
                     sheet.getRow(rc).getCell(8).setCellValue(b.getNoTelp());
                     sheet.getRow(rc).getCell(9).setCellValue(b.getNoHandphone());
                     sheet.getRow(rc).getCell(10).setCellValue(b.getSales().getNama());
-                    sheet.getRow(rc).getCell(11).setCellValue(b.getBank());
-                    sheet.getRow(rc).getCell(12).setCellValue(b.getAtasNamaRekening());
-                    sheet.getRow(rc).getCell(13).setCellValue(b.getNoRekening());
+                    sheet.getRow(rc).getCell(11).setCellValue(b.getNoNpwp());
+                    sheet.getRow(rc).getCell(12).setCellValue(b.getNamaNpwp());
+                    sheet.getRow(rc).getCell(13).setCellValue(b.getAlamatNpwp());
                     sheet.getRow(rc).getCell(14).setCellValue(b.getLimitHutang());
                     sheet.getRow(rc).getCell(15).setCellValue(b.getHutang());
                     sheet.getRow(rc).getCell(16).setCellValue(b.getDeposit());
