@@ -63,6 +63,7 @@ import com.excellentsystem.AuriSteel.View.RencanaProduksiController;
 import com.excellentsystem.AuriSteel.View.Report.LaporanBahanController;
 import com.excellentsystem.AuriSteel.View.Report.LaporanBahanDibeliController;
 import com.excellentsystem.AuriSteel.View.Report.LaporanBarangController;
+import com.excellentsystem.AuriSteel.View.Report.LaporanBarangDipesanController;
 import com.excellentsystem.AuriSteel.View.Report.LaporanBarangDiproduksiController;
 import com.excellentsystem.AuriSteel.View.Report.LaporanBarangTerjualController;
 import com.excellentsystem.AuriSteel.View.Report.LaporanCoilTerjualController;
@@ -609,11 +610,11 @@ public class Main extends Application {
         return controller;
     }
 
-    public LaporanBarangTerjualController showLaporanBarangTerpesan() {
-        FXMLLoader loader = changeStage("View/Report/LaporanBarangTerjual.fxml");
-        LaporanBarangTerjualController controller = loader.getController();
+    public LaporanBarangDipesanController showLaporanBarangTerpesan() {
+        FXMLLoader loader = changeStage("View/Report/LaporanBarangDipesan.fxml");
+        LaporanBarangDipesanController controller = loader.getController();
         controller.setMainApp(this);
-        setTitle("Laporan Barang Terjual");
+        setTitle("Laporan Barang Dipesan");
         return controller;
     }
 

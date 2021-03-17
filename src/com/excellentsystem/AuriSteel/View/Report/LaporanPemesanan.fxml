@@ -67,9 +67,9 @@
               <columns>
                 <TreeTableColumn fx:id="noPemesananColumn" prefWidth="75.0" text="No Pemesanan" />
                 <TreeTableColumn fx:id="tglPemesananColumn" prefWidth="75.0" text="Tgl Pemesanan" />
-                  <TreeTableColumn fx:id="namaInvoiceColumn" prefWidth="75.0" text="Nama Invoice" />
                   <TreeTableColumn fx:id="namaCustomerColumn" prefWidth="75.0" text="Nama Customer" />
                   <TreeTableColumn fx:id="alamatCustomerColumn" prefWidth="75.0" text="Alamat Customer" visible="false" />
+                  <TreeTableColumn fx:id="namaInvoiceColumn" prefWidth="75.0" text="Nama Invoice" visible="false" />
                   <TreeTableColumn fx:id="paymentTermColumn" prefWidth="75.0" text="Payment Term" />
                   <TreeTableColumn fx:id="namaSalesColumn" prefWidth="75.0" text="Sales" />
                   <TreeTableColumn fx:id="totalPemesananColumn" prefWidth="75.0" text="Total Pemesanan" />

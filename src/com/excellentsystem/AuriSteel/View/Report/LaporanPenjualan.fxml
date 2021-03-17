@@ -63,13 +63,19 @@
             <TreeTableView fx:id="penjualanTable" prefHeight="200.0" prefWidth="200.0" showRoot="false" tableMenuButtonVisible="true" GridPane.rowIndex="2">
               <columns>
                 <TreeTableColumn fx:id="noPenjualanColumn" prefWidth="75.0" text="No Penjualan" />
+                  <TreeTableColumn fx:id="tglPengirimanColumn" prefWidth="75.0" text="Tgl Pengiriman" visible="false" />
                 <TreeTableColumn fx:id="tglPenjualanColumn" prefWidth="75.0" text="Tgl Penjualan" />
                   <TreeTableColumn fx:id="gudangColumn" prefWidth="75.0" text="Gudang" />
-                  <TreeTableColumn fx:id="namaCustomerColumn" prefWidth="75.0" text="Customer" />
-                  <TreeTableColumn fx:id="namaSalesColumn" prefWidth="75.0" text="Sales" />
+                  <TreeTableColumn fx:id="namaCustomerColumn" prefWidth="75.0" text="Nama Customer" />
+                  <TreeTableColumn fx:id="alamatCustomerColumn" prefWidth="75.0" text="Alamat Customer" visible="false" />
+                  <TreeTableColumn fx:id="namaInvoiceColumn" prefWidth="75.0" text="Nama Invoice" visible="false" />
+                  <TreeTableColumn fx:id="supirColumn" prefWidth="75.0" text="Supir" visible="false" />
+                  <TreeTableColumn fx:id="paymentTermColumn" prefWidth="75.0" text="Payment Term" />
+                  <TreeTableColumn fx:id="totalBebanPenjualanColumn" prefWidth="75.0" text="Total Beban Penjualan" visible="false" />
                   <TreeTableColumn fx:id="totalPenjualanColumn" prefWidth="75.0" text="Total Penjualan" />
                   <TreeTableColumn fx:id="pembayaranColumn" prefWidth="75.0" text="Pembayaran" />
                   <TreeTableColumn fx:id="sisaPembayaranColumn" prefWidth="75.0" text="Sisa Pembayaran" />
+                  <TreeTableColumn fx:id="namaSalesColumn" prefWidth="75.0" text="Sales" />
               </columns>
                <columnResizePolicy>
                   <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

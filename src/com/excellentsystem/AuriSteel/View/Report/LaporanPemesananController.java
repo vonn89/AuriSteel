@@ -428,6 +428,7 @@ public class LaporanPemesananController {
             double totalPemesanan = 0;
             double totalPembayaran = 0;
             double sisaPembayaran = 0;
+            List<PemesananBarangDetail> listPemesananDetail = new ArrayList<>();
             for (PemesananBarangHead pj : filterData) {
                 boolean status = false;
                 if (groupByCombo.getSelectionModel().getSelectedItem().equals("Tanggal")
@@ -447,12 +448,14 @@ public class LaporanPemesananController {
                     status = true;
                 }
                 if (status) {
+                    listPemesananDetail.addAll(pj.getListPemesananBarangDetail());
                     totalPemesanan = totalPemesanan + pj.getTotalPemesanan();
                     totalPembayaran = totalPembayaran + pj.getDownPayment();
                     sisaPembayaran = sisaPembayaran + pj.getSisaDownPayment();
                     parent.getChildren().addAll(new TreeItem<>(pj));
                 }
             }
+            parent.getValue().setListPemesananBarangDetail(listPemesananDetail);
             parent.getValue().setTotalPemesanan(totalPemesanan);
             parent.getValue().setDownPayment(totalPembayaran);
             parent.getValue().setSisaDownPayment(sisaPembayaran);

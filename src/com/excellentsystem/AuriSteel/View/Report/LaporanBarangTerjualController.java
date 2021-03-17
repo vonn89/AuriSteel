@@ -400,6 +400,7 @@ public class LaporanBarangTerjualController  {
                     status = true;
                 }else if(groupByCombo.getSelectionModel().getSelectedItem().equals("Gudang")&&
                         temp.equals(detail.getPenjualanBarangHead().getKodeGudang())){
+                    status = true;
                 }else if(groupByCombo.getSelectionModel().getSelectedItem().equals("Tanggal")&&
                         temp.equals(tgl.format(tglSql.parse(detail.getPenjualanBarangHead().getTglPenjualan())))){
                     status = true;
