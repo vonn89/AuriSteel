@@ -278,7 +278,7 @@ public class LogBahanController  {
         FXMLLoader loader = mainApp.showDialog(stage, child, "View/Dialog/NewProduksiBarang.fxml");
         NewProduksiBarangController controller = loader.getController();
         controller.setMainApp(mainApp, stage, child);
-        controller.setDetailProduksi(log.getKeterangan());
+        controller.setDetailProduksi(log.getKeterangan(),false);
     }
     private void showDetailPenyesuaianStok(LogBahan log){
         Stage child = new Stage();

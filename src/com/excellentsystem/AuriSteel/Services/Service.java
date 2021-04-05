@@ -167,7 +167,7 @@ public class Service {
                     int selisih = ((now.getYear() - tglBeli.getYear()) * 12) + (now.getMonthValue() - tglBeli.getMonthValue());
                     if (selisih <= aset.getMasaPakai()) {
                         double totalPenyusutan = 0;
-                        double penyusutanPerbulan = aset.getNilaiAwal() / aset.getMasaPakai();
+                        double penyusutanPerbulan = pembulatan(aset.getNilaiAwal() / aset.getMasaPakai());
                         for (int i = 1; i <= selisih; i++) {
                             LocalDate tglSusut = tglBeli.plusMonths(i);
                             if (tglSusut.isBefore(now) || tglSusut.isEqual(now)) {
@@ -277,7 +277,7 @@ public class Service {
                     stok.setStokAkhir(0);
                     StokBarangDAO.insert(con, stok);
                 }
-                for(Mesin m : MesinDAO.getAll(con)){
+                for (Mesin m : MesinDAO.getAll(con)) {
                     MesinDetailBarang b = new MesinDetailBarang();
                     b.setKodeMesin(m.getKodeMesin());
                     b.setKodeBarang(barang.getKodeBarang());
@@ -344,7 +344,7 @@ public class Service {
             } else {
                 barang.setStatus("false");
                 BarangDAO.update(con, barang);
-                
+
                 MesinDetailBarangDAO.deleteByBarang(con, barang);
             }
 
@@ -848,7 +848,7 @@ public class Service {
             MesinDAO.delete(con, mesin);
             MesinDetailBarangDAO.delete(con, mesin);
             UserMesinAppDAO.deleteByMesin(con, mesin);
-            
+
             con.commit();
             con.setAutoCommit(true);
             return "true";
@@ -2665,7 +2665,7 @@ public class Service {
             }
             PemesananPembelianBahanHeadDAO.update(con, pemesanan);
 
-            double bebanPerItem = p.getTotalBebanPembelian() / p.getListPembelianBahanDetail().size();
+            double bebanPerItem = pembulatan(p.getTotalBebanPembelian() / p.getListPembelianBahanDetail().size());
             for (PembelianBahanDetail detail : p.getListPembelianBahanDetail()) {
                 detail.setNoPembelian(noPembelian);
                 PembelianBahanDetailDAO.insert(con, detail);
@@ -3147,7 +3147,6 @@ public class Service {
             String status = "true";
 
             Date date = Function.getServerDate(con);
-            String noKeuangan = KeuanganDAO.getId(con, date);
 
             String noPengiriman = PindahBarangHeadDAO.getId(con, date);
             p.setNoPindah(noPengiriman);
@@ -3155,17 +3154,55 @@ public class Service {
             PindahBarangHeadDAO.insert(con, p);
 
             int i = 1;
-            double totalNilai = 0;
-            List<PindahBarangDetail> stokBarang = new ArrayList<>();
             for (PindahBarangDetail d : p.getListPindahBarangDetail()) {
                 d.setNoPindah(p.getNoPindah());
                 d.setNoUrut(i);
+                PindahBarangDetailDAO.insert(con, d);
+                i++;
+            }
 
+            if (status.equals("true")) {
+                con.commit();
+            } else {
+                con.rollback();
+            }
+            con.setAutoCommit(true);
+
+            return status;
+        } catch (Exception e) {
+            e.printStackTrace();
+            try {
+                con.rollback();
+                con.setAutoCommit(true);
+                return e.toString();
+            } catch (SQLException ex) {
+                return ex.toString();
+            }
+        }
+    }
+
+    public static String verifikasiPindahBarang(Connection con, PindahBarangHead p) {
+        try {
+            con.setAutoCommit(false);
+            String status = "true";
+
+            Date date = Function.getServerDate(con);
+            String noKeuangan = KeuanganDAO.getId(con, date);
+
+            p.setTglVerifikasi(tglSql.format(date));
+            p.setUserVerifikasi(sistem.getUser().getKodeUser());
+            p.setStatus("true");
+            PindahBarangHeadDAO.update(con, p);
+
+            p.setListPindahBarangDetail(PindahBarangDetailDAO.getAllPindahBarangDetail(con, p.getNoPindah()));
+            double totalNilai = 0;
+            List<PindahBarangDetail> stokBarang = new ArrayList<>();
+            for (PindahBarangDetail d : p.getListPindahBarangDetail()) {
                 LogBarang log = LogBarangDAO.getLastByBarangAndGudang(con, d.getKodeBarang(), p.getGudangAsal());
                 if (log.getStokAkhir() != 0) {
                     d.setNilai(log.getNilaiAkhir() / log.getStokAkhir());
                 }
-                PindahBarangDetailDAO.insert(con, d);
+                PindahBarangDetailDAO.update(con, d);
 
                 Boolean inStok = false;
                 for (PindahBarangDetail detail : stokBarang) {
@@ -3188,7 +3225,6 @@ public class Service {
                     temp.setNilai(d.getNilai());
                     stokBarang.add(temp);
                 }
-                i++;
 
                 totalNilai = totalNilai + (d.getNilai() * d.getQty());
             }
@@ -3230,60 +3266,62 @@ public class Service {
             String status = "true";
 
             Date date = Function.getServerDate(con);
-
             p.setListPindahBarangDetail(PindahBarangDetailDAO.getAllPindahBarangDetail(con, p.getNoPindah()));
+
+            if (p.getStatus().equals("true")) {
+                List<PindahBarangDetail> stokBarang = new ArrayList<>();
+                for (PindahBarangDetail d : p.getListPindahBarangDetail()) {
+                    Boolean inStok = false;
+                    for (PindahBarangDetail detail : stokBarang) {
+                        if (d.getKodeBarang().equals(detail.getKodeBarang())) {
+                            detail.setNilai((detail.getNilai() * detail.getQty() + d.getNilai() * d.getQty())
+                                    / (detail.getQty() + d.getQty()));
+                            detail.setQty(detail.getQty() + d.getQty());
+                            inStok = true;
+                        }
+                    }
+                    if (!inStok) {
+                        PindahBarangDetail temp = new PindahBarangDetail();
+                        temp.setNoPindah(d.getNoPindah());
+                        temp.setNoUrut(d.getNoUrut());
+                        temp.setKodeBarang(d.getKodeBarang());
+                        temp.setNamaBarang(d.getNamaBarang());
+                        temp.setKeterangan(d.getKeterangan());
+                        temp.setSatuan(d.getSatuan());
+                        temp.setQty(d.getQty());
+                        temp.setNilai(d.getNilai());
+                        stokBarang.add(temp);
+                    }
+                }
+                KeuanganDAO.delete(con, "Stok Barang", p.getGudangAsal(), "Pindah Barang - " + p.getNoPindah());
+                KeuanganDAO.delete(con, "Stok Barang", p.getGudangTujuan(), "Pindah Barang - " + p.getNoPindah());
+
+                for (PindahBarangDetail d : stokBarang) {
+                    StokBarang stokBatalKeluar = StokBarangDAO.get(con, tglBarang.format(tglSql.parse(p.getTglPindah())),
+                            d.getKodeBarang(), p.getGudangAsal());
+                    stokBatalKeluar.setStokKeluar(stokBatalKeluar.getStokKeluar() - d.getQty());
+                    stokBatalKeluar.setStokAkhir(stokBatalKeluar.getStokAkhir() + d.getQty());
+                    StokBarangDAO.update(con, stokBatalKeluar);
+
+                    StokBarang stokBatalMasuk = StokBarangDAO.get(con, tglBarang.format(tglSql.parse(p.getTglPindah())),
+                            d.getKodeBarang(), p.getGudangTujuan());
+                    stokBatalMasuk.setStokMasuk(stokBatalMasuk.getStokMasuk() - d.getQty());
+                    stokBatalMasuk.setStokAkhir(stokBatalMasuk.getStokAkhir() - d.getQty());
+                    StokBarangDAO.update(con, stokBatalMasuk);
+
+                    LogBarangDAO.delete(con, d.getKodeBarang(), p.getGudangAsal(), "Pindah Barang", p.getNoPindah());
+
+                    LogBarangDAO.delete(con, d.getKodeBarang(), p.getGudangTujuan(), "Pindah Barang", p.getNoPindah());
+
+                    resetStokDanLogBarang(con, d.getKodeBarang(), p.getGudangAsal(), p.getTglPindah(), date);
+                    resetStokDanLogBarang(con, d.getKodeBarang(), p.getGudangTujuan(), p.getTglPindah(), date);
+                }
+            }
+            
             p.setTglBatal(tglSql.format(date));
             p.setUserBatal(sistem.getUser().getKodeUser());
             p.setStatus("false");
             PindahBarangHeadDAO.update(con, p);
-
-            List<PindahBarangDetail> stokBarang = new ArrayList<>();
-            for (PindahBarangDetail d : p.getListPindahBarangDetail()) {
-                Boolean inStok = false;
-                for (PindahBarangDetail detail : stokBarang) {
-                    if (d.getKodeBarang().equals(detail.getKodeBarang())) {
-                        detail.setNilai((detail.getNilai() * detail.getQty() + d.getNilai() * d.getQty())
-                                / (detail.getQty() + d.getQty()));
-                        detail.setQty(detail.getQty() + d.getQty());
-                        inStok = true;
-                    }
-                }
-                if (!inStok) {
-                    PindahBarangDetail temp = new PindahBarangDetail();
-                    temp.setNoPindah(d.getNoPindah());
-                    temp.setNoUrut(d.getNoUrut());
-                    temp.setKodeBarang(d.getKodeBarang());
-                    temp.setNamaBarang(d.getNamaBarang());
-                    temp.setKeterangan(d.getKeterangan());
-                    temp.setSatuan(d.getSatuan());
-                    temp.setQty(d.getQty());
-                    temp.setNilai(d.getNilai());
-                    stokBarang.add(temp);
-                }
-            }
-            KeuanganDAO.delete(con, "Stok Barang", p.getGudangAsal(), "Pindah Barang - " + p.getNoPindah());
-            KeuanganDAO.delete(con, "Stok Barang", p.getGudangTujuan(), "Pindah Barang - " + p.getNoPindah());
-
-            for (PindahBarangDetail d : stokBarang) {
-                StokBarang stokBatalKeluar = StokBarangDAO.get(con, tglBarang.format(tglSql.parse(p.getTglPindah())),
-                        d.getKodeBarang(), p.getGudangAsal());
-                stokBatalKeluar.setStokKeluar(stokBatalKeluar.getStokKeluar() - d.getQty());
-                stokBatalKeluar.setStokAkhir(stokBatalKeluar.getStokAkhir() + d.getQty());
-                StokBarangDAO.update(con, stokBatalKeluar);
-
-                StokBarang stokBatalMasuk = StokBarangDAO.get(con, tglBarang.format(tglSql.parse(p.getTglPindah())),
-                        d.getKodeBarang(), p.getGudangTujuan());
-                stokBatalMasuk.setStokMasuk(stokBatalMasuk.getStokMasuk() - d.getQty());
-                stokBatalMasuk.setStokAkhir(stokBatalMasuk.getStokAkhir() - d.getQty());
-                StokBarangDAO.update(con, stokBatalMasuk);
-
-                LogBarangDAO.delete(con, d.getKodeBarang(), p.getGudangAsal(), "Pindah Barang", p.getNoPindah());
-
-                LogBarangDAO.delete(con, d.getKodeBarang(), p.getGudangTujuan(), "Pindah Barang", p.getNoPindah());
-
-                resetStokDanLogBarang(con, d.getKodeBarang(), p.getGudangAsal(), p.getTglPindah(), date);
-                resetStokDanLogBarang(con, d.getKodeBarang(), p.getGudangTujuan(), p.getTglPindah(), date);
-            }
 
             if (status.equals("true")) {
                 con.commit();

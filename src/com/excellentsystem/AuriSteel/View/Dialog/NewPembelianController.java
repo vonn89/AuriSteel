@@ -11,6 +11,7 @@ import com.excellentsystem.AuriSteel.DAO.PembelianBahanHeadDAO;
 import com.excellentsystem.AuriSteel.DAO.SupplierDAO;
 import com.excellentsystem.AuriSteel.Function;
 import static com.excellentsystem.AuriSteel.Function.createRow;
+import static com.excellentsystem.AuriSteel.Function.pembulatan;
 import com.excellentsystem.AuriSteel.Koneksi;
 import com.excellentsystem.AuriSteel.Main;
 import static com.excellentsystem.AuriSteel.Main.df;
@@ -569,7 +570,7 @@ public class NewPembelianController {
                                     for (PenerimaanBahan pb : listBahan) {
                                         if (pb.getSlit() > 1) {
                                             for (int i = 1; i <= (int) pb.getSlit(); i++) {
-                                                double qty = (pb.getBeratBersih()-pb.getScraft())/pb.getSlit(); 
+                                                double qty = pembulatan((pb.getBeratBersih()-pb.getScraft())/pb.getSlit()); 
                                                 PembelianBahanDetail detail = new PembelianBahanDetail();
                                                 detail.setNoPemesanan(d.getNoPemesanan());
                                                 detail.setNoUrut(d.getNoUrut());
@@ -586,7 +587,7 @@ public class NewPembelianController {
                                                 allPembelianDetail.add(detail);
                                             }
                                         } else {
-                                            double qty = pb.getBeratBersih()-pb.getScraft(); 
+                                            double qty = pembulatan(pb.getBeratBersih()-pb.getScraft()); 
                                             PembelianBahanDetail detail = new PembelianBahanDetail();
                                             detail.setNoPemesanan(d.getNoPemesanan());
                                             detail.setNoUrut(d.getNoUrut());

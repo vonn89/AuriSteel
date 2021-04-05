@@ -440,6 +440,7 @@ public class DataUserController {
                             "Add New Pindah Barang",
                             "Detail Pindah Barang",
                             "Batal Pindah Barang",
+                            "Verifikasi Pindah Barang",
                             "Print Surat Jalan Pindah Barang"
                     )
             ));

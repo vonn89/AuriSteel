@@ -486,7 +486,7 @@ public class LaporanCoilTerjualController  {
                 
                 Sheet sheet = workbook.createSheet("Laporan Coil Terjual");
                 int rc = 0;
-                int c = 13;
+                int c = 14;
                 createRow(workbook, sheet, rc, c, "Bold");
                 sheet.getRow(rc).getCell(0).setCellValue("Tanggal : "+
                         tgl.format(tglBarang.parse(tglPenjualanMulaiPicker.getValue().toString()))+"-"+

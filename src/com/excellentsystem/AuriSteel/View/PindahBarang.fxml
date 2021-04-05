@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
@@ -30,11 +31,13 @@
               <columns>
                 <TableColumn fx:id="noPindahColumn" prefWidth="75.0" text="No Pindah" />
                 <TableColumn fx:id="tglPindahColumn" prefWidth="75.0" text="Tgl Pindah" />
+                  <TableColumn fx:id="kodeUserColumn" prefWidth="75.0" text="User Pindah" />
                   <TableColumn fx:id="gudangAsalColumn" prefWidth="75.0" text="Gudang Asal" />
                   <TableColumn fx:id="gudangTujuanColumn" prefWidth="75.0" text="Gudang Tujuan" />
                   <TableColumn fx:id="supirColumn" prefWidth="75.0" text="Supir" />
                   <TableColumn fx:id="catatanColumn" prefWidth="75.0" text="Catatan" />
-                  <TableColumn fx:id="kodeUserColumn" prefWidth="75.0" text="Kode User" />
+                  <TableColumn fx:id="tglVerifikasiColumn" prefWidth="75.0" text="Tgl Verifikasi" />
+                  <TableColumn fx:id="userVerifikasiColumn" prefWidth="75.0" text="User Verifikasi" />
               </columns>
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -46,6 +49,8 @@
                   <DatePicker fx:id="tglMulaiPicker" onAction="#getPindah" prefHeight="40.0" prefWidth="130.0" />
                   <Label text="-" />
                   <DatePicker fx:id="tglAkhirPicker" onAction="#getPindah" prefHeight="40.0" prefWidth="130.0" />
+                  <Label text="Status" />
+                  <ComboBox fx:id="groupByCombo" onAction="#getPindah" prefWidth="120.0" />
                   <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                      <children>
                         <TextField fx:id="searchField" maxWidth="300.0" prefHeight="40.0" prefWidth="300.0" promptText="Search..." styleClass="search-field" />

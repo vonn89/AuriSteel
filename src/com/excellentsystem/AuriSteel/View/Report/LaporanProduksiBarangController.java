@@ -313,7 +313,7 @@ public class LaporanProduksiBarangController  {
         FXMLLoader loader = mainApp.showDialog(mainApp.MainStage, stage, "View/Dialog/NewProduksiBarang.fxml");
         NewProduksiBarangController controller = loader.getController();
         controller.setMainApp(mainApp,mainApp.MainStage, stage);
-        controller.setDetailProduksi(p.getKodeProduksi());
+        controller.setDetailProduksi(p.getKodeProduksi(), false);
     }
     private void print(){
         try{

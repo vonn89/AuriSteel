@@ -78,7 +78,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  *
  * @author Xtreme
  */
-public class ProduksiBarangController {
+public class ProduksiBarangController_1 {
 
     @FXML
     private TableView<ProduksiHead> produksiHeadTable;
@@ -127,6 +127,8 @@ public class ProduksiBarangController {
     private DatePicker tglMulaiPicker;
     @FXML
     private DatePicker tglAkhirPicker;
+    @FXML
+    private ComboBox<String> groupByCombo;
     @FXML
     private ComboBox<String> statusCombo;
     private ObservableList<ProduksiHead> allProduksi = FXCollections.observableArrayList();
@@ -400,6 +402,13 @@ public class ProduksiBarangController {
 
     public void setMainApp(Main mainApp) {
         this.mainApp = mainApp;
+        ObservableList<String> groupBy = FXCollections.observableArrayList();
+        groupBy.clear();
+        groupBy.add("Bahan - Bahan");
+        groupBy.add("Bahan - Barang");
+        groupBy.add("Barang - Barang");
+        groupByCombo.setItems(groupBy);
+        groupByCombo.getSelectionModel().select("Bahan - Barang");
         ObservableList<String> status = FXCollections.observableArrayList();
         status.clear();
         status.add("Wait");
@@ -429,20 +438,27 @@ public class ProduksiBarangController {
                     List<Barang> listBarang = BarangDAO.getAllByStatus(con, "%");
                     List<ProduksiHead> listProduksi = ProduksiHeadDAO.getAllByTglMulaiAndJenisProduksiAndStatus(
                             con, tglMulaiPicker.getValue().toString(), tglAkhirPicker.getValue().toString(),
-                            "Bahan - Barang", status);
+                            groupByCombo.getSelectionModel().getSelectedItem(), status);
                     List<ProduksiDetailBahan> listProduksiBahan = ProduksiDetailBahanDAO.getAllByTglMulaiAndJenisProduksiAndStatus(
                             con, tglMulaiPicker.getValue().toString(), tglAkhirPicker.getValue().toString(),
-                            "Bahan - Barang", status);
+                            groupByCombo.getSelectionModel().getSelectedItem(), status);
                     List<ProduksiDetailBarang> listProduksiBarang = ProduksiDetailBarangDAO.getAllByTglMulaiAndJenisProduksiAndStatus(
                             con, tglMulaiPicker.getValue().toString(), tglAkhirPicker.getValue().toString(),
-                            "Bahan - Barang", status);
+                            groupByCombo.getSelectionModel().getSelectedItem(), status);
                     List<ProduksiOperator> listProduksiOperator = ProduksiOperatorDAO.getAllByTglMulaiAndJenisProduksiAndStatus(
                             con, tglMulaiPicker.getValue().toString(), tglAkhirPicker.getValue().toString(),
-                            "Bahan - Barang", status);
+                            groupByCombo.getSelectionModel().getSelectedItem(), status);
                     for (ProduksiHead p : listProduksi) {
                         List<ProduksiDetailBahan> detailBahan = new ArrayList<>();
                         for (ProduksiDetailBahan d : listProduksiBahan) {
                             if (p.getKodeProduksi().equals(d.getKodeProduksi())) {
+                                if (p.getJenisProduksi().equals("Barang - Barang")) {
+                                    for (Barang x : listBarang) {
+                                        if (d.getKodeBarang().equals(x.getKodeBarang())) {
+                                            d.setBarang(x);
+                                        }
+                                    }
+                                }
                                 detailBahan.add(d);
                             }
                         }
@@ -559,12 +575,8 @@ public class ProduksiBarangController {
                 mainApp.showMessage(Modality.NONE, "Warning", "Bahan baku masih kosong");
             } else if (controller.listBarangProduksi.isEmpty()) {
                 mainApp.showMessage(Modality.NONE, "Warning", "Barang jadi masih kosong");
-            } else if (controller.gudangCombo.getSelectionModel().getSelectedItem()==null) {
-                mainApp.showMessage(Modality.NONE, "Warning", "Gudang belum dipilih");
-            } else if (controller.mesinCombo.getSelectionModel().getSelectedItem()==null) {
-                mainApp.showMessage(Modality.NONE, "Warning", "Mesin belum dipilih");
-            } else if (sisa > 10 || sisa < -10) {
-                mainApp.showMessage(Modality.NONE, "Warning", "Selisih berat lebih dari 10 persen");
+//            } else if (controller.jenisCombo.getSelectionModel().getSelectedItem().equals("Bahan - Barang") && (sisa > 10 || sisa < -10)) {
+//                mainApp.showMessage(Modality.NONE, "Warning", "Selisih berat lebih dari 10 persen");
             } else {
                 Task<String> task = new Task<String>() {
                     @Override
@@ -574,7 +586,7 @@ public class ProduksiBarangController {
                             produksi.setUserMulai(sistem.getUser().getKodeUser());
                             produksi.setUserSelesai(sistem.getUser().getKodeUser());
                             produksi.setKodeGudang(controller.gudangCombo.getSelectionModel().getSelectedItem());
-                            produksi.setJenisProduksi("Bahan - Barang");
+//                            produksi.setJenisProduksi(controller.jenisCombo.getSelectionModel().getSelectedItem());
                             produksi.setKodeMesin(controller.mesinCombo.getSelectionModel().getSelectedItem());
                             produksi.setBiayaProduksi(0);
                             produksi.setCatatan(controller.catatanField.getText());

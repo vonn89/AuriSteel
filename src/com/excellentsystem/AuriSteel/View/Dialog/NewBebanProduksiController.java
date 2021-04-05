@@ -200,7 +200,7 @@ public class NewBebanProduksiController  {
         FXMLLoader loader = mainApp.showDialog(owner, child, "View/Dialog/NewProduksiBarang.fxml");
         NewProduksiBarangController controller = loader.getController();
         controller.setMainApp(mainApp, owner, child);
-        controller.setDetailProduksi(p.getKodeProduksi());
+        controller.setDetailProduksi(p.getKodeProduksi(),false);
     }
     private void detailBebanProduksi(ProduksiHead p, Stage owner){
         Stage child = new Stage();

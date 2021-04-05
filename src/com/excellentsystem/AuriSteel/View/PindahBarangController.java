@@ -38,6 +38,7 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.MenuItem;
@@ -62,51 +63,82 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  */
 public class PindahBarangController {
 
-    @FXML private TableView<PindahBarangHead> pindahBarangTable;
-    @FXML private TableColumn<PindahBarangHead, String> noPindahColumn;
-    @FXML private TableColumn<PindahBarangHead, String> tglPindahColumn;
-    @FXML private TableColumn<PindahBarangHead, String> gudangAsalColumn;
-    @FXML private TableColumn<PindahBarangHead, String> gudangTujuanColumn;
-    @FXML private TableColumn<PindahBarangHead, String> supirColumn;
-    @FXML private TableColumn<PindahBarangHead, String> catatanColumn;
-    @FXML private TableColumn<PindahBarangHead, String> kodeUserColumn;
-    
-    @FXML private TextField searchField;
-    @FXML private DatePicker tglMulaiPicker;
-    @FXML private DatePicker tglAkhirPicker;
-    
+    @FXML
+    private TableView<PindahBarangHead> pindahBarangTable;
+    @FXML
+    private TableColumn<PindahBarangHead, String> noPindahColumn;
+    @FXML
+    private TableColumn<PindahBarangHead, String> tglPindahColumn;
+    @FXML
+    private TableColumn<PindahBarangHead, String> gudangAsalColumn;
+    @FXML
+    private TableColumn<PindahBarangHead, String> gudangTujuanColumn;
+    @FXML
+    private TableColumn<PindahBarangHead, String> supirColumn;
+    @FXML
+    private TableColumn<PindahBarangHead, String> catatanColumn;
+    @FXML
+    private TableColumn<PindahBarangHead, String> kodeUserColumn;
+    @FXML
+    private TableColumn<PindahBarangHead, String> tglVerifikasiColumn;
+    @FXML
+    private TableColumn<PindahBarangHead, String> userVerifikasiColumn;
+
+    @FXML
+    private TextField searchField;
+    @FXML
+    private DatePicker tglMulaiPicker;
+    @FXML
+    private DatePicker tglAkhirPicker;
+    @FXML
+    private ComboBox<String> groupByCombo;
+
     private ObservableList<PindahBarangHead> allPindah = FXCollections.observableArrayList();
     private ObservableList<PindahBarangHead> filterData = FXCollections.observableArrayList();
-    private Main mainApp;   
+    private Main mainApp;
+
     public void initialize() {
         noPindahColumn.setCellValueFactory(cellData -> cellData.getValue().noPindahProperty());
         noPindahColumn.setCellFactory(col -> Function.getWrapTableCell(noPindahColumn));
-        
-        tglPindahColumn.setCellValueFactory(cellData -> { 
+
+        tglPindahColumn.setCellValueFactory(cellData -> {
             try {
-                return  new SimpleStringProperty(tglLengkap.format(tglSql.parse(cellData.getValue().getTglPindah())));
+                return new SimpleStringProperty(tglLengkap.format(tglSql.parse(cellData.getValue().getTglPindah())));
             } catch (Exception ex) {
                 return null;
             }
         });
         tglPindahColumn.setCellFactory(col -> Function.getWrapTableCell(tglPindahColumn));
         tglPindahColumn.setComparator(Function.sortDate(tglLengkap));
-        
+
         gudangAsalColumn.setCellValueFactory(cellData -> cellData.getValue().gudangAsalProperty());
         gudangAsalColumn.setCellFactory(col -> Function.getWrapTableCell(gudangAsalColumn));
-        
+
         gudangTujuanColumn.setCellValueFactory(cellData -> cellData.getValue().gudangTujuanProperty());
         gudangTujuanColumn.setCellFactory(col -> Function.getWrapTableCell(gudangTujuanColumn));
-        
+
         supirColumn.setCellValueFactory(cellData -> cellData.getValue().supirProperty());
         supirColumn.setCellFactory(col -> Function.getWrapTableCell(supirColumn));
-        
+
         catatanColumn.setCellValueFactory(cellData -> cellData.getValue().catatanProperty());
         catatanColumn.setCellFactory(col -> Function.getWrapTableCell(catatanColumn));
-        
+
         kodeUserColumn.setCellValueFactory(cellData -> cellData.getValue().kodeUserProperty());
         kodeUserColumn.setCellFactory(col -> Function.getWrapTableCell(kodeUserColumn));
-        
+
+        tglVerifikasiColumn.setCellValueFactory(cellData -> {
+            try {
+                return new SimpleStringProperty(tglLengkap.format(tglSql.parse(cellData.getValue().getTglVerifikasi())));
+            } catch (Exception ex) {
+                return null;
+            }
+        });
+        tglVerifikasiColumn.setCellFactory(col -> Function.getWrapTableCell(tglVerifikasiColumn));
+        tglVerifikasiColumn.setComparator(Function.sortDate(tglLengkap));
+
+        userVerifikasiColumn.setCellValueFactory(cellData -> cellData.getValue().userVerifikasiProperty());
+        userVerifikasiColumn.setCellFactory(col -> Function.getWrapTableCell(userVerifikasiColumn));
+
         tglMulaiPicker.setConverter(Function.getTglConverter());
         tglMulaiPicker.setValue(LocalDate.now().minusMonths(1));
         tglMulaiPicker.setDayCellFactory((final DatePicker datePicker) -> Function.getDateCellMulai(tglAkhirPicker));
@@ -115,69 +147,85 @@ public class PindahBarangController {
         tglAkhirPicker.setDayCellFactory((final DatePicker datePicker) -> Function.getDateCellAkhir(tglMulaiPicker));
         final ContextMenu rm = new ContextMenu();
         MenuItem addNew = new MenuItem("Add New Pindah Barang");
-        addNew.setOnAction((ActionEvent e)->{
+        addNew.setOnAction((ActionEvent e) -> {
             newPindah();
         });
         MenuItem export = new MenuItem("Export Excel");
-        export.setOnAction((ActionEvent e)->{
+        export.setOnAction((ActionEvent e) -> {
             exportExcel();
         });
         MenuItem refresh = new MenuItem("Refresh");
-        refresh.setOnAction((ActionEvent e)->{
+        refresh.setOnAction((ActionEvent e) -> {
             getPindah();
         });
-        for(Otoritas o : sistem.getUser().getOtoritas()){
-            if(o.getJenis().equals("Add New Pindah Barang")&&o.isStatus())
+        for (Otoritas o : sistem.getUser().getOtoritas()) {
+            if (o.getJenis().equals("Add New Pindah Barang") && o.isStatus()) {
                 rm.getItems().add(addNew);
-            if(o.getJenis().equals("Export Excel")&&o.isStatus())
+            }
+            if (o.getJenis().equals("Export Excel") && o.isStatus()) {
                 rm.getItems().add(export);
+            }
         }
         rm.getItems().addAll(refresh);
         pindahBarangTable.setContextMenu(rm);
         pindahBarangTable.setRowFactory((TableView<PindahBarangHead> tableView) -> {
-            final TableRow<PindahBarangHead> row = new TableRow<PindahBarangHead>(){
+            final TableRow<PindahBarangHead> row = new TableRow<PindahBarangHead>() {
                 @Override
                 public void updateItem(PindahBarangHead item, boolean empty) {
                     super.updateItem(item, empty);
                     if (empty) {
                         setContextMenu(rm);
-                    } else{
+                    } else {
                         final ContextMenu rm = new ContextMenu();
                         MenuItem addNew = new MenuItem("Add New Pindah Barang");
-                        addNew.setOnAction((ActionEvent e)->{
+                        addNew.setOnAction((ActionEvent e) -> {
                             newPindah();
                         });
                         MenuItem detail = new MenuItem("Detail Pindah Barang");
-                        detail.setOnAction((ActionEvent e)->{
+                        detail.setOnAction((ActionEvent e) -> {
                             lihatDetailPindah(item);
                         });
+                        MenuItem verifikasi = new MenuItem("Verifikasi Pindah Barang");
+                        verifikasi.setOnAction((ActionEvent e) -> {
+                            verifikasiPindah(item);
+                        });
                         MenuItem batal = new MenuItem("Batal Pindah Barang");
-                        batal.setOnAction((ActionEvent e)->{
+                        batal.setOnAction((ActionEvent e) -> {
                             batalPindah(item);
                         });
                         MenuItem suratJalan = new MenuItem("Print Surat Jalan");
-                        suratJalan.setOnAction((ActionEvent e)->{
+                        suratJalan.setOnAction((ActionEvent e) -> {
                             printSuratJalan(item);
                         });
                         MenuItem export = new MenuItem("Export Excel");
-                        export.setOnAction((ActionEvent e)->{
+                        export.setOnAction((ActionEvent e) -> {
                             exportExcel();
                         });
                         MenuItem refresh = new MenuItem("Refresh");
-                        refresh.setOnAction((ActionEvent e)->{
+                        refresh.setOnAction((ActionEvent e) -> {
                             getPindah();
                         });
-                        for(Otoritas o : sistem.getUser().getOtoritas()){
-                            if(o.getJenis().equals("Add New Pindah Barang")&&o.isStatus())
+                        for (Otoritas o : sistem.getUser().getOtoritas()) {
+                            if (o.getJenis().equals("Add New Pindah Barang") && o.isStatus()) {
                                 rm.getItems().add(addNew);
-                            if(o.getJenis().equals("Detail Pindah Barang")&&o.isStatus())
+                            }
+                            if (o.getJenis().equals("Detail Pindah Barang") && o.isStatus()) {
                                 rm.getItems().add(detail);
-                            if(o.getJenis().equals("Batal Pindah Barang")&&o.isStatus())
+                            }
+                            if (o.getJenis().equals("Batal Pindah Barang") && o.isStatus() && 
+                                    (item.getStatus().equals("open") || item.getStatus().equals("true"))) {
                                 rm.getItems().add(batal);
-                            if(o.getJenis().equals("Print Surat Jalan Pindah Barang")&&o.isStatus())
+                            }
+                            if (o.getJenis().equals("Verifikasi Pindah Barang") && o.isStatus()&& 
+                                    item.getStatus().equals("open") ){
+                                rm.getItems().add(verifikasi);
+                            }
+                            if (o.getJenis().equals("Print Surat Jalan Pindah Barang") && o.isStatus()) {
                                 rm.getItems().add(suratJalan);
-                            if(o.getJenis().equals("Export Excel")&&o.isStatus())
+                            }
+                            if (o.getJenis().equals("Export Excel") && o.isStatus()) {
                                 rm.getItems().add(export);
+                            }
                         }
                         rm.getItems().addAll(refresh);
                         setContextMenu(rm);
@@ -185,11 +233,12 @@ public class PindahBarangController {
                 }
             };
             row.setOnMouseClicked((MouseEvent mouseEvent) -> {
-                if(mouseEvent.getButton().equals(MouseButton.PRIMARY)&&mouseEvent.getClickCount() == 2){
-                    if(row.getItem()!=null){
-                        for(Otoritas o : sistem.getUser().getOtoritas()){
-                            if(o.getJenis().equals("Detail Pindah Barang")&&o.isStatus())
+                if (mouseEvent.getButton().equals(MouseButton.PRIMARY) && mouseEvent.getClickCount() == 2) {
+                    if (row.getItem() != null) {
+                        for (Otoritas o : sistem.getUser().getOtoritas()) {
+                            if (o.getJenis().equals("Detail Pindah Barang") && o.isStatus()) {
                                 lihatDetailPindah(row.getItem());
+                            }
                         }
                     }
                 }
@@ -200,24 +249,42 @@ public class PindahBarangController {
             searchPengiriman();
         });
         searchField.textProperty().addListener(
-            (ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            searchPengiriman();
-        });
+                (ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+                    searchPengiriman();
+                });
         filterData.addAll(allPindah);
         pindahBarangTable.setItems(filterData);
-    }    
+    }
+
     public void setMainApp(Main mainApp) {
         this.mainApp = mainApp;
+        ObservableList<String> groupBy = FXCollections.observableArrayList();
+        groupBy.clear();
+        groupBy.add("Wait");
+        groupBy.add("Done");
+        groupBy.add("Cancel");
+        groupBy.add("Semua");
+        groupByCombo.setItems(groupBy);
+        groupByCombo.getSelectionModel().select("Wait");
         getPindah();
     }
+
     @FXML
-    private void getPindah(){
+    private void getPindah() {
         Task<List<PindahBarangHead>> task = new Task<List<PindahBarangHead>>() {
-            @Override 
+            @Override
             public List<PindahBarangHead> call() throws Exception {
                 try (Connection con = Koneksi.getConnection()) {
-                    List<PindahBarangHead> allPindah = PindahBarangHeadDAO.getAllByDateAndStatus(con, 
-                            tglMulaiPicker.getValue().toString(), tglAkhirPicker.getValue().toString(),"true");
+                    String status = "%";
+                    if (groupByCombo.getSelectionModel().getSelectedItem().equals("Done")) {
+                        status = "true";
+                    } else if (groupByCombo.getSelectionModel().getSelectedItem().equals("Wait")) {
+                        status = "open";
+                    } else if (groupByCombo.getSelectionModel().getSelectedItem().equals("Cancel")) {
+                        status = "false";
+                    }
+                    List<PindahBarangHead> allPindah = PindahBarangHeadDAO.getAllByDateAndStatus(con,
+                            tglMulaiPicker.getValue().toString(), tglAkhirPicker.getValue().toString(), status);
                     return allPindah;
                 }
             }
@@ -237,62 +304,71 @@ public class PindahBarangController {
         });
         new Thread(task).start();
     }
-    private Boolean checkColumn(String column){
-        if(column!=null){
-            if(column.toLowerCase().contains(searchField.getText().toLowerCase()))
+
+    private Boolean checkColumn(String column) {
+        if (column != null) {
+            if (column.toLowerCase().contains(searchField.getText().toLowerCase())) {
                 return true;
+            }
         }
         return false;
     }
+
     private void searchPengiriman() {
-        try{
+        try {
             filterData.clear();
             for (PindahBarangHead temp : allPindah) {
-                if (searchField.getText() == null || searchField.getText().equals(""))
+                if (searchField.getText() == null || searchField.getText().equals("")) {
                     filterData.add(temp);
-                else{
-                    if(checkColumn(temp.getNoPindah())||
-                        checkColumn(tglLengkap.format(tglSql.parse(temp.getTglPindah())))||
-                        checkColumn(temp.getGudangAsal())||
-                        checkColumn(temp.getGudangTujuan())||
-                        checkColumn(temp.getSupir())||
-                        checkColumn(temp.getCatatan()))
+                } else {
+                    if (checkColumn(temp.getNoPindah())
+                            || checkColumn(tglLengkap.format(tglSql.parse(temp.getTglPindah())))
+                            || checkColumn(temp.getGudangAsal())
+                            || checkColumn(temp.getGudangTujuan())
+                            || checkColumn(temp.getUserVerifikasi())
+                            || checkColumn(temp.getKodeUser())
+                            || checkColumn(temp.getSupir())
+                            || checkColumn(temp.getCatatan())) {
                         filterData.add(temp);
+                    }
                 }
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             mainApp.showMessage(Modality.NONE, "Error", e.toString());
             e.printStackTrace();
         }
     }
-    private void newPindah(){
+
+    private void newPindah() {
         Stage stage = new Stage();
         FXMLLoader loader = mainApp.showDialog(mainApp.MainStage, stage, "View/Dialog/NewPindahBarang.fxml");
         NewPindahBarangController controller = loader.getController();
         controller.setMainApp(mainApp, mainApp.MainStage, stage);
         controller.setNewPindah();
         controller.saveButton.setOnAction((event) -> {
-            if(controller.gudangAsalCombo.getSelectionModel().getSelectedItem()==null){
+            if (controller.gudangAsalCombo.getSelectionModel().getSelectedItem() == null) {
                 mainApp.showMessage(Modality.NONE, "Warning", "Gudang asal belum dipilih");
-            }else if(controller.gudangTujuanCombo.getSelectionModel().getSelectedItem()==null){
+            } else if (controller.gudangTujuanCombo.getSelectionModel().getSelectedItem() == null) {
                 mainApp.showMessage(Modality.NONE, "Warning", "Gudang tujuan belum dipilih");
-            }else if(controller.allPindahBarangDetail.isEmpty()){
+            } else if (controller.allPindahBarangDetail.isEmpty()) {
                 mainApp.showMessage(Modality.NONE, "Warning", "Barang masih kosong");
-            }else{
+            } else {
                 Task<String> task = new Task<String>() {
-                    @Override 
-                    public String call()throws Exception {
+                    @Override
+                    public String call() throws Exception {
                         try (Connection con = Koneksi.getConnection()) {
                             PindahBarangHead p = new PindahBarangHead();
                             p.setGudangAsal(controller.gudangAsalCombo.getSelectionModel().getSelectedItem());
                             p.setGudangTujuan(controller.gudangTujuanCombo.getSelectionModel().getSelectedItem());
                             p.setSupir(controller.namaSupirField.getText());
-                            p.setCatatan("");
+                            p.setCatatan(controller.catatanField.getText());
                             p.setKodeUser(sistem.getUser().getKodeUser());
+                            p.setTglVerifikasi("2000-01-01 00:00:00");
+                            p.setUserVerifikasi("");
                             p.setTglBatal("2000-01-01 00:00:00");
                             p.setUserBatal("");
-                            p.setStatus("true");
-                            p.setListPindahBarangDetail(controller.allPindahBarangDetail); 
+                            p.setStatus("open");
+                            p.setListPindahBarangDetail(controller.allPindahBarangDetail);
                             return Service.newPindahBarang(con, p);
                         }
                     }
@@ -303,10 +379,10 @@ public class PindahBarangController {
                 task.setOnSucceeded((WorkerStateEvent ex) -> {
                     mainApp.closeLoading();
                     getPindah();
-                    if(task.getValue().equals("true")){
+                    if (task.getValue().equals("true")) {
                         mainApp.closeDialog(mainApp.MainStage, stage);
                         mainApp.showMessage(Modality.NONE, "Success", "Data pindah barang berhasil disimpan");
-                    }else{
+                    } else {
                         mainApp.showMessage(Modality.NONE, "Error", task.getValue());
                     }
                 });
@@ -318,14 +394,15 @@ public class PindahBarangController {
             }
         });
     }
-    private void batalPindah(PindahBarangHead p){
+
+    private void batalPindah(PindahBarangHead p) {
         MessageController controller = mainApp.showMessage(Modality.WINDOW_MODAL, "Confirmation",
-            "Batal pindah barang "+p.getNoPindah()+" ?");
+                "Batal pindah barang " + p.getNoPindah() + " ?");
         controller.OK.setOnAction((ActionEvent e) -> {
             mainApp.closeMessage();
             Task<String> task = new Task<String>() {
-                @Override 
-                public String call()throws Exception {
+                @Override
+                public String call() throws Exception {
                     try (Connection con = Koneksi.getConnection()) {
                         return Service.batalPindahBarang(con, p);
                     }
@@ -337,9 +414,9 @@ public class PindahBarangController {
             task.setOnSucceeded((WorkerStateEvent ex) -> {
                 mainApp.closeLoading();
                 getPindah();
-                if(task.getValue().equals("true")){
+                if (task.getValue().equals("true")) {
                     mainApp.showMessage(Modality.NONE, "Success", "Data pindah barang berhasil dibatal");
-                }else{
+                } else {
                     mainApp.showMessage(Modality.NONE, "Error", task.getValue());
                 }
             });
@@ -350,27 +427,66 @@ public class PindahBarangController {
             new Thread(task).start();
         });
     }
-    private void lihatDetailPindah(PindahBarangHead p){
+
+    private void lihatDetailPindah(PindahBarangHead p) {
         Stage stage = new Stage();
         FXMLLoader loader = mainApp.showDialog(mainApp.MainStage, stage, "View/Dialog/NewPindahBarang.fxml");
         NewPindahBarangController controller = loader.getController();
         controller.setMainApp(mainApp, mainApp.MainStage, stage);
-        controller.setDetailPindah(p.getNoPindah());
+        controller.setDetailPindah(p.getNoPindah(), false);
     }
-    private void printSuratJalan(PindahBarangHead p){
-        try(Connection con = Koneksi.getConnection()){
+
+    private void verifikasiPindah(PindahBarangHead p) {
+        Stage stage = new Stage();
+        FXMLLoader loader = mainApp.showDialog(mainApp.MainStage, stage, "View/Dialog/NewPindahBarang.fxml");
+        NewPindahBarangController controller = loader.getController();
+        controller.setMainApp(mainApp, mainApp.MainStage, stage);
+        controller.setDetailPindah(p.getNoPindah(), true);
+        controller.saveButton.setOnAction((event) -> {
+            Task<String> task = new Task<String>() {
+                @Override
+                public String call() throws Exception {
+                    try (Connection con = Koneksi.getConnection()) {
+                        return Service.verifikasiPindahBarang(con, p);
+                    }
+                }
+            };
+            task.setOnRunning((ex) -> {
+                mainApp.showLoadingScreen();
+            });
+            task.setOnSucceeded((WorkerStateEvent ex) -> {
+                mainApp.closeLoading();
+                getPindah();
+                if (task.getValue().equals("true")) {
+                    mainApp.closeDialog(mainApp.MainStage, stage);
+                    mainApp.showMessage(Modality.NONE, "Success", "Data pindah barang berhasil disetujui");
+                } else {
+                    mainApp.showMessage(Modality.NONE, "Error", task.getValue());
+                }
+            });
+            task.setOnFailed((ex) -> {
+                mainApp.showMessage(Modality.NONE, "Error", task.getException().toString());
+                mainApp.closeLoading();
+            });
+            new Thread(task).start();
+        });
+    }
+
+    private void printSuratJalan(PindahBarangHead p) {
+        try (Connection con = Koneksi.getConnection()) {
             List<PindahBarangDetail> listPindah = PindahBarangDetailDAO.getAllPindahBarangDetail(con, p.getNoPindah());
-            for(PindahBarangDetail d : listPindah){
+            for (PindahBarangDetail d : listPindah) {
                 d.setPindahBarangHead(p);
             }
             Report report = new Report();
             report.printSuratJalanPindahBarang(listPindah);
-        }catch (Exception e){
+        } catch (Exception e) {
             mainApp.showMessage(Modality.NONE, "Error", e.toString());
         }
-    }    
-    private void exportExcel(){
-        try{
+    }
+
+    private void exportExcel() {
+        try {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Select location to export");
             fileChooser.getExtensionFilters().addAll(
@@ -389,41 +505,47 @@ public class PindahBarangController {
                 }
                 Sheet sheet = workbook.createSheet("Data Pindah Barang");
                 int rc = 0;
-                int c = 7;
+                int c = 9;
                 createRow(workbook, sheet, rc, c, "Bold");
-                sheet.getRow(rc).getCell(0).setCellValue("Tanggal : "+
-                        tgl.format(tglBarang.parse(tglMulaiPicker.getValue().toString()))+"-"+
-                        tgl.format(tglBarang.parse(tglAkhirPicker.getValue().toString())));
+                sheet.getRow(rc).getCell(0).setCellValue("Tanggal : "
+                        + tgl.format(tglBarang.parse(tglMulaiPicker.getValue().toString())) + "-"
+                        + tgl.format(tglBarang.parse(tglAkhirPicker.getValue().toString())));
                 rc++;
                 createRow(workbook, sheet, rc, c, "Bold");
-                sheet.getRow(rc).getCell(0).setCellValue("Filter : "+searchField.getText());
+                sheet.getRow(rc).getCell(0).setCellValue("Filter : " + searchField.getText());
                 rc++;
                 createRow(workbook, sheet, rc, c, "Header");
-                sheet.getRow(rc).getCell(0).setCellValue("No Pindah"); 
-                sheet.getRow(rc).getCell(1).setCellValue("Tgl Pindah");  
-                sheet.getRow(rc).getCell(2).setCellValue("Gudang Asal"); 
-                sheet.getRow(rc).getCell(3).setCellValue("Gudang Tujuan"); 
-                sheet.getRow(rc).getCell(4).setCellValue("Supir"); 
-                sheet.getRow(rc).getCell(5).setCellValue("Catatan"); 
-                sheet.getRow(rc).getCell(6).setCellValue("Kode User"); 
+                sheet.getRow(rc).getCell(0).setCellValue("No Pindah");
+                sheet.getRow(rc).getCell(1).setCellValue("Tgl Pindah");
+                sheet.getRow(rc).getCell(2).setCellValue("User Pindah");
+                sheet.getRow(rc).getCell(3).setCellValue("Gudang Asal");
+                sheet.getRow(rc).getCell(4).setCellValue("Gudang Tujuan");
+                sheet.getRow(rc).getCell(5).setCellValue("Supir");
+                sheet.getRow(rc).getCell(6).setCellValue("Catatan");
+                sheet.getRow(rc).getCell(7).setCellValue("Tgl Verifikasi");
+                sheet.getRow(rc).getCell(8).setCellValue("User Verifikasi");
                 rc++;
                 for (PindahBarangHead b : filterData) {
                     createRow(workbook, sheet, rc, c, "Detail");
                     sheet.getRow(rc).getCell(0).setCellValue(b.getNoPindah());
                     sheet.getRow(rc).getCell(1).setCellValue(tglLengkap.format(tglSql.parse(b.getTglPindah())));
-                    sheet.getRow(rc).getCell(2).setCellValue(b.getGudangAsal());
-                    sheet.getRow(rc).getCell(3).setCellValue(b.getGudangTujuan());
-                    sheet.getRow(rc).getCell(4).setCellValue(b.getSupir());
-                    sheet.getRow(rc).getCell(5).setCellValue(b.getCatatan());
-                    sheet.getRow(rc).getCell(6).setCellValue(b.getKodeUser());
+                    sheet.getRow(rc).getCell(2).setCellValue(b.getKodeUser());
+                    sheet.getRow(rc).getCell(3).setCellValue(b.getGudangAsal());
+                    sheet.getRow(rc).getCell(4).setCellValue(b.getGudangTujuan());
+                    sheet.getRow(rc).getCell(5).setCellValue(b.getSupir());
+                    sheet.getRow(rc).getCell(6).setCellValue(b.getCatatan());
+                    sheet.getRow(rc).getCell(7).setCellValue(tglLengkap.format(tglSql.parse(b.getTglVerifikasi())));
+                    sheet.getRow(rc).getCell(8).setCellValue(b.getUserVerifikasi());
                     rc++;
                 }
-                for(int i=0 ; i<c ; i++){ sheet.autoSizeColumn(i);}
+                for (int i = 0; i < c; i++) {
+                    sheet.autoSizeColumn(i);
+                }
                 try (FileOutputStream outputStream = new FileOutputStream(file)) {
                     workbook.write(outputStream);
                 }
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             mainApp.showMessage(Modality.NONE, "Error", e.toString());
             e.printStackTrace();
         }

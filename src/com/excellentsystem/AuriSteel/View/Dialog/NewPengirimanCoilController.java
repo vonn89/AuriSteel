@@ -340,12 +340,12 @@ public class NewPengirimanCoilController  {
             controller.setMainApp(mainApp, stage, child);
             controller.getBahan(gudangCombo.getSelectionModel().getSelectedItem());
             controller.bahanTable.setRowFactory((param) -> {
-                TreeTableRow<Bahan> row = new TreeTableRow<Bahan>(){};
+                TreeTableRow<StokBahan> row = new TreeTableRow<StokBahan>(){};
                 row.setOnMouseClicked((MouseEvent evt) -> {
                     if(evt.getButton().equals(MouseButton.PRIMARY) && evt.getClickCount()==2){
-                        if(row.getItem().getNamaBahan()!=null){
+                        if(row.getItem().getBahan().getNamaBahan()!=null){
                             try(Connection con = Koneksi.getConnection()){
-                                Bahan b = row.getItem();
+                                Bahan b = row.getItem().getBahan();
                                 Boolean status = true;
                                 for(PenjualanBahanDetail temp : allPenjualanCoilDetail){
                                     if(temp.getKodeBahan().equals(b.getKodeBahan()))

@@ -301,6 +301,9 @@ public class LaporanPenjualanController {
                             if (p.getKodeCustomer().equals(c.getKodeCustomer())) {
                                 p.setCustomer(c);
                             }
+                            if (p.getKodeCustomerInvoice().equals(c.getKodeCustomer())) {
+                                p.setCustomerInvoice(c);
+                            }
                         }
                         for (Pegawai s : allSales) {
                             if (p.getKodeSales().equals(s.getKodePegawai())) {

@@ -39,9 +39,11 @@ public class PindahBarangHeadDAO {
             p.setSupir(rs.getString(5));
             p.setCatatan(rs.getString(6));
             p.setKodeUser(rs.getString(7));
-            p.setTglBatal(rs.getDate(8).toString()+" "+rs.getTime(8).toString());
-            p.setUserBatal(rs.getString(9));
-            p.setStatus(rs.getString(10));
+            p.setTglVerifikasi(rs.getDate(8).toString()+" "+rs.getTime(8).toString());
+            p.setUserVerifikasi(rs.getString(9));
+            p.setTglBatal(rs.getDate(10).toString()+" "+rs.getTime(10).toString());
+            p.setUserBatal(rs.getString(11));
+            p.setStatus(rs.getString(12));
             allPenjualan.add(p);
         }
         return allPenjualan;
@@ -61,9 +63,11 @@ public class PindahBarangHeadDAO {
             p.setSupir(rs.getString(5));
             p.setCatatan(rs.getString(6));
             p.setKodeUser(rs.getString(7));
-            p.setTglBatal(rs.getDate(8).toString()+" "+rs.getTime(8).toString());
-            p.setUserBatal(rs.getString(9));
-            p.setStatus(rs.getString(10));
+            p.setTglVerifikasi(rs.getDate(8).toString()+" "+rs.getTime(8).toString());
+            p.setUserVerifikasi(rs.getString(9));
+            p.setTglBatal(rs.getDate(10).toString()+" "+rs.getTime(10).toString());
+            p.setUserBatal(rs.getString(11));
+            p.setStatus(rs.getString(12));
         }
         return p;
     }
@@ -78,7 +82,7 @@ public class PindahBarangHeadDAO {
             return "PG-"+yymm.format(date)+new DecimalFormat("000").format(1);
     }
     public static void insert(Connection con, PindahBarangHead p)throws Exception{
-        PreparedStatement ps = con.prepareStatement("insert into tt_pindah_barang_head values(?,?,?,?,?,?,?,?,?,?)");
+        PreparedStatement ps = con.prepareStatement("insert into tt_pindah_barang_head values(?,?,?,?,?,?,?,?,?,?,?,?)");
         ps.setString(1, p.getNoPindah());
         ps.setString(2, p.getTglPindah());
         ps.setString(3, p.getGudangAsal());
@@ -86,15 +90,17 @@ public class PindahBarangHeadDAO {
         ps.setString(5, p.getSupir());
         ps.setString(6, p.getCatatan());
         ps.setString(7, p.getKodeUser());
-        ps.setString(8, p.getTglBatal());
-        ps.setString(9, p.getUserBatal());
-        ps.setString(10, p.getStatus());
+        ps.setString(8, p.getTglVerifikasi());
+        ps.setString(9, p.getUserVerifikasi());
+        ps.setString(10, p.getTglBatal());
+        ps.setString(11, p.getUserBatal());
+        ps.setString(12, p.getStatus());
         ps.executeUpdate();
     }
     public static void update(Connection con, PindahBarangHead p)throws Exception{
         PreparedStatement ps = con.prepareStatement("update tt_pindah_barang_head set "
                 + " tgl_pindah=?, gudang_asal=?, gudang_tujuan=?, supir=?, "
-                + " catatan=?, kode_user=?, tgl_batal=?, user_batal=?, status=? "
+                + " catatan=?, kode_user=?, tgl_verifikasi=?, user_verifikasi=?, tgl_batal=?, user_batal=?, status=? "
                 + " where no_pindah=?");
         ps.setString(1, p.getTglPindah());
         ps.setString(2, p.getGudangAsal());
@@ -102,10 +108,12 @@ public class PindahBarangHeadDAO {
         ps.setString(4, p.getSupir());
         ps.setString(5, p.getCatatan());
         ps.setString(6, p.getKodeUser());
-        ps.setString(7, p.getTglBatal());
-        ps.setString(8, p.getUserBatal());
-        ps.setString(9, p.getStatus());
-        ps.setString(10, p.getNoPindah());
+        ps.setString(7, p.getTglVerifikasi());
+        ps.setString(8, p.getUserVerifikasi());
+        ps.setString(9, p.getTglBatal());
+        ps.setString(10, p.getUserBatal());
+        ps.setString(11, p.getStatus());
+        ps.setString(12, p.getNoPindah());
         ps.executeUpdate();
     }
 }

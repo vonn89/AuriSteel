@@ -156,9 +156,9 @@
                         </ImageView>
                      </graphic>
                   </TitledPane>
-                  <TitledPane fx:id="barangPane" graphicTextGap="10.0" layoutX="10.0" layoutY="107.0" minWidth="0.0" text="Barang" textFill="WHITE">
+                  <TitledPane fx:id="produksiPane" graphicTextGap="10.0" layoutX="10.0" layoutY="107.0" minWidth="0.0" text="Produksi" textFill="WHITE">
                      <content>
-                        <VBox fx:id="barangVbox" style="-fx-padding: 0 -1 0 0;">
+                        <VBox fx:id="produksiVbox" style="-fx-padding: 0 -1 0 0;">
                            <children>
                               <MenuButton fx:id="menuPermintaanBarang" layoutX="10.0" layoutY="40.0" mnemonicParsing="false" onMouseClicked="#menuPermintaanBarang" prefHeight="35.0" prefWidth="270.0" text="Permintaan Barang">
                                  <padding>
@@ -175,6 +175,21 @@
                                     <Insets left="50.0" />
                                  </padding>
                               </MenuButton>
+                           </children>
+                        </VBox>
+                     </content>
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../Resource/deployment_64px.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </TitledPane>
+                  <TitledPane fx:id="barangPane" graphicTextGap="10.0" layoutX="10.0" layoutY="158.0" minWidth="0.0" text="Barang" textFill="WHITE">
+                     <content>
+                        <VBox fx:id="barangVbox" style="-fx-padding: 0 -1 0 0;">
+                           <children>
                               <MenuButton fx:id="menuPengirimanBarang" layoutX="21.0" layoutY="21.0" mnemonicParsing="false" onMouseClicked="#menuPengirimanBarang" prefHeight="35.0" prefWidth="270.0" text="Pengiriman Barang">
                                  <padding>
                                     <Insets left="50.0" />

@@ -76,4 +76,19 @@ public class PindahBarangDetailDAO {
         ps.setDouble(8, d.getNilai());
         ps.executeUpdate();
     }
+    public static void update(Connection con, PindahBarangDetail d)throws Exception{
+        PreparedStatement ps = con.prepareStatement("update tt_pindah_barang_detail set "
+                + " kode_barang = ?, nama_barang = ?, keterangan = ?, "
+                + " satuan = ?, qty = ?, nilai = ? "
+                + " where no_pindah = ? and no_urut =? ");
+        ps.setString(1, d.getKodeBarang());
+        ps.setString(2, d.getNamaBarang());
+        ps.setString(3, d.getKeterangan());
+        ps.setString(4, d.getSatuan());
+        ps.setDouble(5, d.getQty());
+        ps.setDouble(6, d.getNilai());
+        ps.setString(7, d.getNoPindah());
+        ps.setInt(8, d.getNoUrut());
+        ps.executeUpdate();
+    }
 }

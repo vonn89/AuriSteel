@@ -33,6 +33,7 @@
                   <TreeTableColumn fx:id="beratKotorColumn" maxWidth="2000.0" prefWidth="75.0" text="Berat Kotor" />
                   <TreeTableColumn fx:id="beratBersihColumn" maxWidth="2000.0" prefWidth="75.0" text="Berat Bersih" />
                   <TreeTableColumn fx:id="panjangColumn" maxWidth="2000.0" prefWidth="75.0" text="Panjang" />
+                  <TreeTableColumn fx:id="stokAkhirColumn" maxWidth="2000.0" prefWidth="75.0" text="Stok Akhir" />
               </columns>
                <columnResizePolicy>
                   <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -49,7 +50,7 @@
                   </ImageView>
                </graphic>
             </Button>
-            <TextField fx:id="searchField" prefHeight="40.0" prefWidth="300.0" promptText="Search..." styleClass="search-field" GridPane.rowIndex="2" />
+            <TextField fx:id="searchField" maxWidth="1.7976931348623157E308" prefHeight="40.0" prefWidth="300.0" promptText="Search..." styleClass="search-field" GridPane.rowIndex="2" />
          </children>
          <padding>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />

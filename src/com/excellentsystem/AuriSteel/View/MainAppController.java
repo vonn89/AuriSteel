@@ -72,11 +72,14 @@ public class MainAppController {
     @FXML private MenuButton menuPembelianBahan;
     @FXML private MenuButton menuPembelianBarang;
     
-    @FXML private TitledPane barangPane;
-    @FXML private VBox barangVbox;
+    @FXML private TitledPane produksiPane;
+    @FXML private VBox produksiVbox;
     @FXML private MenuButton menuPermintaanBarang;
     @FXML private MenuButton menuRencanaProduksiDanPengirimanBarang;
     @FXML private MenuButton menuProduksiBarang;
+    
+    @FXML private TitledPane barangPane;
+    @FXML private VBox barangVbox;
     @FXML private MenuButton menuPengirimanBarang;
     @FXML private MenuButton menuPengirimanCoil;
     @FXML private MenuButton menuPenerimaanBahan;
@@ -130,6 +133,9 @@ public class MainAppController {
             for(Node n : pembelianVbox.getChildren()){
                 n.managedProperty().bind(n.visibleProperty());
             }
+            for(Node n : produksiVbox.getChildren()){
+                n.managedProperty().bind(n.visibleProperty());
+            }
             for(Node n : barangVbox.getChildren()){
                 n.managedProperty().bind(n.visibleProperty());
             }
@@ -171,6 +177,7 @@ public class MainAppController {
         menuPermintaanBarang.setVisible(false);
         menuRencanaProduksiDanPengirimanBarang.setVisible(false);
         menuProduksiBarang.setVisible(false);
+        
         menuPengirimanBarang.setVisible(false);
         menuPengirimanCoil.setVisible(false);
         menuPenerimaanBahan.setVisible(false);
@@ -310,8 +317,10 @@ public class MainAppController {
             }
             if(menuPermintaanBarang.isVisible()==false &&
                     menuRencanaProduksiDanPengirimanBarang.isVisible()==false &&
-                    menuProduksiBarang.isVisible()==false &&
-                    menuPengirimanBarang.isVisible()==false &&
+                    menuProduksiBarang.isVisible()==false ){
+                accordion.getPanes().remove(produksiPane);
+            }
+            if(menuPengirimanBarang.isVisible()==false &&
                     menuPengirimanCoil.isVisible()==false &&
                     menuPenerimaanBahan.isVisible()==false &&
                     menuPindahBahan.isVisible()==false &&

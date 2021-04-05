@@ -49,35 +49,52 @@ import javafx.stage.Stage;
  *
  * @author excellent
  */
-public class NewPindahBahanController  {
+public class NewPindahBahanController {
 
-    @FXML private TableView<PindahBahanDetail> pengirimanDetailTable;
-    @FXML private TableColumn<PindahBahanDetail, String> kodeBahanColumn;
-    @FXML private TableColumn<PindahBahanDetail, String> namaBahanColumn;
-    @FXML private TableColumn<PindahBahanDetail, String> spesifikasiColumn;
-    @FXML private TableColumn<PindahBahanDetail, String> keteranganColumn;
-    @FXML private TableColumn<PindahBahanDetail, Number> beratKotorColumn;
-    @FXML private TableColumn<PindahBahanDetail, Number> beratBersihColumn;
-    @FXML private TableColumn<PindahBahanDetail, Number> panjangColumn;
-    
-    
-    @FXML public ComboBox<String> gudangAsalCombo;
-    @FXML public ComboBox<String> gudangTujuanCombo;
-    @FXML public TextField namaSupirField;
+    @FXML
+    private TableView<PindahBahanDetail> pengirimanDetailTable;
+    @FXML
+    private TableColumn<PindahBahanDetail, String> kodeBahanColumn;
+    @FXML
+    private TableColumn<PindahBahanDetail, String> namaBahanColumn;
+    @FXML
+    private TableColumn<PindahBahanDetail, String> spesifikasiColumn;
+    @FXML
+    private TableColumn<PindahBahanDetail, String> keteranganColumn;
+    @FXML
+    private TableColumn<PindahBahanDetail, Number> beratKotorColumn;
+    @FXML
+    private TableColumn<PindahBahanDetail, Number> beratBersihColumn;
+    @FXML
+    private TableColumn<PindahBahanDetail, Number> panjangColumn;
+
+    @FXML
+    public ComboBox<String> gudangAsalCombo;
+    @FXML
+    public ComboBox<String> gudangTujuanCombo;
+    @FXML
+    public TextField namaSupirField;
 //    @FXML public TextArea catatanField;
-    
-    @FXML private Label noPengirimanLabel;
-    @FXML private Label tglPengirimanLabel;
-    @FXML private Label totalQtyField;
-    @FXML private Label totalTonaseField;
-    
-    @FXML private Button cancelButton;
-    @FXML public Button saveButton;
-    
+
+    @FXML
+    private Label noPengirimanLabel;
+    @FXML
+    private Label tglPengirimanLabel;
+    @FXML
+    private Label totalQtyField;
+    @FXML
+    private Label totalTonaseField;
+
+    @FXML
+    private Button cancelButton;
+    @FXML
+    public Button saveButton;
+
     public ObservableList<PindahBahanDetail> allPindahBahanDetail = FXCollections.observableArrayList();
-    private Main mainApp;   
+    private Main mainApp;
     private Stage stage;
     private Stage owner;
+
     public void initialize() {
         kodeBahanColumn.setCellValueFactory(cellData -> cellData.getValue().kodeBahanProperty());
         namaBahanColumn.setCellValueFactory(cellData -> cellData.getValue().namaBahanProperty());
@@ -90,42 +107,43 @@ public class NewPindahBahanController  {
         panjangColumn.setCellValueFactory(cellData -> cellData.getValue().panjangProperty());
         panjangColumn.setCellFactory(col -> Function.getTableCell());
         pengirimanDetailTable.setItems(allPindahBahanDetail);
-        
+
         ContextMenu cm = new ContextMenu();
         MenuItem addBarang = new MenuItem("Add Barang");
-        addBarang.setOnAction((ActionEvent e)->{
+        addBarang.setOnAction((ActionEvent e) -> {
             addBarang();
         });
         MenuItem refresh = new MenuItem("Refresh");
-        refresh.setOnAction((ActionEvent e)->{
+        refresh.setOnAction((ActionEvent e) -> {
             pengirimanDetailTable.refresh();
         });
         cm.getItems().addAll(addBarang, refresh);
         pengirimanDetailTable.setContextMenu(cm);
         pengirimanDetailTable.setRowFactory((TableView<PindahBahanDetail> tv) -> {
-            final TableRow<PindahBahanDetail> row = new TableRow<PindahBahanDetail>(){
+            final TableRow<PindahBahanDetail> row = new TableRow<PindahBahanDetail>() {
                 @Override
                 public void updateItem(PindahBahanDetail item, boolean empty) {
                     super.updateItem(item, empty);
                     if (empty) {
                         setContextMenu(cm);
-                    } else{
+                    } else {
                         final ContextMenu rm = new ContextMenu();
                         MenuItem addBarang = new MenuItem("Add Barang");
-                        addBarang.setOnAction((ActionEvent e)->{
+                        addBarang.setOnAction((ActionEvent e) -> {
                             addBarang();
                         });
                         MenuItem delete = new MenuItem("Delete Barang");
-                        delete.setOnAction((ActionEvent e)->{
+                        delete.setOnAction((ActionEvent e) -> {
                             allPindahBahanDetail.remove(item);
                             hitungTotal();
                         });
                         MenuItem refresh = new MenuItem("Refresh");
-                        refresh.setOnAction((ActionEvent e)->{
+                        refresh.setOnAction((ActionEvent e) -> {
                             pengirimanDetailTable.refresh();
                         });
-                        if(saveButton.isVisible())
+                        if (saveButton.isVisible()) {
                             rm.getItems().addAll(addBarang, delete);
+                        }
                         rm.getItems().addAll(refresh);
                         setContextMenu(rm);
                     }
@@ -134,6 +152,7 @@ public class NewPindahBahanController  {
             return row;
         });
     }
+
     public void setMainApp(Main mainApp, Stage owner, Stage stage) {
         this.mainApp = mainApp;
         this.owner = owner;
@@ -141,35 +160,38 @@ public class NewPindahBahanController  {
         stage.setOnCloseRequest((event) -> {
             mainApp.closeDialog(owner, stage);
         });
-        stage.setHeight(mainApp.screenSize.getHeight()*0.9);
-        stage.setWidth(mainApp.screenSize.getWidth()*0.9);
+        stage.setHeight(mainApp.screenSize.getHeight() * 0.9);
+        stage.setWidth(mainApp.screenSize.getWidth() * 0.9);
         stage.setX((mainApp.screenSize.getWidth() - stage.getWidth()) / 2);
         stage.setY((mainApp.screenSize.getHeight() - stage.getHeight()) / 2);
         ObservableList<String> listGudang = FXCollections.observableArrayList();
-        for(Gudang g : sistem.getListGudang()){
+        for (Gudang g : sistem.getListGudang()) {
             listGudang.add(g.getKodeGudang());
         }
         gudangAsalCombo.setItems(listGudang);
         gudangTujuanCombo.setItems(listGudang);
     }
-    private void hitungTotal(){
+
+    private void hitungTotal() {
         double total = 0;
         double totalTonase = 0;
-        for(PindahBahanDetail d : allPindahBahanDetail){
+        for (PindahBahanDetail d : allPindahBahanDetail) {
             total = total + 1;
             totalTonase = totalTonase + d.getBeratKotor();
         }
         totalQtyField.setText(df.format(total));
         totalTonaseField.setText(df.format(totalTonase));
     }
-    public void setNewPindah(){
+
+    public void setNewPindah() {
         noPengirimanLabel.setText("");
         tglPengirimanLabel.setText("");
     }
-    public void setDetailPindah(String noPindah){
+
+    public void setDetailPindah(String noPindah) {
         Task<PindahBahanHead> task = new Task<PindahBahanHead>() {
-            @Override 
-            public PindahBahanHead call() throws Exception{
+            @Override
+            public PindahBahanHead call() throws Exception {
                 try (Connection con = Koneksi.getConnection()) {
                     PindahBahanHead pindah = PindahBahanHeadDAO.get(con, noPindah);
                     pindah.setListPindahBahanDetail(PindahBahanDetailDAO.getAllPindahBahanDetail(con, noPindah));
@@ -181,7 +203,7 @@ public class NewPindahBahanController  {
             mainApp.showLoadingScreen();
         });
         task.setOnSucceeded((ev) -> {
-            try{
+            try {
                 mainApp.closeLoading();
                 namaSupirField.setDisable(true);
                 gudangAsalCombo.setDisable(true);
@@ -190,12 +212,13 @@ public class NewPindahBahanController  {
                 saveButton.setVisible(false);
                 cancelButton.setVisible(false);
                 List<MenuItem> removeMenu = new ArrayList<>();
-                for(MenuItem m : pengirimanDetailTable.getContextMenu().getItems()){
-                    if(m.getText().equals("Add Barang"))
+                for (MenuItem m : pengirimanDetailTable.getContextMenu().getItems()) {
+                    if (m.getText().equals("Add Barang")) {
                         removeMenu.add(m);
+                    }
                 }
                 pengirimanDetailTable.getContextMenu().getItems().removeAll(removeMenu);
-                
+
                 PindahBahanHead p = task.getValue();
                 noPengirimanLabel.setText(p.getNoPindah());
                 tglPengirimanLabel.setText(tglLengkap.format(tglSql.parse(p.getTglPindah())));
@@ -205,7 +228,7 @@ public class NewPindahBahanController  {
                 gudangTujuanCombo.getSelectionModel().select(p.getGudangTujuan());
                 allPindahBahanDetail.addAll(p.getListPindahBahanDetail());
                 hitungTotal();
-            }catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
                 mainApp.showMessage(Modality.NONE, "Error", e.toString());
             }
@@ -217,36 +240,39 @@ public class NewPindahBahanController  {
         });
         new Thread(task).start();
     }
+
     @FXML
-    private void changeGudang(){
+    private void changeGudang() {
         allPindahBahanDetail.clear();
         hitungTotal();
     }
+
     @FXML
-    private void close(){
+    private void close() {
         mainApp.closeDialog(owner, stage);
     }
+
     @FXML
-    private void addBarang(){
-        if(gudangAsalCombo.getSelectionModel().getSelectedItem()==null){
-            mainApp.showMessage(Modality.NONE,"Warning", "Gudang asal belum dipilih");
-        }else if(gudangTujuanCombo.getSelectionModel().getSelectedItem()==null){
-            mainApp.showMessage(Modality.NONE,"Warning", "Gudang tujuan belum dipilih");
-        }else if(gudangAsalCombo.getSelectionModel().getSelectedItem().equals(gudangTujuanCombo.getSelectionModel().getSelectedItem())){
+    private void addBarang() {
+        if (gudangAsalCombo.getSelectionModel().getSelectedItem() == null) {
+            mainApp.showMessage(Modality.NONE, "Warning", "Gudang asal belum dipilih");
+        } else if (gudangTujuanCombo.getSelectionModel().getSelectedItem() == null) {
+            mainApp.showMessage(Modality.NONE, "Warning", "Gudang tujuan belum dipilih");
+        } else if (gudangAsalCombo.getSelectionModel().getSelectedItem().equals(gudangTujuanCombo.getSelectionModel().getSelectedItem())) {
             mainApp.showMessage(Modality.NONE, "Warning", "Gudang asal dan tujuan tidak boleh sama");
-        }else{
+        } else {
             Stage child = new Stage();
             FXMLLoader loader = mainApp.showDialog(stage, child, "View/Dialog/AddBahan.fxml");
             AddBahanController controller = loader.getController();
             controller.setMainApp(mainApp, stage, child);
             controller.getBahan(gudangAsalCombo.getSelectionModel().getSelectedItem());
             controller.bahanTable.setRowFactory((param) -> {
-                TreeTableRow<Bahan> row = new TreeTableRow<Bahan>(){};
+                TreeTableRow<StokBahan> row = new TreeTableRow<StokBahan>(){};
                 row.setOnMouseClicked((MouseEvent evt) -> {
                     if(evt.getButton().equals(MouseButton.PRIMARY) && evt.getClickCount()==2){
-                        if(row.getItem().getNamaBahan()!=null){
+                        if(row.getItem().getBahan().getNamaBahan()!=null){
                             try(Connection con = Koneksi.getConnection()){
-                                Bahan b = row.getItem();
+                                Bahan b = row.getItem().getBahan();
                                 Boolean status = true;
                                 for(PindahBahanDetail d : allPindahBahanDetail){
                                     if(d.getKodeBahan().equals(b.getKodeBahan()))
@@ -288,6 +314,7 @@ public class NewPindahBahanController  {
                 });
                 return row; 
             });
+
         }
     }
 }

@@ -171,7 +171,7 @@ public class NewPengirimanController  {
         noPengirimanField.setText("");
         tglPengirimanField.setText("");
     }
-    public void setDetailPengiriman(String noPenjualan){
+    public void setDetailPengiriman(String noPenjualan, boolean verifikasi){
         Task<PenjualanBarangHead> task = new Task<PenjualanBarangHead>() {
             @Override 
             public PenjualanBarangHead call() throws Exception{
@@ -198,8 +198,14 @@ public class NewPengirimanController  {
                 alamatKirimField.setDisable(true);
                 namaSupirField.setDisable(true);
                 gudangCombo.setDisable(true);
-                saveButton.setVisible(false);
-                cancelButton.setVisible(false);
+                if(verifikasi){
+                    saveButton.setText("Verifikasi");
+                    saveButton.setVisible(true);
+                    cancelButton.setVisible(true);
+                }else{
+                    saveButton.setVisible(false);
+                    cancelButton.setVisible(false);
+                }
                 List<MenuItem> removeMenu = new ArrayList<>();
                 for(MenuItem m : pengirimanDetailTable.getContextMenu().getItems()){
                     if(m.getText().equals("Add Barang"))

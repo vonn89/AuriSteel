@@ -23,10 +23,36 @@ public class PindahBarangHead {
     private final StringProperty supir = new SimpleStringProperty();
     private final StringProperty catatan = new SimpleStringProperty();
     private final StringProperty kodeUser = new SimpleStringProperty();
+    private final StringProperty tglVerifikasi = new SimpleStringProperty();
+    private final StringProperty userVerifikasi = new SimpleStringProperty();
     private final StringProperty tglBatal = new SimpleStringProperty();
     private final StringProperty userBatal = new SimpleStringProperty();
     private final StringProperty status = new SimpleStringProperty();
     private List<PindahBarangDetail> listPindahBarangDetail;
+
+    public String getUserVerifikasi() {
+        return userVerifikasi.get();
+    }
+
+    public void setUserVerifikasi(String value) {
+        userVerifikasi.set(value);
+    }
+
+    public StringProperty userVerifikasiProperty() {
+        return userVerifikasi;
+    }
+
+    public String getTglVerifikasi() {
+        return tglVerifikasi.get();
+    }
+
+    public void setTglVerifikasi(String value) {
+        tglVerifikasi.set(value);
+    }
+
+    public StringProperty tglVerifikasiProperty() {
+        return tglVerifikasi;
+    }
 
     public List<PindahBarangDetail> getListPindahBarangDetail() {
         return listPindahBarangDetail;
