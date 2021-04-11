@@ -167,6 +167,9 @@ public class KeuanganController {
             if (o.getJenis().equals("Add New Transaksi") && o.isStatus()) {
                 rm.getItems().add(addNew);
             }
+            if (o.getJenis().equals("Add New Beban Penjualan") && o.isStatus()) {
+                rm.getItems().add(addNewBebanPenjualan);
+            }
             if (o.getJenis().equals("Transfer Keuangan") && o.isStatus()) {
                 rm.getItems().add(transfer);
             }
@@ -174,7 +177,6 @@ public class KeuanganController {
                 rm.getItems().add(export);
             }
         }
-        rm.getItems().add(addNewBebanPenjualan);
         rm.getItems().addAll(refresh);
         keuanganTable.setContextMenu(rm);
         keuanganTable.setRowFactory(ttv -> {
@@ -198,13 +200,13 @@ public class KeuanganController {
                         addNewBebanProduksi.setOnAction((ActionEvent event) -> {
                             showNewBebanProduksi();
                         });
+                        MenuItem lihatKeuangan = new MenuItem("Detail Transaksi");
+                        lihatKeuangan.setOnAction((ActionEvent e) -> {
+                            showDetailKeuangan(item);
+                        });
                         MenuItem transfer = new MenuItem("Transfer Keuangan");
                         transfer.setOnAction((ActionEvent event) -> {
                             showTransfer();
-                        });
-                        MenuItem lihatKeuangan = new MenuItem("Detail Keuangan");
-                        lihatKeuangan.setOnAction((ActionEvent e) -> {
-                            showDetailKeuangan(item);
                         });
                         MenuItem detailBebanPenjualan = new MenuItem("Detail Beban Penjualan");
                         detailBebanPenjualan.setOnAction((ActionEvent e) -> {
@@ -253,26 +255,30 @@ public class KeuanganController {
                         for (Otoritas o : sistem.getUser().getOtoritas()) {
                             if (o.getJenis().equals("Add New Transaksi") && o.isStatus()) {
                                 rm.getItems().add(addNew);
+                            }
+                            if (o.getJenis().equals("Add New Beban Penjualan") && o.isStatus()) {
                                 rm.getItems().add(addNewBebanPenjualan);
+                            }
+                            if (o.getJenis().equals("Add New Beban Produksi") && o.isStatus()) {
                                 rm.getItems().add(addNewBebanProduksi);
                             }
-                            if (o.getJenis().equals("Detail Transaksi") && o.isStatus()) {
-                                if (statusBebanPenjualan) {
-                                    rm.getItems().addAll(detailBebanPenjualan);
-                                }else if (statusBebanProduksi) {
-                                    rm.getItems().addAll(detailBebanProduksi);
-                                }else if(status){
-                                    rm.getItems().add(lihatKeuangan);
-                                }
+                            if (o.getJenis().equals("Detail Transaksi") && o.isStatus() && status) {
+                                rm.getItems().add(lihatKeuangan);
                             }
-                            if (o.getJenis().equals("Batal Transaksi") && o.isStatus()) {
-                                if (statusBebanPenjualan) {
-                                    rm.getItems().addAll(batalBebanPenjualan);
-                                }else if (statusBebanProduksi) {
-                                    rm.getItems().addAll(batalBebanProduksi);
-                                }else if(status){
-                                    rm.getItems().add(batal);
-                                }
+                            if (o.getJenis().equals("Detail Beban Penjualan") && o.isStatus() && statusBebanPenjualan) {
+                                rm.getItems().addAll(detailBebanPenjualan);
+                            }
+                            if (o.getJenis().equals("Detail Beban Produksi") && o.isStatus() && statusBebanProduksi) {
+                                rm.getItems().addAll(detailBebanProduksi);
+                            }
+                            if (o.getJenis().equals("Batal Transaksi") && o.isStatus() && status) {
+                                rm.getItems().add(batal);
+                            }
+                            if (o.getJenis().equals("Batal Beban Penjualan") && o.isStatus() && statusBebanPenjualan) {
+                                rm.getItems().addAll(batalBebanPenjualan);
+                            }
+                            if (o.getJenis().equals("Batal Beban Produksi") && o.isStatus() && statusBebanProduksi) {
+                                rm.getItems().addAll(batalBebanProduksi);
                             }
                             if (o.getJenis().equals("Transfer Keuangan") && o.isStatus()) {
                                 rm.getItems().add(transfer);
@@ -460,6 +466,7 @@ public class KeuanganController {
             }
         });
     }
+
     private void showNewBebanPenjualan() {
         Stage stage = new Stage();
         FXMLLoader loader = mainApp.showDialog(mainApp.MainStage, stage, "View/Dialog/NewBebanPenjualan.fxml");
@@ -523,9 +530,10 @@ public class KeuanganController {
         controller.setMainApp(mainApp, mainApp.MainStage, child);
         controller.setDetailBebanPenjualan(k.getDeskripsi());
     }
+
     private void batalBebanPenjualan(Keuangan keu) {
         MessageController controller = mainApp.showMessage(Modality.WINDOW_MODAL, "Confirmation",
-                "Batal beban penjualan " + keu.getDeskripsi()+ " ?");
+                "Batal beban penjualan " + keu.getDeskripsi() + " ?");
         controller.OK.setOnAction((ActionEvent e) -> {
             Task<String> task = new Task<String>() {
                 @Override
@@ -557,7 +565,6 @@ public class KeuanganController {
             new Thread(task).start();
         });
     }
-
 
     private void showNewBebanProduksi() {
         Stage stage = new Stage();
@@ -622,9 +629,10 @@ public class KeuanganController {
         controller.setMainApp(mainApp, mainApp.MainStage, child);
         controller.setDetailBebanProduksi(k.getDeskripsi());
     }
+
     private void batalBebanProduksi(Keuangan keu) {
         MessageController controller = mainApp.showMessage(Modality.WINDOW_MODAL, "Confirmation",
-                "Batal beban produksi " + keu.getDeskripsi()+ " ?");
+                "Batal beban produksi " + keu.getDeskripsi() + " ?");
         controller.OK.setOnAction((ActionEvent e) -> {
             Task<String> task = new Task<String>() {
                 @Override

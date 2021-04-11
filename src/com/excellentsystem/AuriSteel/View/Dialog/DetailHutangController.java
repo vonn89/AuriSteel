@@ -15,8 +15,8 @@ import static com.excellentsystem.AuriSteel.Main.tglLengkap;
 import static com.excellentsystem.AuriSteel.Main.tglSql;
 import com.excellentsystem.AuriSteel.Model.Hutang;
 import com.excellentsystem.AuriSteel.Model.Pembayaran;
-import com.excellentsystem.AuriSteel.Model.PembelianBarangHead;
 import com.excellentsystem.AuriSteel.Model.PembelianBahanHead;
+import com.excellentsystem.AuriSteel.Model.PembelianBarangHead;
 import java.sql.Connection;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -37,30 +37,44 @@ import javafx.stage.Stage;
  */
 public class DetailHutangController {
 
-    @FXML public TableView<Pembayaran> pembayaranHutangTable;
-    @FXML private TableColumn<Pembayaran, String> noPembayaranColumn;
-    @FXML private TableColumn<Pembayaran, String> tglPembayaranColumn;
-    @FXML private TableColumn<Pembayaran, Number> jumlahPembayaranColumn;
-    @FXML private TableColumn<Pembayaran, String> tipeKeuanganColumn;
-    @FXML private TableColumn<Pembayaran, String> catatanColumn;
-    
-    @FXML private TextField noHutangField;
-    @FXML private TextField tglHutangField;
-    @FXML private TextField kategoriField;
-    @FXML private TextField keteranganField;
-    @FXML private TextField jumlahHutangField;
-    @FXML private Label terbayarLabel;
-    @FXML private Label sisaHutangLabel;
-    
+    @FXML
+    public TableView<Pembayaran> pembayaranHutangTable;
+    @FXML
+    private TableColumn<Pembayaran, String> noPembayaranColumn;
+    @FXML
+    private TableColumn<Pembayaran, String> tglPembayaranColumn;
+    @FXML
+    private TableColumn<Pembayaran, Number> jumlahPembayaranColumn;
+    @FXML
+    private TableColumn<Pembayaran, String> tipeKeuanganColumn;
+    @FXML
+    private TableColumn<Pembayaran, String> catatanColumn;
+
+    @FXML
+    private TextField noHutangField;
+    @FXML
+    private TextField tglHutangField;
+    @FXML
+    private TextField kategoriField;
+    @FXML
+    private TextField keteranganField;
+    @FXML
+    private TextField jumlahHutangField;
+    @FXML
+    private Label terbayarLabel;
+    @FXML
+    private Label sisaHutangLabel;
+
     private ObservableList<Pembayaran> allPembayaran = FXCollections.observableArrayList();
-    private Main mainApp;   
+    private Main mainApp;
     private Stage stage;
     private Stage owner;
+
     public void initialize() {
         noPembayaranColumn.setCellValueFactory(cellData -> cellData.getValue().noPembayaranProperty());
         tipeKeuanganColumn.setCellValueFactory(cellData -> cellData.getValue().tipeKeuanganProperty());
-        tglPembayaranColumn.setCellValueFactory(cellData -> { 
-            try{
+        tglPembayaranColumn.setCellValueFactory(cellData -> {
+            try {
                 return new SimpleStringProperty(tglLengkap.format(tglSql.parse(cellData.getValue().getTglPembayaran())));
             } catch (Exception ex) {
                 return null;
@@ -69,9 +83,10 @@ public class DetailHutangController {
         jumlahPembayaranColumn.setCellValueFactory(cellData -> cellData.getValue().jumlahPembayaranProperty());
         jumlahPembayaranColumn.setCellFactory(col -> Function.getTableCell());
         catatanColumn.setCellValueFactory(cellData -> cellData.getValue().catatanProperty());
-        
-    }    
-    public void setMainApp(Main mainApp,Stage owner,Stage stage) {
+
+    }
+
+    public void setMainApp(Main mainApp, Stage owner, Stage stage) {
         this.mainApp = mainApp;
         this.owner = owner;
         this.stage = stage;
@@ -79,11 +94,12 @@ public class DetailHutangController {
         stage.setOnCloseRequest((event) -> {
             mainApp.closeDialog(owner, stage);
         });
-    }   
-    public void setDetail(Hutang hutang){
+    }
+
+    public void setDetail(Hutang hutang) {
         Task<Hutang> task = new Task<Hutang>() {
-            @Override 
-            public Hutang call() throws Exception{
+            @Override
+            public Hutang call() throws Exception {
                 try (Connection con = Koneksi.getConnection()) {
                     hutang.setListPembayaran(PembayaranDAO.getAllByNoHutang(con, hutang.getNoHutang(), "true"));
                     return hutang;
@@ -103,14 +119,15 @@ public class DetailHutangController {
         });
         new Thread(task).start();
     }
-    public void setDetailPembelian(PembelianBahanHead p){
+
+    public void setDetailPembelian(PembelianBahanHead p) {
         Task<Hutang> task = new Task<Hutang>() {
-            @Override 
-            public Hutang call() throws Exception{
+            @Override
+            public Hutang call() throws Exception {
                 try (Connection con = Koneksi.getConnection()) {
                     Hutang hutang = HutangDAO.getByKategoriAndKeteranganAndStatus(
-                            con, "Hutang Pembelian", p.getNoPembelian(),"%");
-                    hutang.setListPembayaran(PembayaranDAO.getAllByNoHutang(con, hutang.getNoHutang(),"true"));
+                            con, "Hutang Pembelian", p.getNoPembelian(), "%");
+                    hutang.setListPembayaran(PembayaranDAO.getAllByNoHutang(con, hutang.getNoHutang(), "true"));
                     return hutang;
                 }
             }
@@ -128,14 +145,15 @@ public class DetailHutangController {
         });
         new Thread(task).start();
     }
-    public void setDetailPembelianBarang(PembelianBarangHead p){
+
+    public void setDetailPembelianBarang(PembelianBarangHead p) {
         Task<Hutang> task = new Task<Hutang>() {
-            @Override 
-            public Hutang call() throws Exception{
+            @Override
+            public Hutang call() throws Exception {
                 try (Connection con = Koneksi.getConnection()) {
                     Hutang hutang = HutangDAO.getByKategoriAndKeteranganAndStatus(
-                            con, "Hutang Pembelian", p.getNoPembelian(),"%");
-                    hutang.setListPembayaran(PembayaranDAO.getAllByNoHutang(con, hutang.getNoHutang(),"true"));
+                            con, "Hutang Pembelian", p.getNoPembelian(), "%");
+                    hutang.setListPembayaran(PembayaranDAO.getAllByNoHutang(con, hutang.getNoHutang(), "true"));
                     return hutang;
                 }
             }
@@ -153,23 +171,25 @@ public class DetailHutangController {
         });
         new Thread(task).start();
     }
-    private void setHutang(Hutang hutang){
-        try{
+
+    private void setHutang(Hutang hutang) {
+        try {
             noHutangField.setText(hutang.getNoHutang());
             tglHutangField.setText(tglLengkap.format(tglSql.parse(hutang.getTglHutang())));
             kategoriField.setText(hutang.getKategori());
             keteranganField.setText(hutang.getKeterangan());
-            jumlahHutangField.setText("Rp "+df.format(hutang.getJumlahHutang()));
+            jumlahHutangField.setText("Rp " + df.format(hutang.getJumlahHutang()));
             terbayarLabel.setText(df.format(hutang.getPembayaran()));
             sisaHutangLabel.setText(df.format(hutang.getSisaHutang()));
             allPembayaran.clear();
             allPembayaran.addAll(hutang.getListPembayaran());
-        }catch(Exception ex) {
+        } catch (Exception ex) {
             mainApp.showMessage(Modality.NONE, "Error", ex.toString());
         }
     }
+
     public void close() {
         mainApp.closeDialog(owner, stage);
     }
-    
+
 }

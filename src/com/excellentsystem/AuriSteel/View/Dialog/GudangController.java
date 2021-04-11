@@ -33,20 +33,24 @@ import javafx.stage.Stage;
  *
  * @author Yunaz
  */
-public class GudangController  {
+public class GudangController {
 
-    @FXML private TableView<Gudang> gudangTable;
-    @FXML private TableColumn<Gudang, String> kodeGudangColumn;
-    
-    @FXML private TextField kodeGudangField;
-    
+    @FXML
+    private TableView<Gudang> gudangTable;
+    @FXML
+    private TableColumn<Gudang, String> kodeGudangColumn;
+
+    @FXML
+    private TextField kodeGudangField;
+
     private ObservableList<Gudang> allGudang = FXCollections.observableArrayList();
     private Main mainApp;
     private Stage stage;
     private Stage owner;
+
     public void initialize() {
         kodeGudangColumn.setCellValueFactory(cellData -> cellData.getValue().kodeGudangProperty());
-        
+
         final ContextMenu rm = new ContextMenu();
         MenuItem refresh = new MenuItem("Refresh");
         refresh.setOnAction((ActionEvent event) -> {
@@ -55,15 +59,15 @@ public class GudangController  {
         rm.getItems().addAll(refresh);
         gudangTable.setContextMenu(rm);
         gudangTable.setRowFactory(table -> {
-            TableRow<Gudang> row = new TableRow<Gudang>(){
+            TableRow<Gudang> row = new TableRow<Gudang>() {
                 @Override
                 public void updateItem(Gudang item, boolean empty) {
                     super.updateItem(item, empty);
                     if (empty) {
                         setContextMenu(rm);
-                    }else{
+                    } else {
                         final ContextMenu rm = new ContextMenu();
-                        MenuItem hapus = new MenuItem("Delete Gudang");
+                        MenuItem hapus = new MenuItem("Delete");
                         hapus.setOnAction((ActionEvent event) -> {
                             deleteGudang(item);
                         });
@@ -71,7 +75,7 @@ public class GudangController  {
                         refresh.setOnAction((ActionEvent event) -> {
                             getGudang();
                         });
-                        rm.getItems().addAll(hapus,refresh);
+                        rm.getItems().addAll(hapus, refresh);
                         setContextMenu(rm);
                     }
                 }
@@ -79,10 +83,12 @@ public class GudangController  {
             return row;
         });
         kodeGudangField.setOnKeyPressed((KeyEvent keyEvent) -> {
-            if (keyEvent.getCode() == KeyCode.ENTER)  
+            if (keyEvent.getCode() == KeyCode.ENTER) {
                 saveGudang();
+            }
         });
-    }    
+    }
+
     public void setMainApp(Main mainApp, Stage owner, Stage stage) {
         this.mainApp = mainApp;
         this.stage = stage;
@@ -93,11 +99,12 @@ public class GudangController  {
         gudangTable.setItems(allGudang);
         getGudang();
     }
-    private void getGudang(){
+
+    private void getGudang() {
         Task<List<Gudang>> task = new Task<List<Gudang>>() {
-            @Override 
-            public List<Gudang> call() throws Exception{
-                try(Connection con = Koneksi.getConnection()){
+            @Override
+            public List<Gudang> call() throws Exception {
+                try (Connection con = Koneksi.getConnection()) {
                     return GudangDAO.getAll(con);
                 }
             }
@@ -117,14 +124,15 @@ public class GudangController  {
         });
         new Thread(task).start();
     }
-    private void deleteGudang(Gudang temp){
+
+    private void deleteGudang(Gudang temp) {
         MessageController controller = mainApp.showMessage(Modality.WINDOW_MODAL, "Confirmation",
-                "Delete Gudang "+temp.getKodeGudang()+" ?");
+                "Delete Gudang " + temp.getKodeGudang() + " ?");
         controller.OK.setOnAction((ActionEvent ex) -> {
             Task<String> task = new Task<String>() {
-                @Override 
-                public String call() throws Exception{
-                    try(Connection con = Koneksi.getConnection()){
+                @Override
+                public String call() throws Exception {
+                    try (Connection con = Koneksi.getConnection()) {
                         return Service.deleteGudang(con, temp);
                     }
                 }
@@ -136,11 +144,12 @@ public class GudangController  {
                 mainApp.closeLoading();
                 getGudang();
                 String status = task.getValue();
-                if(status.equals("true")){
+                if (status.equals("true")) {
                     mainApp.showMessage(Modality.NONE, "Success", "Gudang berhasil dihapus");
                     kodeGudangField.setText("");
-                }else
+                } else {
                     mainApp.showMessage(Modality.NONE, "Failed", status);
+                }
             });
             task.setOnFailed((e) -> {
                 mainApp.closeLoading();
@@ -149,21 +158,23 @@ public class GudangController  {
             new Thread(task).start();
         });
     }
+
     @FXML
-    private void saveGudang(){
-        if(kodeGudangField.getText().equals(""))
+    private void saveGudang() {
+        if (kodeGudangField.getText().equals("")) {
             mainApp.showMessage(Modality.NONE, "Warning", "Kode gudang masih kosong");
-        else{
+        } else {
             Boolean s = true;
-            for(Gudang k : allGudang){
-                if(k.getKodeGudang().equals(kodeGudangField.getText()))
+            for (Gudang k : allGudang) {
+                if (k.getKodeGudang().equals(kodeGudangField.getText())) {
                     s = false;
+                }
             }
-            if(s){
+            if (s) {
                 Task<String> task = new Task<String>() {
-                    @Override 
-                    public String call() throws Exception{
-                        try(Connection con = Koneksi.getConnection()){
+                    @Override
+                    public String call() throws Exception {
+                        try (Connection con = Koneksi.getConnection()) {
                             Gudang k = new Gudang();
                             k.setKodeGudang(kodeGudangField.getText());
                             return Service.newGudang(con, k);
@@ -177,25 +188,27 @@ public class GudangController  {
                     mainApp.closeLoading();
                     getGudang();
                     String status = task.getValue();
-                    if(status.equals("true")){
+                    if (status.equals("true")) {
                         mainApp.showMessage(Modality.NONE, "Success", "Gudang berhasil disimpan");
                         kodeGudangField.setText("");
-                    }else
+                    } else {
                         mainApp.showMessage(Modality.NONE, "Failed", status);
+                    }
                 });
                 task.setOnFailed((e) -> {
                     mainApp.closeLoading();
                     mainApp.showMessage(Modality.NONE, "Error", task.getException().toString());
                 });
                 new Thread(task).start();
-            }else{
-                mainApp.showMessage(Modality.NONE, "Warning", "Kode Kategori sudah terdaftar");
+            } else {
+                mainApp.showMessage(Modality.NONE, "Warning", "Gudang sudah terdaftar");
             }
         }
-    } 
+    }
+
     @FXML
-    private void close(){
+    private void close() {
         mainApp.closeDialog(owner, stage);
     }
-    
+
 }

@@ -24,30 +24,45 @@ import javafx.stage.Stage;
  *
  * @author excellent
  */
-public class AddDetailPemesananController  {
+public class AddDetailPemesananController {
 
-    
-    @FXML private TableView<PemesananBarangDetail> pemesananDetailTable;
-    @FXML private TableColumn<PemesananBarangDetail, String> kodeBarangColumn;
-    @FXML private TableColumn<PemesananBarangDetail, String> namaBarangColumn;
-    @FXML private TableColumn<PemesananBarangDetail, String> keteranganColumn;
-    @FXML private TableColumn<PemesananBarangDetail, String> catatanInternColumn;
-    @FXML private TableColumn<PemesananBarangDetail, String> satuanColumn;
-    @FXML private TableColumn<PemesananBarangDetail, Number> qtyColumn;
-    @FXML private TableColumn<PemesananBarangDetail, Number> qtyTerkirimColumn;
-    
-    @FXML private TextField kodeBarangField;
-    @FXML private TextField namaBarangField;
-    @FXML public TextField qtyField;
-    @FXML private TextField satuanField;
-    @FXML public TextField keteranganField;
-    @FXML public TextField catatanInternField;
-    @FXML public Button addButton;
+    @FXML
+    private TableView<PemesananBarangDetail> pemesananDetailTable;
+    @FXML
+    private TableColumn<PemesananBarangDetail, String> kodeBarangColumn;
+    @FXML
+    private TableColumn<PemesananBarangDetail, String> namaBarangColumn;
+    @FXML
+    private TableColumn<PemesananBarangDetail, String> keteranganColumn;
+    @FXML
+    private TableColumn<PemesananBarangDetail, String> catatanInternColumn;
+    @FXML
+    private TableColumn<PemesananBarangDetail, String> satuanColumn;
+    @FXML
+    private TableColumn<PemesananBarangDetail, Number> qtyColumn;
+    @FXML
+    private TableColumn<PemesananBarangDetail, Number> qtyTerkirimColumn;
+
+    @FXML
+    private TextField kodeBarangField;
+    @FXML
+    private TextField namaBarangField;
+    @FXML
+    public TextField qtyField;
+    @FXML
+    private TextField satuanField;
+    @FXML
+    public TextField keteranganField;
+    @FXML
+    public TextField catatanInternField;
+    @FXML
+    public Button addButton;
     public PemesananBarangDetail pemesananDetail;
     private Main mainApp;
     private Stage stage;
     private Stage owner;
     public ObservableList<PemesananBarangDetail> allPemesananDetail = FXCollections.observableArrayList();
+
     public void initialize() {
         kodeBarangColumn.setCellValueFactory(cellData -> cellData.getValue().kodeBarangProperty());
         namaBarangColumn.setCellValueFactory(cellData -> cellData.getValue().namaBarangProperty());
@@ -62,23 +77,26 @@ public class AddDetailPemesananController  {
             selectPemesananDetail(newValue);
         });
         qtyField.setOnKeyReleased((event) -> {
-            try{
+            try {
                 String string = qtyField.getText();
-                if(string.indexOf(".")>0){
-                    String string2 = string.substring(string.indexOf(".")+1, string.length());
-                    if(string2.contains("."))
+                if (string.indexOf(".") > 0) {
+                    String string2 = string.substring(string.indexOf(".") + 1, string.length());
+                    if (string2.contains(".")) {
                         qtyField.undo();
-                    else if(!string2.equals("") && Double.parseDouble(string2)!=0)
+                    } else if (!string2.equals("") && Double.parseDouble(string2) != 0) {
                         qtyField.setText(df.format(Double.parseDouble(string.replaceAll(",", ""))));
-                }else
+                    }
+                } else {
                     qtyField.setText(df.format(Double.parseDouble(string.replaceAll(",", ""))));
+                }
                 qtyField.end();
-            }catch(Exception e){
+            } catch (Exception e) {
                 qtyField.undo();
             }
         });
     }
-    public void setMainApp(Main mainApp,Stage owner,Stage stage) {
+
+    public void setMainApp(Main mainApp, Stage owner, Stage stage) {
         this.mainApp = mainApp;
         this.owner = owner;
         this.stage = stage;
@@ -86,23 +104,25 @@ public class AddDetailPemesananController  {
         stage.setOnCloseRequest((e) -> {
             mainApp.closeDialog(owner, stage);
         });
-        stage.setHeight(mainApp.screenSize.getHeight()*0.9);
-        stage.setWidth(mainApp.screenSize.getWidth()*0.9);
+        stage.setHeight(mainApp.screenSize.getHeight() * 0.9);
+        stage.setWidth(mainApp.screenSize.getWidth() * 0.9);
         stage.setX((mainApp.screenSize.getWidth() - stage.getWidth()) / 2);
         stage.setY((mainApp.screenSize.getHeight() - stage.getHeight()) / 2);
     }
-    public void setPemesananDetail(List<PemesananBarangDetail> listPemesanan){
+
+    public void setPemesananDetail(List<PemesananBarangDetail> listPemesanan) {
         allPemesananDetail.clear();
         allPemesananDetail.addAll(listPemesanan);
     }
-    private void selectPemesananDetail(PemesananBarangDetail value){
+
+    private void selectPemesananDetail(PemesananBarangDetail value) {
         pemesananDetail = null;
         kodeBarangField.setText("");
         namaBarangField.setText("");
         satuanField.setText("");
         keteranganField.setText("");
         catatanInternField.setText("");
-        if(value!=null){
+        if (value != null) {
             pemesananDetail = value;
             kodeBarangField.setText(value.getKodeBarang());
             namaBarangField.setText(value.getNamaBarang());
@@ -112,7 +132,8 @@ public class AddDetailPemesananController  {
             qtyField.setText(df.format(value.getQty()));
         }
     }
-    public void close(){
+
+    public void close() {
         mainApp.closeDialog(owner, stage);
-    }   
+    }
 }

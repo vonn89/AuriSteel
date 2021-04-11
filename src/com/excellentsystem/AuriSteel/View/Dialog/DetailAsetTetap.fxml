@@ -68,7 +68,7 @@
             <TextField fx:id="noAsetTetapField" disable="true" prefHeight="35.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <TextField fx:id="namaField" disable="true" prefHeight="35.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <TextField fx:id="kategoriField" disable="true" prefHeight="35.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <TextArea fx:id="keteranganField" disable="true" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.rowSpan="2" />
+            <TextArea fx:id="keteranganField" editable="false" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.rowSpan="2" />
             <TextField fx:id="tglBeliField" disable="true" prefHeight="35.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
             <TextField fx:id="userBeliField" disable="true" prefHeight="35.0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
             <TextField fx:id="hargaBeliField" disable="true" prefHeight="35.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />

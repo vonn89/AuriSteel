@@ -314,14 +314,13 @@ public class DataUserAppController {
         cancelButton.setDisable(false);
 
         List<String> allVerifikasi = new ArrayList<>();
-        allVerifikasi.add("Mulai Produksi");
         allVerifikasi.add("Penerimaan Bahan");
         allVerifikasi.add("Produksi Barang");
-        allVerifikasi.add("Selesai Produksi");
         allVerifikasi.add("Stok Bahan");
         allVerifikasi.add("Stok Barang");
         allVerifikasi.add("Verifikasi Penerimaan Bahan");
         allVerifikasi.add("Verifikasi Produksi");
+        allVerifikasi.add("Verifikasi Produksi Barang");
         List<VerifikasiApp> tempVerifikasi = new ArrayList<>();
         for (String jns : allVerifikasi) {
             VerifikasiApp temp = new VerifikasiApp();

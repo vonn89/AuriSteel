@@ -358,6 +358,7 @@ public class ProduksiBarangController {
                             }
                             if (o.getJenis().equals("Detail Produksi") && o.isStatus()) {
                                 rm.getItems().add(detail);
+                                rm.getItems().addAll(foto);
                             }
                             if (o.getJenis().equals("Batal Produksi") && o.isStatus()) {
                                 rm.getItems().add(batal);
@@ -369,7 +370,6 @@ public class ProduksiBarangController {
                                 rm.getItems().add(export);
                             }
                         }
-                        rm.getItems().addAll(foto);
                         rm.getItems().addAll(refresh);
                         setContextMenu(rm);
                     }
@@ -559,9 +559,9 @@ public class ProduksiBarangController {
                 mainApp.showMessage(Modality.NONE, "Warning", "Bahan baku masih kosong");
             } else if (controller.listBarangProduksi.isEmpty()) {
                 mainApp.showMessage(Modality.NONE, "Warning", "Barang jadi masih kosong");
-            } else if (controller.gudangCombo.getSelectionModel().getSelectedItem()==null) {
+            } else if (controller.gudangCombo.getSelectionModel().getSelectedItem() == null) {
                 mainApp.showMessage(Modality.NONE, "Warning", "Gudang belum dipilih");
-            } else if (controller.mesinCombo.getSelectionModel().getSelectedItem()==null) {
+            } else if (controller.mesinCombo.getSelectionModel().getSelectedItem() == null) {
                 mainApp.showMessage(Modality.NONE, "Warning", "Mesin belum dipilih");
             } else if (sisa > 10 || sisa < -10) {
                 mainApp.showMessage(Modality.NONE, "Warning", "Selisih berat lebih dari 10 persen");

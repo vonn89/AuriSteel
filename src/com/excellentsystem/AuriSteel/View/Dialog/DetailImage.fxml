@@ -50,7 +50,7 @@
                <children>
                   <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="200.0" spacing="5.0" style="-fx-background-color: seccolor6;">
                      <children>
-                        <Slider fx:id="zoomLevel" blockIncrement="25.0" majorTickUnit="75.0" max="175.0" maxWidth="1.7976931348623157E308" min="25.0" minorTickCount="2" showTickMarks="true" snapToTicks="true" value="100.0" HBox.hgrow="ALWAYS">
+                        <Slider fx:id="zoomLevel" blockIncrement="25.0" majorTickUnit="75.0" max="200.0" maxWidth="1.7976931348623157E308" minorTickCount="2" showTickMarks="true" snapToTicks="true" HBox.hgrow="ALWAYS">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin></Slider>

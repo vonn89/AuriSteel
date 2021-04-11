@@ -438,14 +438,6 @@ public class PengirimanBarangController {
                             pengiriman.setTotalPenjualan(total);
                             pengiriman.setPembayaran(0);
                             pengiriman.setSisaPembayaran(total);
-//                            
-//                            double dp = pengiriman.getPemesananHead().getSisaDownPayment();
-//                            if(total>=dp)
-//                                pengiriman.setPembayaran(dp);
-//                            else if(total<dp)
-//                                pengiriman.setPembayaran(total);
-//                            pengiriman.setSisaPembayaran(pengiriman.getTotalPenjualan()-pengiriman.getPembayaran());
-
                             pengiriman.setListPenjualanBarangDetail(controller.allPenjualanDetail);
                             return Service.newPengiriman(con, pengiriman);
                         }

@@ -17,7 +17,6 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
@@ -34,20 +33,24 @@ import javafx.stage.Stage;
  *
  * @author Yunaz
  */
-public class KategoriBahanController  {
+public class KategoriBahanController {
 
-    @FXML private TableView<KategoriBahan> kategoriBahanTable;
-    @FXML private TableColumn<KategoriBahan, String> kodeKategoriColumn;
-    
-    @FXML private TextField kodeKategoriBahanField;
-    
+    @FXML
+    private TableView<KategoriBahan> kategoriBahanTable;
+    @FXML
+    private TableColumn<KategoriBahan, String> kodeKategoriColumn;
+
+    @FXML
+    private TextField kodeKategoriBahanField;
+
     private ObservableList<KategoriBahan> allKategoriBahan = FXCollections.observableArrayList();
     private Main mainApp;
     private Stage stage;
     private Stage owner;
+
     public void initialize() {
         kodeKategoriColumn.setCellValueFactory(cellData -> cellData.getValue().kodeKategoriProperty());
-        
+
         final ContextMenu rm = new ContextMenu();
         MenuItem refresh = new MenuItem("Refresh");
         refresh.setOnAction((ActionEvent event) -> {
@@ -56,15 +59,15 @@ public class KategoriBahanController  {
         rm.getItems().addAll(refresh);
         kategoriBahanTable.setContextMenu(rm);
         kategoriBahanTable.setRowFactory(table -> {
-            TableRow<KategoriBahan> row = new TableRow<KategoriBahan>(){
+            TableRow<KategoriBahan> row = new TableRow<KategoriBahan>() {
                 @Override
                 public void updateItem(KategoriBahan item, boolean empty) {
                     super.updateItem(item, empty);
                     if (empty) {
                         setContextMenu(rm);
-                    }else{
+                    } else {
                         final ContextMenu rm = new ContextMenu();
-                        MenuItem hapus = new MenuItem("Delete Kategori Bahan");
+                        MenuItem hapus = new MenuItem("Delete");
                         hapus.setOnAction((ActionEvent event) -> {
                             deleteKategoriBahan(item);
                         });
@@ -72,7 +75,7 @@ public class KategoriBahanController  {
                         refresh.setOnAction((ActionEvent event) -> {
                             getKategoriBahan();
                         });
-                        rm.getItems().addAll(hapus,refresh);
+                        rm.getItems().addAll(hapus, refresh);
                         setContextMenu(rm);
                     }
                 }
@@ -80,10 +83,12 @@ public class KategoriBahanController  {
             return row;
         });
         kodeKategoriBahanField.setOnKeyPressed((KeyEvent keyEvent) -> {
-            if (keyEvent.getCode() == KeyCode.ENTER)  
+            if (keyEvent.getCode() == KeyCode.ENTER) {
                 saveKategoriBahan();
+            }
         });
-    }    
+    }
+
     public void setMainApp(Main mainApp, Stage owner, Stage stage) {
         this.mainApp = mainApp;
         this.stage = stage;
@@ -94,11 +99,12 @@ public class KategoriBahanController  {
         kategoriBahanTable.setItems(allKategoriBahan);
         getKategoriBahan();
     }
-    private void getKategoriBahan(){
+
+    private void getKategoriBahan() {
         Task<List<KategoriBahan>> task = new Task<List<KategoriBahan>>() {
-            @Override 
-            public List<KategoriBahan> call() throws Exception{
-                try(Connection con = Koneksi.getConnection()){
+            @Override
+            public List<KategoriBahan> call() throws Exception {
+                try (Connection con = Koneksi.getConnection()) {
                     return KategoriBahanDAO.getAllByStatus(con, "true");
                 }
             }
@@ -118,14 +124,15 @@ public class KategoriBahanController  {
         });
         new Thread(task).start();
     }
-    private void deleteKategoriBahan(KategoriBahan temp){
+
+    private void deleteKategoriBahan(KategoriBahan temp) {
         MessageController controller = mainApp.showMessage(Modality.WINDOW_MODAL, "Confirmation",
-                "Delete Kategori Bahan "+temp.getKodeKategori()+" ?");
+                "Delete Kategori Bahan " + temp.getKodeKategori() + " ?");
         controller.OK.setOnAction((ActionEvent ex) -> {
             Task<String> task = new Task<String>() {
-                @Override 
-                public String call() throws Exception{
-                    try(Connection con = Koneksi.getConnection()){
+                @Override
+                public String call() throws Exception {
+                    try (Connection con = Koneksi.getConnection()) {
                         return Service.deleteKategoriBahan(con, temp);
                     }
                 }
@@ -137,11 +144,12 @@ public class KategoriBahanController  {
                 mainApp.closeLoading();
                 getKategoriBahan();
                 String status = task.getValue();
-                if(status.equals("true")){
+                if (status.equals("true")) {
                     mainApp.showMessage(Modality.NONE, "Success", "Kategori Bahan berhasil dihapus");
                     kodeKategoriBahanField.setText("");
-                }else
+                } else {
                     mainApp.showMessage(Modality.NONE, "Failed", status);
+                }
             });
             task.setOnFailed((e) -> {
                 mainApp.closeLoading();
@@ -150,21 +158,23 @@ public class KategoriBahanController  {
             new Thread(task).start();
         });
     }
+
     @FXML
-    private void saveKategoriBahan(){
-        if(kodeKategoriBahanField.getText().equals(""))
+    private void saveKategoriBahan() {
+        if (kodeKategoriBahanField.getText().equals("")) {
             mainApp.showMessage(Modality.NONE, "Warning", "Kode kategori masih kosong");
-        else{
+        } else {
             Boolean s = true;
-            for(KategoriBahan k : allKategoriBahan){
-                if(k.getKodeKategori().equals(kodeKategoriBahanField.getText()))
+            for (KategoriBahan k : allKategoriBahan) {
+                if (k.getKodeKategori().equals(kodeKategoriBahanField.getText())) {
                     s = false;
+                }
             }
-            if(s){
+            if (s) {
                 Task<String> task = new Task<String>() {
-                    @Override 
-                    public String call() throws Exception{
-                        try(Connection con = Koneksi.getConnection()){
+                    @Override
+                    public String call() throws Exception {
+                        try (Connection con = Koneksi.getConnection()) {
                             KategoriBahan k = new KategoriBahan();
                             k.setKodeKategori(kodeKategoriBahanField.getText());
                             k.setStatus("true");
@@ -179,25 +189,27 @@ public class KategoriBahanController  {
                     mainApp.closeLoading();
                     getKategoriBahan();
                     String status = task.getValue();
-                    if(status.equals("true")){
+                    if (status.equals("true")) {
                         mainApp.showMessage(Modality.NONE, "Success", "Kategori Bahan berhasil disimpan");
                         kodeKategoriBahanField.setText("");
-                    }else
+                    } else {
                         mainApp.showMessage(Modality.NONE, "Failed", status);
+                    }
                 });
                 task.setOnFailed((e) -> {
                     mainApp.closeLoading();
                     mainApp.showMessage(Modality.NONE, "Error", task.getException().toString());
                 });
                 new Thread(task).start();
-            }else{
+            } else {
                 mainApp.showMessage(Modality.NONE, "Warning", "Kode Kategori sudah terdaftar");
             }
         }
-    } 
+    }
+
     @FXML
-    private void close(){
+    private void close() {
         mainApp.closeDialog(owner, stage);
     }
-    
+
 }

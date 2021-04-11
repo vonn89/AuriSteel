@@ -140,7 +140,7 @@ public class RencanaProduksiController {
         tonaseColumn.setCellFactory(col -> Function.getTreeTableCell());
 
         final ContextMenu rm = new ContextMenu();
-        MenuItem add = new MenuItem("Add Rencana Produksi");
+        MenuItem add = new MenuItem("Add New Rencana Produksi");
         add.setOnAction((ActionEvent e) -> {
             addRencanaProduksi();
         });
@@ -157,7 +157,7 @@ public class RencanaProduksiController {
             getRencana();
         });
         for (Otoritas o : sistem.getUser().getOtoritas()) {
-            if (o.getJenis().equals("Add Rencana Produksi") && o.isStatus()) {
+            if (o.getJenis().equals("Add New Rencana Produksi") && o.isStatus()) {
                 rm.getItems().add(add);
             }
             if (o.getJenis().equals("Print Rencana Produksi") && o.isStatus()) {
@@ -178,7 +178,7 @@ public class RencanaProduksiController {
                         setContextMenu(rm);
                     } else {
                         final ContextMenu rm = new ContextMenu();
-                        MenuItem add = new MenuItem("Add Rencana Produksi");
+                        MenuItem add = new MenuItem("Add New Rencana Produksi");
                         add.setOnAction((ActionEvent e) -> {
                             addRencanaProduksi();
                         });
@@ -215,7 +215,7 @@ public class RencanaProduksiController {
                             getRencana();
                         });
                         for (Otoritas o : sistem.getUser().getOtoritas()) {
-                            if (o.getJenis().equals("Add Rencana Produksi") && o.isStatus()) {
+                            if (o.getJenis().equals("Add New Rencana Produksi") && o.isStatus()) {
                                 rm.getItems().add(add);
                             }
                             if (o.getJenis().equals("Edit Rencana Produksi") && o.isStatus() && item.getNoPemesanan() != null) {

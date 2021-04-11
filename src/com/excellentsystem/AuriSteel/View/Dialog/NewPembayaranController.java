@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.excellentsystem.AuriSteel.View.Dialog;
 
 import com.excellentsystem.AuriSteel.DAO.PembelianBahanHeadDAO;
@@ -41,24 +40,36 @@ import javafx.stage.Stage;
  *
  * @author Xtreme
  */
-public class NewPembayaranController  {
+public class NewPembayaranController {
 
-    @FXML public Label title;
-    @FXML public Label noTransaksiLabel;
-    @FXML public Label totalTransaksiLabel;
-    @FXML public Label sudahTerbayarLabel;
-    
-    @FXML public TextField noTransaksiField;
-    @FXML public TextField totalTransaksiField;
-    @FXML public TextField sudahTerbayarField;
-    @FXML public TextField sisaPembayaranField;
-    @FXML public TextField jumlahPembayaranField;
-    @FXML public ComboBox<String> tipeKeuanganCombo;
-    @FXML public Button saveButton;
-    private Main mainApp;   
+    @FXML
+    public Label title;
+    @FXML
+    public Label noTransaksiLabel;
+    @FXML
+    public Label totalTransaksiLabel;
+    @FXML
+    public Label sudahTerbayarLabel;
+
+    @FXML
+    public TextField noTransaksiField;
+    @FXML
+    public TextField totalTransaksiField;
+    @FXML
+    public TextField sudahTerbayarField;
+    @FXML
+    public TextField sisaPembayaranField;
+    @FXML
+    public TextField jumlahPembayaranField;
+    @FXML
+    public ComboBox<String> tipeKeuanganCombo;
+    @FXML
+    public Button saveButton;
+    private Main mainApp;
     private Stage stage;
     private Stage owner;
-    public void setMainApp(Main mainApp,Stage owner, Stage stage) {
+
+    public void setMainApp(Main mainApp, Stage owner, Stage stage) {
         this.mainApp = mainApp;
         this.stage = stage;
         this.owner = owner;
@@ -66,28 +77,31 @@ public class NewPembayaranController  {
             mainApp.closeDialog(owner, stage);
         });
         ObservableList<String> listKeuangan = FXCollections.observableArrayList();
-        for(KategoriKeuangan kk : sistem.getListKategoriKeuangan()){
+        for (KategoriKeuangan kk : sistem.getListKategoriKeuangan()) {
             listKeuangan.add(kk.getKodeKeuangan());
         }
         tipeKeuanganCombo.setItems(listKeuangan);
         jumlahPembayaranField.setOnKeyReleased((event) -> {
-            try{
+            try {
                 String string = jumlahPembayaranField.getText();
-                if(string.indexOf(".")>0){
-                    String string2 = string.substring(string.indexOf(".")+1, string.length());
-                    if(string2.contains("."))
+                if (string.indexOf(".") > 0) {
+                    String string2 = string.substring(string.indexOf(".") + 1, string.length());
+                    if (string2.contains(".")) {
                         jumlahPembayaranField.undo();
-                    else if(!string2.equals("") && Double.parseDouble(string2)!=0)
+                    } else if (!string2.equals("") && Double.parseDouble(string2) != 0) {
                         jumlahPembayaranField.setText(df.format(Double.parseDouble(string.replaceAll(",", ""))));
-                }else
+                    }
+                } else {
                     jumlahPembayaranField.setText(df.format(Double.parseDouble(string.replaceAll(",", ""))));
+                }
                 jumlahPembayaranField.end();
-            }catch(Exception e){
+            } catch (Exception e) {
                 jumlahPembayaranField.undo();
             }
         });
-    }   
-    public void setTerimaPembayaranDownPayment(PemesananBarangHead p){
+    }
+
+    public void setTerimaPembayaranDownPayment(PemesananBarangHead p) {
         title.setText("Terima Pembayaran DP");
         noTransaksiLabel.setText("No Pemesanan");
         totalTransaksiLabel.setText("Total Pemesanan");
@@ -95,9 +109,10 @@ public class NewPembayaranController  {
         noTransaksiField.setText(p.getNoPemesanan());
         totalTransaksiField.setText(df.format(p.getTotalPemesanan()));
         sudahTerbayarField.setText(df.format(p.getDownPayment()));
-        sisaPembayaranField.setText(df.format(p.getTotalPemesanan()-p.getDownPayment()));
+        sisaPembayaranField.setText(df.format(p.getTotalPemesanan() - p.getDownPayment()));
     }
-    public void setTerimaPembayaranDownPaymentCoil(PemesananBahanHead p){
+
+    public void setTerimaPembayaranDownPaymentCoil(PemesananBahanHead p) {
         title.setText("Terima Pembayaran DP");
         noTransaksiLabel.setText("No Pemesanan");
         totalTransaksiLabel.setText("Total Pemesanan");
@@ -105,9 +120,10 @@ public class NewPembayaranController  {
         noTransaksiField.setText(p.getNoPemesanan());
         totalTransaksiField.setText(df.format(p.getTotalPemesanan()));
         sudahTerbayarField.setText(df.format(p.getDownPayment()));
-        sisaPembayaranField.setText(df.format(p.getTotalPemesanan()-p.getDownPayment()));
+        sisaPembayaranField.setText(df.format(p.getTotalPemesanan() - p.getDownPayment()));
     }
-    public void setPembayaranDownPayment(PemesananPembelianBahanHead p){
+
+    public void setPembayaranDownPayment(PemesananPembelianBahanHead p) {
         title.setText("Pembayaran DP");
         noTransaksiLabel.setText("No Pemesanan");
         totalTransaksiLabel.setText("Total Pemesanan");
@@ -115,12 +131,13 @@ public class NewPembayaranController  {
         noTransaksiField.setText(p.getNoPemesanan());
         totalTransaksiField.setText(df.format(p.getTotalPemesanan()));
         sudahTerbayarField.setText(df.format(p.getDownPayment()));
-        sisaPembayaranField.setText(df.format(p.getTotalPemesanan()-p.getDownPayment()));
+        sisaPembayaranField.setText(df.format(p.getTotalPemesanan() - p.getDownPayment()));
     }
-    public void setPembayaranPenjualanCoil(String noPenjualan){
+
+    public void setPembayaranPenjualanCoil(String noPenjualan) {
         Task<PenjualanBahanHead> task = new Task<PenjualanBahanHead>() {
-            @Override 
-            public PenjualanBahanHead call() throws Exception{
+            @Override
+            public PenjualanBahanHead call() throws Exception {
                 try (Connection con = Koneksi.getConnection()) {
                     return PenjualanBahanHeadDAO.get(con, noPenjualan);
                 }
@@ -130,7 +147,7 @@ public class NewPembayaranController  {
             mainApp.showLoadingScreen();
         });
         task.setOnSucceeded((e) -> {
-            try{
+            try {
                 mainApp.closeLoading();
                 PenjualanBahanHead p = task.getValue();
                 title.setText("Pembayaran Penjualan");
@@ -140,7 +157,7 @@ public class NewPembayaranController  {
                 totalTransaksiField.setText(df.format(p.getTotalPenjualan()));
                 sudahTerbayarField.setText(df.format(p.getPembayaran()));
                 sisaPembayaranField.setText(df.format(p.getSisaPembayaran()));
-            }catch(Exception ex){
+            } catch (Exception ex) {
                 mainApp.showMessage(Modality.NONE, "Error", ex.toString());
             }
         });
@@ -150,10 +167,11 @@ public class NewPembayaranController  {
         });
         new Thread(task).start();
     }
-    public void setPembayaranPenjualan(String noPenjualan){
+
+    public void setPembayaranPenjualan(String noPenjualan) {
         Task<PenjualanBarangHead> task = new Task<PenjualanBarangHead>() {
-            @Override 
-            public PenjualanBarangHead call() throws Exception{
+            @Override
+            public PenjualanBarangHead call() throws Exception {
                 try (Connection con = Koneksi.getConnection()) {
                     return PenjualanBarangHeadDAO.get(con, noPenjualan);
                 }
@@ -163,7 +181,7 @@ public class NewPembayaranController  {
             mainApp.showLoadingScreen();
         });
         task.setOnSucceeded((e) -> {
-            try{
+            try {
                 mainApp.closeLoading();
                 PenjualanBarangHead p = task.getValue();
                 title.setText("Pembayaran Penjualan");
@@ -173,7 +191,7 @@ public class NewPembayaranController  {
                 totalTransaksiField.setText(df.format(p.getTotalPenjualan()));
                 sudahTerbayarField.setText(df.format(p.getPembayaran()));
                 sisaPembayaranField.setText(df.format(p.getSisaPembayaran()));
-            }catch(Exception ex){
+            } catch (Exception ex) {
                 mainApp.showMessage(Modality.NONE, "Error", ex.toString());
             }
         });
@@ -183,10 +201,11 @@ public class NewPembayaranController  {
         });
         new Thread(task).start();
     }
-    public void setPembayaranPembelian(String noPembelian){
+
+    public void setPembayaranPembelian(String noPembelian) {
         Task<PembelianBahanHead> task = new Task<PembelianBahanHead>() {
-            @Override 
-            public PembelianBahanHead call() throws Exception{
+            @Override
+            public PembelianBahanHead call() throws Exception {
                 try (Connection con = Koneksi.getConnection()) {
                     return PembelianBahanHeadDAO.get(con, noPembelian);
                 }
@@ -196,7 +215,7 @@ public class NewPembayaranController  {
             mainApp.showLoadingScreen();
         });
         task.setOnSucceeded((e) -> {
-            try{
+            try {
                 mainApp.closeLoading();
                 PembelianBahanHead p = task.getValue();
                 title.setText("Pembayaran Pembelian");
@@ -206,7 +225,7 @@ public class NewPembayaranController  {
                 totalTransaksiField.setText(df.format(p.getGrandtotal()));
                 sudahTerbayarField.setText(df.format(p.getPembayaran()));
                 sisaPembayaranField.setText(df.format(p.getSisaPembayaran()));
-            }catch(Exception ex){
+            } catch (Exception ex) {
                 mainApp.showMessage(Modality.NONE, "Error", ex.toString());
             }
         });
@@ -216,10 +235,11 @@ public class NewPembayaranController  {
         });
         new Thread(task).start();
     }
-    public void setPembayaranPembelianBarang(String noPembelian){
+
+    public void setPembayaranPembelianBarang(String noPembelian) {
         Task<PembelianBarangHead> task = new Task<PembelianBarangHead>() {
-            @Override 
-            public PembelianBarangHead call() throws Exception{
+            @Override
+            public PembelianBarangHead call() throws Exception {
                 try (Connection con = Koneksi.getConnection()) {
                     return PembelianBarangHeadDAO.get(con, noPembelian);
                 }
@@ -229,7 +249,7 @@ public class NewPembayaranController  {
             mainApp.showLoadingScreen();
         });
         task.setOnSucceeded((e) -> {
-            try{
+            try {
                 mainApp.closeLoading();
                 PembelianBarangHead p = task.getValue();
                 title.setText("Pembayaran Pembelian");
@@ -239,7 +259,7 @@ public class NewPembayaranController  {
                 totalTransaksiField.setText(df.format(p.getGrandtotal()));
                 sudahTerbayarField.setText(df.format(p.getPembayaran()));
                 sisaPembayaranField.setText(df.format(p.getSisaPembayaran()));
-            }catch(Exception ex){
+            } catch (Exception ex) {
                 mainApp.showMessage(Modality.NONE, "Error", ex.toString());
             }
         });
@@ -249,7 +269,8 @@ public class NewPembayaranController  {
         });
         new Thread(task).start();
     }
-    public void setPembayaranHutang(Hutang h){
+
+    public void setPembayaranHutang(Hutang h) {
         title.setText("Pembayaran Hutang");
         noTransaksiLabel.setText("No Hutang");
         totalTransaksiLabel.setText("Total Hutang");
@@ -258,7 +279,8 @@ public class NewPembayaranController  {
         sudahTerbayarField.setText(df.format(h.getPembayaran()));
         sisaPembayaranField.setText(df.format(h.getSisaHutang()));
     }
-    public void setPembayaranPiutang(Piutang p){
+
+    public void setPembayaranPiutang(Piutang p) {
         title.setText("Pembayaran Piutang");
         noTransaksiLabel.setText("No Piutang");
         totalTransaksiLabel.setText("Total Piutang");
@@ -267,8 +289,9 @@ public class NewPembayaranController  {
         sudahTerbayarField.setText(df.format(p.getPembayaran()));
         sisaPembayaranField.setText(df.format(p.getSisaPiutang()));
     }
-    public void close(){
+
+    public void close() {
         mainApp.closeDialog(owner, stage);
-    }    
-    
+    }
+
 }

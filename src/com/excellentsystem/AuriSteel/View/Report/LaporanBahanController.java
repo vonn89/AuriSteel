@@ -133,9 +133,9 @@ public class LaporanBahanController {
         tglStokPicker.setDayCellFactory((final DatePicker datePicker) -> Function.getDateCellDisableAfter(LocalDate.now()));
 
         final ContextMenu rm = new ContextMenu();
-        MenuItem barcode = new MenuItem("Cetak Barcode");
+        MenuItem barcode = new MenuItem("Print Barcode");
         barcode.setOnAction((ActionEvent e) -> {
-            cetakBarcode();
+            cetakBarcode(filterData);
         });
         MenuItem print = new MenuItem("Print Laporan");
         print.setOnAction((ActionEvent e) -> {
@@ -150,7 +150,7 @@ public class LaporanBahanController {
             getBahan();
         });
         for (Otoritas o : sistem.getUser().getOtoritas()) {
-            if (o.getJenis().equals("Cetak Barcode") && o.isStatus()) {
+            if (o.getJenis().equals("Print Barcode") && o.isStatus()) {
                 rm.getItems().add(barcode);
             }
             if (o.getJenis().equals("Print Laporan") && o.isStatus()) {
@@ -183,9 +183,9 @@ public class LaporanBahanController {
                         penyesuaian.setOnAction((ActionEvent e) -> {
                             showPenyesuaianStok(item);
                         });
-                        MenuItem barcode = new MenuItem("Cetak Barcode");
+                        MenuItem barcode = new MenuItem("Print Barcode");
                         barcode.setOnAction((ActionEvent e) -> {
-                            cetakBarcode();
+                            cetakBarcode(filterData);
                         });
                         MenuItem print = new MenuItem("Print Laporan");
                         print.setOnAction((ActionEvent e) -> {
@@ -208,7 +208,7 @@ public class LaporanBahanController {
                                     && item.getBahan().getNamaBahan() != null) {
                                 rm.getItems().addAll(penyesuaian);
                             }
-                            if (o.getJenis().equals("Cetak Barcode") && o.isStatus()) {
+                            if (o.getJenis().equals("Print Barcode") && o.isStatus()) {
                                 rm.getItems().add(barcode);
                             }
                             if (o.getJenis().equals("Print Laporan") && o.isStatus()) {
@@ -416,11 +416,12 @@ public class LaporanBahanController {
         totalNilaiField.setText(df.format(totalNilai));
     }
 
-    private void cetakBarcode() {
+    private void cetakBarcode(List<StokBahan> listBahan) {
         Stage stage = new Stage();
         FXMLLoader loader = mainApp.showDialog(mainApp.MainStage, stage, "View/Dialog/CetakBarcode.fxml");
         CetakBarcodeController x = loader.getController();
         x.setMainApp(mainApp, mainApp.MainStage, stage);
+        x.setBahan(listBahan);
     }
 
     private void showLogBahan(StokBahan s) {

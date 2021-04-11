@@ -59,7 +59,7 @@
                         <TextField fx:id="namaField" disable="true" editable="false" prefHeight="35.0" prefWidth="1000.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Button fx:id="addSupplierButton" mnemonicParsing="false" onAction="#addSupplier" prefHeight="30.0" prefWidth="30.0" styleClass="button2" text="..." GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
                         <Label text="Alamat" GridPane.rowIndex="2" />
-                        <TextArea fx:id="alamatField" disable="true" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <TextArea fx:id="alamatField" editable="false" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                      </children>
                      <padding>
                         <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />

@@ -5,33 +5,23 @@
  */
 package com.excellentsystem.AuriSteel.View.Dialog;
 
-import com.excellentsystem.AuriSteel.DAO.BahanDAO;
-import com.excellentsystem.AuriSteel.DAO.StokBahanDAO;
 import com.excellentsystem.AuriSteel.Function;
-import com.excellentsystem.AuriSteel.Koneksi;
 import com.excellentsystem.AuriSteel.Main;
 import static com.excellentsystem.AuriSteel.Main.df;
-import static com.excellentsystem.AuriSteel.Main.sistem;
-import static com.excellentsystem.AuriSteel.Main.tglBarang;
 import com.excellentsystem.AuriSteel.Model.Bahan;
-import com.excellentsystem.AuriSteel.Model.Gudang;
-import com.excellentsystem.AuriSteel.Model.Otoritas;
 import com.excellentsystem.AuriSteel.Model.StokBahan;
 import com.excellentsystem.AuriSteel.PrintOut.Report;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -74,7 +64,7 @@ public class CetakBarcodeController {
     @FXML
     private TextField searchField;
     @FXML
-    private ComboBox<String> gudangCombo;
+    private Label totalLabel;
 
     private ObservableList<StokBahan> allBahan = FXCollections.observableArrayList();
     private ObservableList<StokBahan> filterData = FXCollections.observableArrayList();
@@ -87,7 +77,7 @@ public class CetakBarcodeController {
         checkColumn.setCellFactory(CheckBoxTableCell.forTableColumn((Integer v) -> {
             return bahanTable.getItems().get(v).isCheckedProperty();
         }));
-        
+
         kodeBahanColumn.setCellValueFactory(cellData -> cellData.getValue().getBahan().kodeBahanProperty());
         kodeBahanColumn.setCellFactory(col -> Function.getWrapTableCell(kodeBahanColumn));
 
@@ -110,37 +100,31 @@ public class CetakBarcodeController {
         stokAkhirColumn.setCellFactory(col -> Function.getTableCell());
 
         final ContextMenu rm = new ContextMenu();
-        MenuItem cetak = new MenuItem("Cetak Barcode");
-        cetak.setOnAction((ActionEvent e) -> {
-            cetakBarcode();
-        });
         MenuItem refresh = new MenuItem("Refresh");
         refresh.setOnAction((ActionEvent e) -> {
-            getBahan();
+            bahanTable.refresh();
         });
-        for (Otoritas o : sistem.getUser().getOtoritas()) {
-            if (o.getJenis().equals("Cetak Barcode") && o.isStatus()) {
-                rm.getItems().addAll(cetak);
-            }
-        }
         rm.getItems().addAll(refresh);
         bahanTable.setContextMenu(rm);
         bahanTable.setRowFactory((TableView<StokBahan> tableView) -> {
-            final TableRow<StokBahan> row = new TableRow<StokBahan>(){};
+            final TableRow<StokBahan> row = new TableRow<StokBahan>() {
+            };
             row.setOnMouseClicked((MouseEvent mouseEvent) -> {
-                if(mouseEvent.getButton().equals(MouseButton.PRIMARY)&&
-                        mouseEvent.getClickCount() == 2){
-                    if(row.getItem()!=null){
-                        if(row.getItem().isIsChecked())
+                if (mouseEvent.getButton().equals(MouseButton.PRIMARY)
+                        && mouseEvent.getClickCount() == 2) {
+                    if (row.getItem() != null) {
+                        if (row.getItem().isIsChecked()) {
                             row.getItem().setIsChecked(false);
-                        else
+                        } else {
                             row.getItem().setIsChecked(true);
+                        }
+                        hitungTotal();
                     }
                 }
             });
             return row;
         });
-        
+
         allBahan.addListener((ListChangeListener.Change<? extends StokBahan> change) -> {
             searchBahan();
         });
@@ -162,13 +146,6 @@ public class CetakBarcodeController {
         stage.setWidth(mainApp.screenSize.getWidth() * 0.9);
         stage.setX((mainApp.screenSize.getWidth() - stage.getWidth()) / 2);
         stage.setY((mainApp.screenSize.getHeight() - stage.getHeight()) / 2);
-        ObservableList<String> listGudang = FXCollections.observableArrayList();
-        for (Gudang g : sistem.getListGudang()) {
-            listGudang.add(g.getKodeGudang());
-        }
-        gudangCombo.setItems(listGudang);
-        gudangCombo.getSelectionModel().selectFirst();
-        getBahan();
         bahanTable.setItems(filterData);
     }
 
@@ -178,49 +155,23 @@ public class CetakBarcodeController {
             d.setIsChecked(checkAll.isSelected());
         }
         bahanTable.refresh();
+        hitungTotal();
+    }
+
+    public void setBahan(List<StokBahan> listStok) {
+        allBahan.clear();
+        allBahan.addAll(listStok);
     }
 
     @FXML
-    private void getBahan() {
-        if (gudangCombo.getSelectionModel().getSelectedItem() != null) {
-            Task<List<StokBahan>> task = new Task<List<StokBahan>>() {
-                @Override
-                public List<StokBahan> call() throws Exception {
-                    try (Connection con = Koneksi.getConnection()) {
-                        List<Bahan> listBahan = BahanDAO.getAllByStatus(con, "%");
-                        List<StokBahan> listStok = StokBahanDAO.getAllByDateAndGudang(con,
-                                tglBarang.format(Function.getServerDate(con)), gudangCombo.getSelectionModel().getSelectedItem());
-                        List<StokBahan> allStok = new ArrayList<>();
-                        for (StokBahan s : listStok) {
-                            if (s.getStokAkhir() > 0) {
-                                for (Bahan b : listBahan) {
-                                    if (s.getKodeBahan().equals(b.getKodeBahan())) {
-                                        s.setBahan(b);
-                                    }
-                                }
-                                s.setNilaiAkhir(s.getStokAkhir() * s.getBahan().getHargaBeli() / s.getBahan().getBeratBersih());
-                                allStok.add(s);
-                            }
-                        }
-                        return allStok;
-                    }
-                }
-            };
-            task.setOnRunning((e) -> {
-                mainApp.showLoadingScreen();
-            });
-            task.setOnSucceeded((WorkerStateEvent e) -> {
-                mainApp.closeLoading();
-                allBahan.clear();
-                allBahan.addAll(task.getValue());
-            });
-            task.setOnFailed((e) -> {
-                task.getException().printStackTrace();
-                mainApp.showMessage(Modality.NONE, "Error", task.getException().toString());
-                mainApp.closeLoading();
-            });
-            new Thread(task).start();
+    private void hitungTotal() {
+        int qty = 0;
+        for (StokBahan d : allBahan) {
+            if (d.isIsChecked()) {
+                qty = qty + 1;
+            }
         }
+        totalLabel.setText(df.format(qty));
     }
 
     private Boolean checkColumn(String column) {
@@ -254,6 +205,7 @@ public class CetakBarcodeController {
         }
     }
 
+    @FXML
     private void cetakBarcode() {
         try {
             List<Bahan> listBarcode = new ArrayList<>();

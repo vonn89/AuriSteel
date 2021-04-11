@@ -268,7 +268,7 @@ public class PemesananController {
                         invoice.setOnAction((ActionEvent e) -> {
                             printProformaInvoice(item);
                         });
-                        MenuItem invoiceSoftcopy = new MenuItem("Print Order Confirmation Softcopy");
+                        MenuItem invoiceSoftcopy = new MenuItem("Print Order Confirmation Copy");
                         invoiceSoftcopy.setOnAction((ActionEvent e) -> {
                             printProformaInvoiceSoftcopy(item);
                         });

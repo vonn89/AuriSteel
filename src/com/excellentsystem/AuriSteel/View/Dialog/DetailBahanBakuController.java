@@ -19,24 +19,36 @@ import javafx.stage.Stage;
  *
  * @author yunaz
  */
-public class DetailBahanBakuController  {
+public class DetailBahanBakuController {
 
-    @FXML private TextField kodeKategoriField;
-    @FXML private TextField noKontrakField;
-    @FXML private TextField kodeBahanField;
-    @FXML public TextField namaBahanField;
-    @FXML public TextArea spesifikasiField;
-    @FXML public TextField keteranganField;
-    @FXML private TextField beratKotorField;
-    @FXML private TextField beratBersihField;
-    @FXML private TextField panjangField;
-    @FXML private TextField hargaBeliField;
-    
-    @FXML public Button saveButton;
+    @FXML
+    private TextField kodeKategoriField;
+    @FXML
+    private TextField noKontrakField;
+    @FXML
+    private TextField kodeBahanField;
+    @FXML
+    public TextField namaBahanField;
+    @FXML
+    public TextArea spesifikasiField;
+    @FXML
+    public TextField keteranganField;
+    @FXML
+    private TextField beratKotorField;
+    @FXML
+    private TextField beratBersihField;
+    @FXML
+    private TextField panjangField;
+    @FXML
+    private TextField hargaBeliField;
+
+    @FXML
+    public Button saveButton;
     private Main mainApp;
     private Stage stage;
     private Stage owner;
-    public void setMainApp(Main mainApp,Stage owner, Stage stage){
+
+    public void setMainApp(Main mainApp, Stage owner, Stage stage) {
         this.mainApp = mainApp;
         this.stage = stage;
         this.owner = owner;
@@ -44,7 +56,8 @@ public class DetailBahanBakuController  {
             mainApp.closeDialog(owner, stage);
         });
     }
-    public void setBahan(Bahan b){
+
+    public void setBahan(Bahan b) {
         kodeKategoriField.setText("");
         noKontrakField.setText("");
         kodeBahanField.setText("");
@@ -55,7 +68,7 @@ public class DetailBahanBakuController  {
         beratKotorField.setText("0");
         beratBersihField.setText("0");
         panjangField.setText("0");
-        if(b!=null && b.getNamaBahan()!=null){
+        if (b != null && b.getNamaBahan() != null) {
             kodeKategoriField.setText(b.getKodeKategori());
             noKontrakField.setText(b.getNoKontrak());
             kodeBahanField.setText(b.getKodeBahan());
@@ -68,7 +81,8 @@ public class DetailBahanBakuController  {
             panjangField.setText(df.format(b.getPanjang()));
         }
     }
-    public void close(){
+
+    public void close() {
         mainApp.closeDialog(owner, stage);
     }
 }

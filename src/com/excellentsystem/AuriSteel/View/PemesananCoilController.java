@@ -202,11 +202,11 @@ public class PemesananCoilController {
         tglAkhirPicker.setValue(LocalDate.now());
         tglAkhirPicker.setDayCellFactory((final DatePicker datePicker) -> Function.getDateCellAkhir(tglMulaiPicker));
         final ContextMenu rm = new ContextMenu();
-        MenuItem addNew = new MenuItem("Add New Pemesanan Coil (USD)");
+        MenuItem addNew = new MenuItem("Add New Pemesanan (USD)");
         addNew.setOnAction((ActionEvent e) -> {
             newPemesanan();
         });
-        MenuItem addNewRp = new MenuItem("Add New Pemesanan Coil (Rp)");
+        MenuItem addNewRp = new MenuItem("Add New Pemesanan (Rp)");
         addNewRp.setOnAction((ActionEvent e) -> {
             newPemesananRp();
         });
@@ -234,35 +234,35 @@ public class PemesananCoilController {
                         setContextMenu(rm);
                     } else {
                         final ContextMenu rm = new ContextMenu();
-                        MenuItem addNew = new MenuItem("Add New Pemesanan Coil (USD)");
+                        MenuItem addNew = new MenuItem("Add New Pemesanan (USD)");
                         addNew.setOnAction((ActionEvent e) -> {
                             newPemesanan();
                         });
-                        MenuItem addNewRp = new MenuItem("Add New Pemesanan Coil (Rp)");
+                        MenuItem addNewRp = new MenuItem("Add New Pemesanan (Rp)");
                         addNewRp.setOnAction((ActionEvent e) -> {
                             newPemesananRp();
                         });
-                        MenuItem detail = new MenuItem("Detail Pemesanan Coil");
+                        MenuItem detail = new MenuItem("Detail Pemesanan");
                         detail.setOnAction((ActionEvent e) -> {
                             lihatDetailPemesanan(item);
                         });
-                        MenuItem batal = new MenuItem("Batal Pemesanan Coil");
+                        MenuItem batal = new MenuItem("Batal Pemesanan");
                         batal.setOnAction((ActionEvent e) -> {
                             batalPemesanan(item);
                         });
-                        MenuItem selesai = new MenuItem("Pemesanan Coil Selesai");
+                        MenuItem selesai = new MenuItem("Pemesanan Selesai");
                         selesai.setOnAction((ActionEvent e) -> {
                             selesaiPemesananCoil(item);
                         });
-                        MenuItem bayar = new MenuItem("Terima Pembayaran DP Coil");
+                        MenuItem bayar = new MenuItem("Terima Pembayaran DP");
                         bayar.setOnAction((ActionEvent e) -> {
                             terimaPembayaranDownPayment(item);
                         });
-                        MenuItem detailBayar = new MenuItem("Detail Terima Pembayaran DP Coil");
+                        MenuItem detailBayar = new MenuItem("Detail Terima Pembayaran DP");
                         detailBayar.setOnAction((ActionEvent e) -> {
                             lihatTerimaPembayaranDownPayment(item);
                         });
-                        MenuItem invoice = new MenuItem("Print Order Confirmation Coil");
+                        MenuItem invoice = new MenuItem("Print Order Confirmation");
                         invoice.setOnAction((ActionEvent e) -> {
                             printProformaInvoice(item);
                         });
@@ -711,7 +711,7 @@ public class PemesananCoilController {
                         setContextMenu(null);
                     } else {
                         final ContextMenu rm = new ContextMenu();
-                        MenuItem batal = new MenuItem("Batal Terima Pembayaran DP Coil");
+                        MenuItem batal = new MenuItem("Batal Terima Pembayaran DP");
                         batal.setOnAction((ActionEvent e) -> {
                             batalPembayaran(p, item, stage);
                         });

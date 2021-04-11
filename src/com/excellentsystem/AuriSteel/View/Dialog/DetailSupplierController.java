@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.excellentsystem.AuriSteel.View.Dialog;
 
 import com.excellentsystem.AuriSteel.Main;
@@ -19,25 +18,41 @@ import javafx.stage.Stage;
  *
  * @author Xtreme
  */
-public class DetailSupplierController  {
-    @FXML public TextField kodeSupplierField;
-    @FXML public TextField namaField;
-    @FXML public TextArea alamatField;
-    @FXML public TextField kotaField;
-    @FXML public TextField negaraField;
-    @FXML public TextField kodePosField;
-    @FXML public TextField emailField;
-    @FXML public TextField kontakPersonField;
-    @FXML public TextField noTelpField;
-    @FXML public TextField noHandphoneField;
-    @FXML public TextField bankField;
-    @FXML public TextField atasNamaRekeningField;
-    @FXML public TextField noRekeningField;
-    @FXML public Button saveButton;
-    private Main mainApp;  
+public class DetailSupplierController {
+
+    @FXML
+    public TextField kodeSupplierField;
+    @FXML
+    public TextField namaField;
+    @FXML
+    public TextArea alamatField;
+    @FXML
+    public TextField kotaField;
+    @FXML
+    public TextField negaraField;
+    @FXML
+    public TextField kodePosField;
+    @FXML
+    public TextField emailField;
+    @FXML
+    public TextField kontakPersonField;
+    @FXML
+    public TextField noTelpField;
+    @FXML
+    public TextField noHandphoneField;
+    @FXML
+    public TextField bankField;
+    @FXML
+    public TextField atasNamaRekeningField;
+    @FXML
+    public TextField noRekeningField;
+    @FXML
+    public Button saveButton;
+    private Main mainApp;
     private Stage stage;
     private Stage owner;
-    public void setMainApp(Main mainApp,Stage owner,Stage stage) {
+
+    public void setMainApp(Main mainApp, Stage owner, Stage stage) {
         this.mainApp = mainApp;
         this.stage = stage;
         this.owner = owner;
@@ -45,7 +60,8 @@ public class DetailSupplierController  {
             mainApp.closeDialog(owner, stage);
         });
     }
-    public void setSupplierDetail(Supplier supplier){
+
+    public void setSupplierDetail(Supplier supplier) {
         kodeSupplierField.setText("");
         namaField.setText("");
         alamatField.setText("");
@@ -73,10 +89,11 @@ public class DetailSupplierController  {
             bankField.setText(supplier.getBank());
             atasNamaRekeningField.setText(supplier.getAtasNamaRekening());
             noRekeningField.setText(supplier.getNoRekening());
-        } 
+        }
     }
-    public void close(){
+
+    public void close() {
         mainApp.closeDialog(owner, stage);
-    }   
-    
+    }
+
 }

@@ -53,7 +53,6 @@
                      <columns>
                         <TableColumn fx:id="kategoriBahanColumn" maxWidth="4000.0" prefWidth="75.0" text="Kategori" />
                         <TableColumn fx:id="kodeBahanColumn" maxWidth="4000.0" prefWidth="75.0" text="Kode Bahan" />
-                        <TableColumn fx:id="gudangColumn" maxWidth="2000.0" prefWidth="75.0" text="Gudang" />
                         <TableColumn fx:id="stokBahanColumn" maxWidth="2000.0" prefWidth="75.0" text="Stok Bahan" />
                         <TableColumn fx:id="beratBahanDiproduksiColumn" maxWidth="2000.0" prefWidth="75.0" text="Berat Diproduksi" />
                         <TableColumn fx:id="bahanHabisColumn" maxWidth="1500.0" prefWidth="75.0" text="Bahan Habis" />

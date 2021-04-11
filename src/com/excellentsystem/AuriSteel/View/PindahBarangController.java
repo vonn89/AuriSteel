@@ -189,6 +189,10 @@ public class PindahBarangController {
                         verifikasi.setOnAction((ActionEvent e) -> {
                             verifikasiPindah(item);
                         });
+                        MenuItem batalBlmVer = new MenuItem("Batal Pindah Barang");
+                        batalBlmVer.setOnAction((ActionEvent e) -> {
+                            batalPindahBelumDiVerifikasi(item);
+                        });
                         MenuItem batal = new MenuItem("Batal Pindah Barang");
                         batal.setOnAction((ActionEvent e) -> {
                             batalPindah(item);
@@ -212,12 +216,16 @@ public class PindahBarangController {
                             if (o.getJenis().equals("Detail Pindah Barang") && o.isStatus()) {
                                 rm.getItems().add(detail);
                             }
-                            if (o.getJenis().equals("Batal Pindah Barang") && o.isStatus() && 
-                                    (item.getStatus().equals("open") || item.getStatus().equals("true"))) {
+                            if (o.getJenis().equals("Add New Pindah Barang") && o.isStatus()
+                                    && (item.getStatus().equals("open"))) {
+                                rm.getItems().add(batalBlmVer);
+                            }
+                            if (o.getJenis().equals("Batal Pindah Barang") && o.isStatus()
+                                    && item.getStatus().equals("true")) {
                                 rm.getItems().add(batal);
                             }
-                            if (o.getJenis().equals("Verifikasi Pindah Barang") && o.isStatus()&& 
-                                    item.getStatus().equals("open") ){
+                            if (o.getJenis().equals("Verifikasi Pindah Barang") && o.isStatus()
+                                    && item.getStatus().equals("open")) {
                                 rm.getItems().add(verifikasi);
                             }
                             if (o.getJenis().equals("Print Surat Jalan Pindah Barang") && o.isStatus()) {
@@ -392,6 +400,39 @@ public class PindahBarangController {
                 });
                 new Thread(task).start();
             }
+        });
+    }
+
+    private void batalPindahBelumDiVerifikasi(PindahBarangHead p) {
+        MessageController controller = mainApp.showMessage(Modality.WINDOW_MODAL, "Confirmation",
+                "Batal pindah barang " + p.getNoPindah() + " ?");
+        controller.OK.setOnAction((ActionEvent e) -> {
+            mainApp.closeMessage();
+            Task<String> task = new Task<String>() {
+                @Override
+                public String call() throws Exception {
+                    try (Connection con = Koneksi.getConnection()) {
+                        return Service.batalPindahBarang(con, p);
+                    }
+                }
+            };
+            task.setOnRunning((ex) -> {
+                mainApp.showLoadingScreen();
+            });
+            task.setOnSucceeded((WorkerStateEvent ex) -> {
+                mainApp.closeLoading();
+                getPindah();
+                if (task.getValue().equals("true")) {
+                    mainApp.showMessage(Modality.NONE, "Success", "Data pindah barang berhasil dibatal");
+                } else {
+                    mainApp.showMessage(Modality.NONE, "Error", task.getValue());
+                }
+            });
+            task.setOnFailed((ex) -> {
+                mainApp.showMessage(Modality.NONE, "Error", task.getException().toString());
+                mainApp.closeLoading();
+            });
+            new Thread(task).start();
         });
     }
 

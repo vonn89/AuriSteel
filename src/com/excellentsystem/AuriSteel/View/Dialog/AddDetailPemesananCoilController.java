@@ -43,9 +43,13 @@ public class AddDetailPemesananCoilController {
 
     public void initialize() {
         kategoriBahanColumn.setCellValueFactory(cellData -> cellData.getValue().kategoriBahanProperty());
+        
         namaBarangColumn.setCellValueFactory(cellData -> cellData.getValue().namaBarangProperty());
+        
         keteranganColumn.setCellValueFactory(cellData -> cellData.getValue().keteranganProperty());
+        
         spesifikasiColumn.setCellValueFactory(cellData -> cellData.getValue().spesifikasiProperty());
+        
         qtyColumn.setCellValueFactory(cellData -> cellData.getValue().qtyProperty());
         qtyColumn.setCellFactory(col -> Function.getTableCell());
     }

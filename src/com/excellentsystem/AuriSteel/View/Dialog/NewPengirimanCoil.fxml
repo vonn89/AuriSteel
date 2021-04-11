@@ -66,7 +66,7 @@
                         <Label text="Nama Customer" GridPane.rowIndex="2" />
                         <TextField fx:id="namaField" disable="true" prefHeight="35.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <Label text="Alamat Customer" GridPane.rowIndex="3" />
-                        <TextArea fx:id="alamatField" disable="true" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <TextArea fx:id="alamatField" editable="false" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                      </children>
                      <padding>
                         <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />

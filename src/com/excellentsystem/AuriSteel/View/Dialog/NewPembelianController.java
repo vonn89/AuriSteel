@@ -528,7 +528,7 @@ public class NewPembelianController {
     private void addPemesananBahan() {
         if (pemesanan == null) {
             mainApp.showMessage(Modality.NONE, "Warning", "Pemesanan Pembelian belum dipilih");
-        } else if (gudangCombo.getSelectionModel().getSelectedItem()==null || gudangCombo.getSelectionModel().getSelectedItem().equals("")) {
+        } else if (gudangCombo.getSelectionModel().getSelectedItem() == null || gudangCombo.getSelectionModel().getSelectedItem().equals("")) {
             mainApp.showMessage(Modality.NONE, "Warning", "Gudang belum dipilih");
         } else {
             Stage child = new Stage();
@@ -570,13 +570,13 @@ public class NewPembelianController {
                                     for (PenerimaanBahan pb : listBahan) {
                                         if (pb.getSlit() > 1) {
                                             for (int i = 1; i <= (int) pb.getSlit(); i++) {
-                                                double qty = pembulatan((pb.getBeratBersih()-pb.getScraft())/pb.getSlit()); 
+                                                double qty = pembulatan((pb.getBeratBersih() - pb.getScraft()) / pb.getSlit());
                                                 PembelianBahanDetail detail = new PembelianBahanDetail();
                                                 detail.setNoPemesanan(d.getNoPemesanan());
                                                 detail.setNoUrut(d.getNoUrut());
                                                 detail.setNoPenerimaan(pb.getNoPenerimaan());
-                                                detail.setKodeBahan(pb.getKodeBahan()+"-"+new DecimalFormat("00").format(i));
-                                                detail.setKodeKategori(d.getKategoriBahan());
+                                                detail.setKodeBahan(pb.getKodeBahan() + "-" + new DecimalFormat("00").format(i));
+                                                detail.setKodeKategori(pb.getKodeKategori());
                                                 detail.setNoKontrak(pemesanan.getNoKontrak());
                                                 detail.setNamaBahan(pb.getNamaBahan());
                                                 detail.setSpesifikasi(d.getSpesifikasi());
@@ -587,7 +587,7 @@ public class NewPembelianController {
                                                 allPembelianDetail.add(detail);
                                             }
                                         } else {
-                                            double qty = pembulatan(pb.getBeratBersih()-pb.getScraft()); 
+                                            double qty = pembulatan(pb.getBeratBersih() - pb.getScraft());
                                             PembelianBahanDetail detail = new PembelianBahanDetail();
                                             detail.setNoPemesanan(d.getNoPemesanan());
                                             detail.setNoUrut(d.getNoUrut());

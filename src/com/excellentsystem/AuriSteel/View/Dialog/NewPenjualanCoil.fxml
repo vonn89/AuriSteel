@@ -56,7 +56,7 @@
                         <Label text="Nama" GridPane.rowIndex="1" />
                         <Label text="Alamat" GridPane.rowIndex="2" />
                         <TextField fx:id="namaField" disable="true" editable="false" prefHeight="35.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <TextArea fx:id="alamatField" disable="true" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <TextArea fx:id="alamatField" editable="false" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                      </children>
                      <padding>
                         <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
@@ -134,7 +134,7 @@
                   <VBox style="-fx-background-color: seccolor6;" HBox.hgrow="ALWAYS">
                      <children>
                         <Label text="Catatan" />
-                        <TextArea fx:id="catatanField" disable="true" wrapText="true" />
+                        <TextArea fx:id="catatanField" styleClass="text-area-border" wrapText="true" />
                      </children>
                      <padding>
                         <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />

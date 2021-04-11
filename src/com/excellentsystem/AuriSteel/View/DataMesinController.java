@@ -129,7 +129,7 @@ public class DataMesinController {
                         addNew.setOnAction((ActionEvent event) -> {
                             newMesin();
                         });
-                        MenuItem hapus = new MenuItem("Hapus Mesin");
+                        MenuItem hapus = new MenuItem("Delete Mesin");
                         hapus.setOnAction((ActionEvent event) -> {
                             delete(item);
                         });

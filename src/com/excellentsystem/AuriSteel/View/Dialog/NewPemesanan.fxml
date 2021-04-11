@@ -60,7 +60,7 @@
                         <Button fx:id="addCustomerButton" mnemonicParsing="false" onAction="#addCustomer" prefHeight="30.0" prefWidth="30.0" styleClass="button2" text="..." GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
                         <Button mnemonicParsing="false" onAction="#namaInvoice" prefHeight="25.0" prefWidth="150.0" text="Customer Invoice" GridPane.columnIndex="1" GridPane.halignment="RIGHT" />
                         <Label text="Alamat" GridPane.rowIndex="2" />
-                        <TextArea fx:id="alamatField" disable="true" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <TextArea fx:id="alamatField" editable="false" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                      </children>
                      <padding>
                         <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />

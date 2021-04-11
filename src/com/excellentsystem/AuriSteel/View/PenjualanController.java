@@ -31,7 +31,6 @@ import com.excellentsystem.AuriSteel.PrintOut.Report;
 import com.excellentsystem.AuriSteel.Services.Service;
 import com.excellentsystem.AuriSteel.View.Dialog.DetailBebanPenjualanController;
 import com.excellentsystem.AuriSteel.View.Dialog.DetailPiutangController;
-import com.excellentsystem.AuriSteel.View.Dialog.JatuhTempoController;
 import com.excellentsystem.AuriSteel.View.Dialog.LaporanFakturPajakController;
 import com.excellentsystem.AuriSteel.View.Dialog.MessageController;
 import com.excellentsystem.AuriSteel.View.Dialog.NewPembayaranController;
@@ -241,7 +240,7 @@ public class PenjualanController {
                         detailBeban.setOnAction((ActionEvent e) -> {
                             detailBebanPenjualan(item);
                         });
-                        MenuItem pembayaran = new MenuItem("Detail Pembayaran Penjualan");
+                        MenuItem pembayaran = new MenuItem("Detail Pembayaran");
                         pembayaran.setOnAction((ActionEvent e) -> {
                             showDetailPiutang(item);
                         });
@@ -256,10 +255,6 @@ public class PenjualanController {
                         MenuItem bayar = new MenuItem("Terima Pembayaran");
                         bayar.setOnAction((ActionEvent e) -> {
                             showPembayaran(item);
-                        });
-                        MenuItem tempo = new MenuItem("Set Jatuh Tempo Penjualan");
-                        tempo.setOnAction((ActionEvent e) -> {
-                            setJatuhTempo(item);
                         });
                         MenuItem export = new MenuItem("Export Excel");
                         export.setOnAction((ActionEvent e) -> {
@@ -289,9 +284,6 @@ public class PenjualanController {
                             }
                             if (o.getJenis().equals("Terima Pembayaran") && o.isStatus() && item.getSisaPembayaran() > 0) {
                                 rm.getItems().add(bayar);
-                            }
-                            if (o.getJenis().equals("Set Jatuh Tempo Penjualan") && o.isStatus() && item.getSisaPembayaran() > 0) {
-                                rm.getItems().add(tempo);
                             }
                             if (o.getJenis().equals("Print Invoice") && o.isStatus()) {
                                 rm.getItems().addAll(invoice, invoiceSoftcopy);
@@ -505,45 +497,6 @@ public class PenjualanController {
                 });
                 new Thread(task).start();
             }
-        });
-    }
-
-    private void setJatuhTempo(PenjualanBarangHead p) {
-        Stage stage = new Stage();
-        FXMLLoader loader = mainApp.showDialog(mainApp.MainStage, stage, "View/Dialog/JatuhTempo.fxml");
-        JatuhTempoController controller = loader.getController();
-        controller.setMainApp(mainApp, mainApp.MainStage, stage);
-        controller.saveButton.setOnAction((event) -> {
-            String jatuhTempo = controller.jatuhTempoPicker.getValue().toString();
-            Task<String> task = new Task<String>() {
-                @Override
-                public String call() throws Exception {
-                    try (Connection con = Koneksi.getConnection()) {
-                        Piutang piutang = PiutangDAO.getByKategoriAndKeteranganAndStatus(
-                                con, "Piutang Penjualan", p.getNoPenjualan(), "%");
-                        piutang.setJatuhTempo(jatuhTempo);
-                        return Service.setJatuhTempoPiutang(con, piutang);
-                    }
-                }
-            };
-            task.setOnRunning((e) -> {
-                mainApp.showLoadingScreen();
-            });
-            task.setOnSucceeded((e) -> {
-                mainApp.closeLoading();
-                getPenjualan();
-                if (task.getValue().equals("true")) {
-                    mainApp.closeDialog(mainApp.MainStage, stage);
-                    mainApp.showMessage(Modality.NONE, "Success", "Jatuh tempo penjualan berhasil disimpan");
-                } else {
-                    mainApp.showMessage(Modality.NONE, "Failed", task.getValue());
-                }
-            });
-            task.setOnFailed((e) -> {
-                mainApp.closeLoading();
-                mainApp.showMessage(Modality.NONE, "Error", task.getException().toString());
-            });
-            new Thread(task).start();
         });
     }
 

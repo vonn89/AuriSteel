@@ -48,7 +48,7 @@
             <Label text="Kontak Person" GridPane.rowIndex="6" />
             <TextField fx:id="namaField" disable="true" prefHeight="35.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <TextField fx:id="kotaField" disable="true" prefHeight="35.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <TextArea fx:id="alamatField" disable="true" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.rowSpan="2" />
+            <TextArea fx:id="alamatField" editable="false" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.rowSpan="2" />
             <TextField fx:id="kontakPersonField" disable="true" prefHeight="35.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
             <Button fx:id="addCustomerButton" mnemonicParsing="false" onAction="#addCustomer" prefHeight="30.0" prefWidth="30.0" styleClass="button2" text="..." GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
          </children>

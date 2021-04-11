@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.excellentsystem.AuriSteel.View.Dialog;
 
 import com.excellentsystem.AuriSteel.Function;
@@ -26,20 +25,26 @@ import javafx.stage.Stage;
  */
 public class NewModalController {
 
-    @FXML public Label title;
-    @FXML public TextField keteranganField;
-    @FXML public TextField jumlahRpField;
-    @FXML public ComboBox<String> tipeKeuanganCombo;
-    @FXML public Button saveButton;
-    private Main mainApp;   
+    @FXML
+    public Label title;
+    @FXML
+    public TextField keteranganField;
+    @FXML
+    public TextField jumlahRpField;
+    @FXML
+    public ComboBox<String> tipeKeuanganCombo;
+    @FXML
+    public Button saveButton;
+    private Main mainApp;
     private Stage stage;
     private Stage owner;
-    public void setMainApp(Main mainApp,Stage owner,Stage stage) {
+
+    public void setMainApp(Main mainApp, Stage owner, Stage stage) {
         this.mainApp = mainApp;
         this.stage = stage;
         this.owner = owner;
         ObservableList<String> listKeuangan = FXCollections.observableArrayList();
-        for(KategoriKeuangan kk : sistem.getListKategoriKeuangan()){
+        for (KategoriKeuangan kk : sistem.getListKategoriKeuangan()) {
             listKeuangan.add(kk.getKodeKeuangan());
         }
         tipeKeuanganCombo.setItems(listKeuangan);
@@ -47,11 +52,13 @@ public class NewModalController {
         stage.setOnCloseRequest((event) -> {
             mainApp.closeDialog(owner, stage);
         });
-    }   
-    public void setTitle(String temp){
+    }
+
+    public void setTitle(String temp) {
         title.setText(temp);
     }
-    public void close(){
+
+    public void close() {
         mainApp.closeDialog(owner, stage);
-    }  
+    }
 }

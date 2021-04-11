@@ -117,7 +117,9 @@ public class AddBahanController {
                                     s.setBahan(b);
                                 }
                             }
-                            allStok.add(s);
+                            if (s.getBahan() != null) {
+                                allStok.add(s);
+                            }
                         }
                     }
                     return allStok;

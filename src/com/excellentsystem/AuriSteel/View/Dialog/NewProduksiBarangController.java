@@ -81,8 +81,6 @@ public class NewProduksiBarangController {
     @FXML
     private TableColumn<ProduksiDetailBahan, String> kodeBahanColumn;
     @FXML
-    private TableColumn<ProduksiDetailBahan, String> gudangColumn;
-    @FXML
     private TableColumn<ProduksiDetailBahan, Number> stokBahanColumn;
     @FXML
     private TableColumn<ProduksiDetailBahan, Number> beratBahanDiproduksiColumn;
@@ -136,7 +134,6 @@ public class NewProduksiBarangController {
             return new SimpleStringProperty(kodeKategori);
         });
         kodeBahanColumn.setCellValueFactory(cellData -> cellData.getValue().kodeBarangProperty());
-        gudangColumn.setCellValueFactory(cellData -> cellData.getValue().getBahan().getStokBahan().kodeGudangProperty());
         stokBahanColumn.setCellValueFactory(cellData -> {
             if (cellData.getValue().getBahan().getStokBahan() != null) {
                 return new SimpleDoubleProperty(cellData.getValue().getBahan().getStokBahan().getStokAkhir());

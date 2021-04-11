@@ -191,7 +191,7 @@ public class PemesananPembelianBahanController {
         tglAkhirPicker.setDayCellFactory((final DatePicker datePicker) -> Function.getDateCellAkhir(tglMulaiPicker));
 
         final ContextMenu rm = new ContextMenu();
-        MenuItem addNew = new MenuItem("Add New Pemesanan Pembelian");
+        MenuItem addNew = new MenuItem("Add New Pemesanan");
         addNew.setOnAction((ActionEvent e) -> {
             newPemesanan();
         });
@@ -222,19 +222,19 @@ public class PemesananPembelianBahanController {
                         setContextMenu(rm);
                     } else {
                         final ContextMenu rm = new ContextMenu();
-                        MenuItem addNew = new MenuItem("Add New Pemesanan Pembelian");
+                        MenuItem addNew = new MenuItem("Add New Pemesanan");
                         addNew.setOnAction((ActionEvent e) -> {
                             newPemesanan();
                         });
-                        MenuItem detail = new MenuItem("Detail Pemesanan Pembelian");
+                        MenuItem detail = new MenuItem("Detail Pemesanan");
                         detail.setOnAction((ActionEvent e) -> {
                             lihatDetailPemesanan(item);
                         });
-                        MenuItem batal = new MenuItem("Batal Pemesanan Pembelian");
+                        MenuItem batal = new MenuItem("Batal Pemesanan");
                         batal.setOnAction((ActionEvent e) -> {
                             batalPemesanan(item);
                         });
-                        MenuItem selesai = new MenuItem("Pemesanan Pembelian Selesai");
+                        MenuItem selesai = new MenuItem("Pemesanan Selesai");
                         selesai.setOnAction((ActionEvent e) -> {
                             selesaiPemesanan(item);
                         });

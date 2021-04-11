@@ -22,21 +22,28 @@ import javafx.stage.Stage;
  *
  * @author ASUS
  */
-public class NamaInvoiceController  {
+public class NamaInvoiceController {
 
-    @FXML private TextField namaField;
-    @FXML private TextArea alamatField;
-    @FXML private TextField kotaField;
-    @FXML private TextField kontakPersonField;
-    @FXML private Button addCustomerButton;
-    
-    private Main mainApp; 
+    @FXML
+    private TextField namaField;
+    @FXML
+    private TextArea alamatField;
+    @FXML
+    private TextField kotaField;
+    @FXML
+    private TextField kontakPersonField;
+    @FXML
+    private Button addCustomerButton;
+
+    private Main mainApp;
     private Stage stage;
     private Stage owner;
     public Customer customer;
+
     public void initialize() {
-    }    
-    public void setMainApp(Main mainApp,Stage owner, Stage stage) {
+    }
+
+    public void setMainApp(Main mainApp, Stage owner, Stage stage) {
         this.mainApp = mainApp;
         this.owner = owner;
         this.stage = stage;
@@ -44,26 +51,30 @@ public class NamaInvoiceController  {
             mainApp.closeDialog(owner, stage);
         });
     }
-    public void setCustomer(Customer c){
+
+    public void setCustomer(Customer c) {
         customer = c;
         namaField.setText(customer.getNama());
         alamatField.setText(customer.getAlamat());
         kotaField.setText(customer.getKota());
         kontakPersonField.setText(customer.getKontakPerson());
     }
-    public void setViewOnly(){
+
+    public void setViewOnly() {
         addCustomerButton.setVisible(false);
     }
+
     @FXML
-    private void addCustomer(){
+    private void addCustomer() {
         Stage child = new Stage();
         FXMLLoader loader = mainApp.showDialog(stage, child, "View/Dialog/AddCustomer.fxml");
         AddCustomerController controller = loader.getController();
         controller.setMainApp(mainApp, stage, child);
         controller.customerTable.setRowFactory((param) -> {
-            TableRow<Customer> row = new TableRow<Customer>(){};
+            TableRow<Customer> row = new TableRow<Customer>() {
+            };
             row.setOnMouseClicked((MouseEvent evt) -> {
-                if(evt.getButton().equals(MouseButton.PRIMARY) && evt.getClickCount()==2){
+                if (evt.getButton().equals(MouseButton.PRIMARY) && evt.getClickCount() == 2) {
                     mainApp.closeDialog(stage, child);
                     customer = row.getItem();
                     namaField.setText(customer.getNama());
@@ -72,11 +83,12 @@ public class NamaInvoiceController  {
                     kontakPersonField.setText(customer.getKontakPerson());
                 }
             });
-            return row; 
+            return row;
         });
     }
-    public void close(){
+
+    public void close() {
         mainApp.closeDialog(owner, stage);
-    }   
-    
+    }
+
 }

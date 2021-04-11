@@ -55,48 +55,76 @@ import javafx.stage.Stage;
  *
  * @author excellent
  */
-public class NewPengirimanCoilController  {
+public class NewPengirimanCoilController {
 
-    
-    @FXML private TableView<PenjualanBahanDetail> pengirimanDetailTable;
-    @FXML private TableColumn<PenjualanBahanDetail, String> kodeBarangColumn;
-    @FXML private TableColumn<PenjualanBahanDetail, String> namaBarangColumn;
-    @FXML private TableColumn<PenjualanBahanDetail, String> spesifikasiColumn;
-    @FXML private TableColumn<PenjualanBahanDetail, String> keteranganColumn;
-    @FXML private TableColumn<PenjualanBahanDetail, Number> beratKotorColumn;
-    @FXML private TableColumn<PenjualanBahanDetail, Number> beratBersihColumn;
-    @FXML private TableColumn<PenjualanBahanDetail, Number> panjangColumn;
-    
-    @FXML public TextField noPemesananField;
-    @FXML private TextField tglPemesananField;
-    
-    @FXML private TextField namaField;
-    @FXML private TextArea alamatField;
-    @FXML public TextField jenisKendaraanField;
-    @FXML public TextField noPolisiField;
-    @FXML public TextField namaSupirField;
-    @FXML private Label kursLabel;
-    @FXML public TextField kursField;
-    @FXML public ComboBox<String> gudangCombo;
-    @FXML public CheckBox pemesananSelesai;
-    
-    @FXML private Label totalQtyField;
-    @FXML private Label totalBeratKotorField;
-    @FXML private Label totalBeratBersihField;
-    @FXML private Label totalPanjangField;
-    
-    @FXML private Label noPengirimanField;
-    @FXML private Label tglPengirimanField;
-    
-    @FXML private Button addPemesananButton;
-    @FXML public Button saveButton;
-    @FXML private Button cancelButton;
-    
+    @FXML
+    private TableView<PenjualanBahanDetail> pengirimanDetailTable;
+    @FXML
+    private TableColumn<PenjualanBahanDetail, String> kodeBarangColumn;
+    @FXML
+    private TableColumn<PenjualanBahanDetail, String> namaBarangColumn;
+    @FXML
+    private TableColumn<PenjualanBahanDetail, String> spesifikasiColumn;
+    @FXML
+    private TableColumn<PenjualanBahanDetail, String> keteranganColumn;
+    @FXML
+    private TableColumn<PenjualanBahanDetail, Number> beratKotorColumn;
+    @FXML
+    private TableColumn<PenjualanBahanDetail, Number> beratBersihColumn;
+    @FXML
+    private TableColumn<PenjualanBahanDetail, Number> panjangColumn;
+
+    @FXML
+    public TextField noPemesananField;
+    @FXML
+    private TextField tglPemesananField;
+
+    @FXML
+    private TextField namaField;
+    @FXML
+    private TextArea alamatField;
+    @FXML
+    public TextField jenisKendaraanField;
+    @FXML
+    public TextField noPolisiField;
+    @FXML
+    public TextField namaSupirField;
+    @FXML
+    private Label kursLabel;
+    @FXML
+    public TextField kursField;
+    @FXML
+    public ComboBox<String> gudangCombo;
+    @FXML
+    public CheckBox pemesananSelesai;
+
+    @FXML
+    private Label totalQtyField;
+    @FXML
+    private Label totalBeratKotorField;
+    @FXML
+    private Label totalBeratBersihField;
+    @FXML
+    private Label totalPanjangField;
+
+    @FXML
+    private Label noPengirimanField;
+    @FXML
+    private Label tglPengirimanField;
+
+    @FXML
+    private Button addPemesananButton;
+    @FXML
+    public Button saveButton;
+    @FXML
+    private Button cancelButton;
+
     public PemesananBahanHead pemesanan;
     public ObservableList<PenjualanBahanDetail> allPenjualanCoilDetail = FXCollections.observableArrayList();
-    private Main mainApp;   
+    private Main mainApp;
     private Stage stage;
     private Stage owner;
+
     public void initialize() {
         kodeBarangColumn.setCellValueFactory(cellData -> cellData.getValue().kodeBahanProperty());
         namaBarangColumn.setCellValueFactory(cellData -> cellData.getValue().namaBahanProperty());
@@ -109,42 +137,43 @@ public class NewPengirimanCoilController  {
         panjangColumn.setCellValueFactory(cellData -> cellData.getValue().panjangProperty());
         panjangColumn.setCellFactory(col -> Function.getTableCell());
         Function.setNumberField(kursField);
-        
+
         ContextMenu cm = new ContextMenu();
         MenuItem addBarang = new MenuItem("Add Barang");
-        addBarang.setOnAction((ActionEvent e)->{
+        addBarang.setOnAction((ActionEvent e) -> {
             addBarang();
         });
         MenuItem refresh = new MenuItem("Refresh");
-        refresh.setOnAction((ActionEvent e)->{
+        refresh.setOnAction((ActionEvent e) -> {
             pengirimanDetailTable.refresh();
         });
         cm.getItems().addAll(addBarang, refresh);
         pengirimanDetailTable.setContextMenu(cm);
         pengirimanDetailTable.setRowFactory((TableView<PenjualanBahanDetail> tv) -> {
-            final TableRow<PenjualanBahanDetail> row = new TableRow<PenjualanBahanDetail>(){
+            final TableRow<PenjualanBahanDetail> row = new TableRow<PenjualanBahanDetail>() {
                 @Override
                 public void updateItem(PenjualanBahanDetail item, boolean empty) {
                     super.updateItem(item, empty);
                     if (empty) {
                         setContextMenu(cm);
-                    } else{
+                    } else {
                         final ContextMenu rm = new ContextMenu();
                         MenuItem addBarang = new MenuItem("Add Barang");
-                        addBarang.setOnAction((ActionEvent e)->{
+                        addBarang.setOnAction((ActionEvent e) -> {
                             addBarang();
                         });
                         MenuItem delete = new MenuItem("Delete Barang");
-                        delete.setOnAction((ActionEvent e)->{
+                        delete.setOnAction((ActionEvent e) -> {
                             allPenjualanCoilDetail.remove(item);
                             hitungTotal();
                         });
                         MenuItem refresh = new MenuItem("Refresh");
-                        refresh.setOnAction((ActionEvent e)->{
+                        refresh.setOnAction((ActionEvent e) -> {
                             pengirimanDetailTable.refresh();
                         });
-                        if(saveButton.isVisible())
+                        if (saveButton.isVisible()) {
                             rm.getItems().addAll(addBarang, delete);
+                        }
                         rm.getItems().addAll(refresh);
                         setContextMenu(rm);
                     }
@@ -154,6 +183,7 @@ public class NewPengirimanCoilController  {
         });
         pengirimanDetailTable.setItems(allPenjualanCoilDetail);
     }
+
     public void setMainApp(Main mainApp, Stage owner, Stage stage) {
         this.mainApp = mainApp;
         this.owner = owner;
@@ -161,31 +191,33 @@ public class NewPengirimanCoilController  {
         stage.setOnCloseRequest((event) -> {
             mainApp.closeDialog(owner, stage);
         });
-        stage.setHeight(mainApp.screenSize.getHeight()*0.9);
-        stage.setWidth(mainApp.screenSize.getWidth()*0.9);
+        stage.setHeight(mainApp.screenSize.getHeight() * 0.9);
+        stage.setWidth(mainApp.screenSize.getWidth() * 0.9);
         stage.setX((mainApp.screenSize.getWidth() - stage.getWidth()) / 2);
         stage.setY((mainApp.screenSize.getHeight() - stage.getHeight()) / 2);
         ObservableList<String> listGudang = FXCollections.observableArrayList();
-        for(Gudang g : sistem.getListGudang()){
+        for (Gudang g : sistem.getListGudang()) {
             listGudang.add(g.getKodeGudang());
         }
         gudangCombo.setItems(listGudang);
     }
-    private void setKurs(){
-        if(pemesanan.getKurs()==1){
+
+    private void setKurs() {
+        if (pemesanan.getKurs() == 1) {
             kursField.setVisible(false);
             kursLabel.setVisible(false);
-        }else{
+        } else {
             kursField.setVisible(true);
             kursLabel.setVisible(true);
         }
     }
-    private void hitungTotal(){
-        double totalQty = 0 ;
+
+    private void hitungTotal() {
+        double totalQty = 0;
         double totalBeratKotor = 0;
         double totalBeratBersih = 0;
         double totalPanjang = 0;
-        for(PenjualanBahanDetail d : allPenjualanCoilDetail){
+        for (PenjualanBahanDetail d : allPenjualanCoilDetail) {
             totalQty = totalQty + 1;
             totalBeratKotor = totalBeratKotor + d.getBeratKotor();
             totalBeratBersih = totalBeratBersih + d.getBeratBersih();
@@ -196,14 +228,16 @@ public class NewPengirimanCoilController  {
         totalBeratBersihField.setText(df.format(totalBeratBersih));
         totalPanjangField.setText(df.format(totalPanjang));
     }
-    public void setNewPengiriman(){
+
+    public void setNewPengiriman() {
         noPengirimanField.setText("");
         tglPengirimanField.setText("");
     }
-    public void setDetailPengiriman(String noPenjualan){
+
+    public void setDetailPengiriman(String noPenjualan) {
         Task<PenjualanBahanHead> task = new Task<PenjualanBahanHead>() {
-            @Override 
-            public PenjualanBahanHead call() throws Exception{
+            @Override
+            public PenjualanBahanHead call() throws Exception {
                 try (Connection con = Koneksi.getConnection()) {
                     PenjualanBahanHead pengiriman = PenjualanBahanHeadDAO.get(con, noPenjualan);
                     pengiriman.setPemesananBahanHead(PemesananBahanHeadDAO.get(con, pengiriman.getNoPemesanan()));
@@ -217,7 +251,7 @@ public class NewPengirimanCoilController  {
             mainApp.showLoadingScreen();
         });
         task.setOnSucceeded((ev) -> {
-            try{
+            try {
                 mainApp.closeLoading();
                 addPemesananButton.setVisible(false);
                 jenisKendaraanField.setDisable(true);
@@ -229,18 +263,20 @@ public class NewPengirimanCoilController  {
                 saveButton.setVisible(false);
                 cancelButton.setVisible(false);
                 List<MenuItem> removeMenu = new ArrayList<>();
-                for(MenuItem m : pengirimanDetailTable.getContextMenu().getItems()){
-                    if(m.getText().equals("Add Barang"))
+                for (MenuItem m : pengirimanDetailTable.getContextMenu().getItems()) {
+                    if (m.getText().equals("Add Barang")) {
                         removeMenu.add(m);
+                    }
                 }
                 pengirimanDetailTable.getContextMenu().getItems().removeAll(removeMenu);
-                
+
                 PenjualanBahanHead pengiriman = task.getValue();
                 noPengirimanField.setText(pengiriman.getNoPenjualan());
                 tglPengirimanField.setText(tglLengkap.format(tglSql.parse(pengiriman.getTglPenjualan())));
                 noPemesananField.setText(pengiriman.getNoPemesanan());
-                if(pengiriman.getPemesananBahanHead()!=null)
+                if (pengiriman.getPemesananBahanHead() != null) {
                     tglPemesananField.setText(tglLengkap.format(tglSql.parse(pengiriman.getPemesananBahanHead().getTglPemesanan())));
+                }
                 namaField.setText(pengiriman.getCustomer().getNama());
                 alamatField.setText(pengiriman.getCustomer().getAlamat());
                 jenisKendaraanField.setText(pengiriman.getJenisKendaraan());
@@ -252,7 +288,7 @@ public class NewPengirimanCoilController  {
                 pemesanan = pengiriman.getPemesananBahanHead();
                 setKurs();
                 hitungTotal();
-            }catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
                 mainApp.showMessage(Modality.NONE, "Error", e.toString());
             }
@@ -264,19 +300,21 @@ public class NewPengirimanCoilController  {
         });
         new Thread(task).start();
     }
+
     @FXML
-    private void addPemesanan(){
+    private void addPemesanan() {
         Stage child = new Stage();
         FXMLLoader loader = mainApp.showDialog(stage, child, "View/Dialog/AddPemesananCoil.fxml");
         AddPemesananCoilController controller = loader.getController();
         controller.setMainApp(mainApp, stage, child);
         controller.pemesananHeadTable.setRowFactory(table -> {
-            TableRow<PemesananBahanHead> row = new TableRow<PemesananBahanHead>() {};
+            TableRow<PemesananBahanHead> row = new TableRow<PemesananBahanHead>() {
+            };
             row.setOnMouseClicked((MouseEvent mouseEvent) -> {
-                if(mouseEvent.getButton().equals(MouseButton.PRIMARY)&&
-                        mouseEvent.getClickCount() == 2){
-                    if(row.getItem()!=null){
-                        try{
+                if (mouseEvent.getButton().equals(MouseButton.PRIMARY)
+                        && mouseEvent.getClickCount() == 2) {
+                    if (row.getItem() != null) {
+                        try {
                             mainApp.closeDialog(stage, child);
                             pemesanan = row.getItem();
                             noPemesananField.setText(pemesanan.getNoPemesanan());
@@ -286,7 +324,7 @@ public class NewPengirimanCoilController  {
                             allPenjualanCoilDetail.clear();
                             setKurs();
                             hitungTotal();
-                        }catch(Exception e){
+                        } catch (Exception e) {
                             mainApp.showMessage(Modality.NONE, "Error", e.toString());
                         }
                     }
@@ -295,33 +333,37 @@ public class NewPengirimanCoilController  {
             return row;
         });
     }
+
     @FXML
-    private void changeGudang(){
+    private void changeGudang() {
         allPenjualanCoilDetail.clear();
         hitungTotal();
     }
+
     @FXML
-    private void close(){
+    private void close() {
         mainApp.closeDialog(owner, stage);
     }
+
     @FXML
-    private void addBarang(){
-        if(pemesanan==null)
-            mainApp.showMessage(Modality.NONE,"Warning", "Pemesanan belum dipilih");
-        else if(gudangCombo.getSelectionModel().getSelectedItem()==null){
+    private void addBarang() {
+        if (pemesanan == null) {
+            mainApp.showMessage(Modality.NONE, "Warning", "Pemesanan belum dipilih");
+        } else if (gudangCombo.getSelectionModel().getSelectedItem() == null) {
             mainApp.showMessage(Modality.NONE, "Warning", "Gudang belum dipilih");
-        }else{
+        } else {
             Stage child = new Stage();
             FXMLLoader loader = mainApp.showDialog(stage, child, "View/Dialog/AddDetailPemesananCoil.fxml");
             AddDetailPemesananCoilController controller = loader.getController();
             controller.setMainApp(mainApp, stage, child);
             controller.setPemesananDetail(pemesanan.getListPemesananBahanDetail());
             controller.pemesananDetailTable.setRowFactory(table -> {
-                TableRow<PemesananBahanDetail> row = new TableRow<PemesananBahanDetail>() {};
+                TableRow<PemesananBahanDetail> row = new TableRow<PemesananBahanDetail>() {
+                };
                 row.setOnMouseClicked((MouseEvent mouseEvent) -> {
-                    if(mouseEvent.getButton().equals(MouseButton.PRIMARY)&&
-                        mouseEvent.getClickCount() == 2&&
-                        row.getItem()!=null){
+                    if (mouseEvent.getButton().equals(MouseButton.PRIMARY)
+                            && mouseEvent.getClickCount() == 2
+                            && row.getItem() != null) {
                         mainApp.closeDialog(stage, child);
                         addBahan(row.getItem());
                     }
@@ -330,40 +372,43 @@ public class NewPengirimanCoilController  {
             });
         }
     }
-    private void addBahan(PemesananBahanDetail d){
-        if(gudangCombo.getSelectionModel().getSelectedItem()==null){
+
+    private void addBahan(PemesananBahanDetail d) {
+        if (gudangCombo.getSelectionModel().getSelectedItem() == null) {
             mainApp.showMessage(Modality.NONE, "Warning", "Gudang belum dipilih");
-        }else{
+        } else {
             Stage child = new Stage();
             FXMLLoader loader = mainApp.showDialog(stage, child, "View/Dialog/AddBahan.fxml");
             AddBahanController controller = loader.getController();
             controller.setMainApp(mainApp, stage, child);
             controller.getBahan(gudangCombo.getSelectionModel().getSelectedItem());
             controller.bahanTable.setRowFactory((param) -> {
-                TreeTableRow<StokBahan> row = new TreeTableRow<StokBahan>(){};
+                TreeTableRow<StokBahan> row = new TreeTableRow<StokBahan>() {
+                };
                 row.setOnMouseClicked((MouseEvent evt) -> {
-                    if(evt.getButton().equals(MouseButton.PRIMARY) && evt.getClickCount()==2){
-                        if(row.getItem().getBahan().getNamaBahan()!=null){
-                            try(Connection con = Koneksi.getConnection()){
+                    if (evt.getButton().equals(MouseButton.PRIMARY) && evt.getClickCount() == 2) {
+                        if (row.getItem().getBahan().getNamaBahan() != null) {
+                            try (Connection con = Koneksi.getConnection()) {
                                 Bahan b = row.getItem().getBahan();
                                 Boolean status = true;
-                                for(PenjualanBahanDetail temp : allPenjualanCoilDetail){
-                                    if(temp.getKodeBahan().equals(b.getKodeBahan()))
-                                        status=false;
+                                for (PenjualanBahanDetail temp : allPenjualanCoilDetail) {
+                                    if (temp.getKodeBahan().equals(b.getKodeBahan())) {
+                                        status = false;
+                                    }
                                 }
-                                if(status==false){
+                                if (status == false) {
                                     mainApp.showMessage(Modality.NONE, "Warning", "Kode bahan baku sudah diinput");
-                                }else{
-                                    if(d.getKategoriBahan().equals(b.getKodeKategori())){
-                                        StokBahan s = StokBahanDAO.getStokAkhir(con, 
+                                } else {
+                                    if (d.getKategoriBahan().equals(b.getKodeKategori())) {
+                                        StokBahan s = StokBahanDAO.getStokAkhir(con,
                                                 b.getKodeBahan(), gudangCombo.getSelectionModel().getSelectedItem());
-                                        if(s==null){
+                                        if (s == null) {
                                             mainApp.showMessage(Modality.NONE, "Warning", "Stok bahan tidak ditemukan");
-                                        }else{
-                                            if(s.getStokAkhir()<=0){
+                                        } else {
+                                            if (s.getStokAkhir() <= 0) {
                                                 mainApp.showMessage(Modality.NONE, "Warning", "Stok bahan sudah habis");
-                                            }else{
-                                                mainApp.closeDialog(stage,child);
+                                            } else {
+                                                mainApp.closeDialog(stage, child);
                                                 PenjualanBahanDetail detail = new PenjualanBahanDetail();
                                                 detail.setBahan(b);
                                                 detail.setKodeBahan(b.getKodeBahan());
@@ -375,22 +420,22 @@ public class NewPengirimanCoilController  {
                                                 detail.setPanjang(b.getPanjang());
                                                 detail.setNilai(b.getHargaBeli());
                                                 detail.setHargaJual(d.getHarga());
-                                                detail.setTotal(d.getHarga()*b.getBeratBersih());
+                                                detail.setTotal(d.getHarga() * b.getBeratBersih());
                                                 allPenjualanCoilDetail.add(detail);
                                                 hitungTotal();
                                             }
                                         }
-                                    }else{
+                                    } else {
                                         mainApp.showMessage(Modality.NONE, "Warning", "Kode bahan yang diinput berbeda kategori dengan yang dipesan");
                                     }
-                                } 
-                            }catch(Exception e){
+                                }
+                            } catch (Exception e) {
                                 mainApp.showMessage(Modality.NONE, "Error", e.toString());
                             }
                         }
                     }
                 });
-                return row; 
+                return row;
             });
         }
     }

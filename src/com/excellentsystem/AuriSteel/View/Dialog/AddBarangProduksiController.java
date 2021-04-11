@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.excellentsystem.AuriSteel.View.Dialog;
 
 import com.excellentsystem.AuriSteel.DAO.BarangDAO;
@@ -32,24 +31,36 @@ import javafx.stage.Stage;
  *
  * @author Xtreme
  */
-public class AddBarangProduksiController  {
-    @FXML private TableView<Barang> barangTable;
-    @FXML private TableColumn<Barang, String> kodeBarangColumn;
-    @FXML private TableColumn<Barang, String> namaBarangColumn;
-    @FXML private TableColumn<Barang, String> satuanColumn;
-    
-    @FXML public TextField kodeBarangField;
-    @FXML private TextField namaBarangField;
-    @FXML public TextField qtyField;
-    @FXML private TextField satuanField;
-    @FXML private TextField searchField;
-    @FXML public Button addButton;
+public class AddBarangProduksiController {
+
+    @FXML
+    private TableView<Barang> barangTable;
+    @FXML
+    private TableColumn<Barang, String> kodeBarangColumn;
+    @FXML
+    private TableColumn<Barang, String> namaBarangColumn;
+    @FXML
+    private TableColumn<Barang, String> satuanColumn;
+
+    @FXML
+    public TextField kodeBarangField;
+    @FXML
+    private TextField namaBarangField;
+    @FXML
+    public TextField qtyField;
+    @FXML
+    private TextField satuanField;
+    @FXML
+    private TextField searchField;
+    @FXML
+    public Button addButton;
     public Barang barang;
-    private Main mainApp;  
+    private Main mainApp;
     private Stage stage;
     private Stage owner;
     private final ObservableList<Barang> allBarang = FXCollections.observableArrayList();
     private final ObservableList<Barang> filterData = FXCollections.observableArrayList();
+
     public void initialize() {
         kodeBarangColumn.setCellValueFactory(cellData -> cellData.getValue().kodeBarangProperty());
         namaBarangColumn.setCellValueFactory(cellData -> cellData.getValue().namaBarangProperty());
@@ -66,7 +77,8 @@ public class AddBarangProduksiController  {
         });
         filterData.addAll(allBarang);
     }
-    public void setMainApp(Main mainApp,Stage owner, Stage stage) {
+
+    public void setMainApp(Main mainApp, Stage owner, Stage stage) {
         this.mainApp = mainApp;
         this.owner = owner;
         this.stage = stage;
@@ -74,16 +86,17 @@ public class AddBarangProduksiController  {
         stage.setOnCloseRequest((e) -> {
             mainApp.closeDialog(owner, stage);
         });
-        stage.setHeight(mainApp.screenSize.getHeight()*0.9);
-        stage.setWidth(mainApp.screenSize.getWidth()*0.9);
+        stage.setHeight(mainApp.screenSize.getHeight() * 0.9);
+        stage.setWidth(mainApp.screenSize.getWidth() * 0.9);
         stage.setX((mainApp.screenSize.getWidth() - stage.getWidth()) / 2);
         stage.setY((mainApp.screenSize.getHeight() - stage.getHeight()) / 2);
         getBarang();
     }
-    private void getBarang(){
+
+    private void getBarang() {
         Task<List<Barang>> task = new Task<List<Barang>>() {
-            @Override 
-            public List<Barang> call() throws Exception{
+            @Override
+            public List<Barang> call() throws Exception {
                 try (Connection con = Koneksi.getConnection()) {
                     return BarangDAO.getAllByStatus(con, "true");
                 }
@@ -104,44 +117,50 @@ public class AddBarangProduksiController  {
         });
         new Thread(task).start();
     }
-    private Boolean checkColumn(String column){
-        if(column!=null){
-            if(column.toLowerCase().contains(searchField.getText().toLowerCase()))
+
+    private Boolean checkColumn(String column) {
+        if (column != null) {
+            if (column.toLowerCase().contains(searchField.getText().toLowerCase())) {
                 return true;
+            }
         }
         return false;
     }
+
     private void searchBarang() {
         filterData.clear();
         for (Barang temp : allBarang) {
-            if (searchField.getText() == null || searchField.getText().equals(""))
+            if (searchField.getText() == null || searchField.getText().equals("")) {
                 filterData.add(temp);
-            else{
-                if(checkColumn(temp.getKodeBarang())||
-                    checkColumn(temp.getNamaBarang())||
-                    checkColumn(temp.getSpesifikasi())||
-                    checkColumn(df.format(temp.getBerat()))||
-                    checkColumn(temp.getSatuan()))
+            } else {
+                if (checkColumn(temp.getKodeBarang())
+                        || checkColumn(temp.getNamaBarang())
+                        || checkColumn(temp.getSpesifikasi())
+                        || checkColumn(df.format(temp.getBerat()))
+                        || checkColumn(temp.getSatuan())) {
                     filterData.add(temp);
+                }
             }
         }
     }
-    private void selectBarang(Barang value){
+
+    private void selectBarang(Barang value) {
         barang = null;
         kodeBarangField.setText("");
         namaBarangField.setText("");
         satuanField.setText("");
         qtyField.setText("0");
-        if(value!=null){
+        if (value != null) {
             barang = value;
             kodeBarangField.setText(value.getKodeBarang());
             namaBarangField.setText(value.getNamaBarang());
             satuanField.setText(value.getSatuan());
         }
     }
+
     @FXML
-    private void close(){
+    private void close() {
         mainApp.closeDialog(owner, stage);
-    } 
-    
+    }
+
 }

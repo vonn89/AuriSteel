@@ -86,11 +86,11 @@ public class DetailImageController {
             rm.hide();
         });
         zoomFactor = 1d;
-        zoomLevel.setValue(100d);
+        zoomLevel.setValue(0d);
         imageView.setX(0);
         imageView.setY(0);
         zoomLevel.valueProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            zoomFactor = newValue.doubleValue() / 100 * 1;
+            zoomFactor = 1+ newValue.doubleValue() / 100 * 2;
             imageView.setFitHeight(imageHeight * zoomFactor);
             imageView.setFitWidth(imageWidth * zoomFactor);
         });

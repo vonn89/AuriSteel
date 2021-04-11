@@ -37,35 +37,47 @@ import javafx.stage.Stage;
  */
 public class DetailPembayaranDownPaymentController {
 
-    @FXML public TableView<Piutang> piutangTable;
-    @FXML private TableColumn<Piutang, String> noPiutangColumn;
-    @FXML private TableColumn<Piutang, String> tglPiutangColumn;
-    @FXML private TableColumn<Piutang, Number> jumlahPembayaranColumn;
-    @FXML private TableColumn<Piutang, String> tipeKeuanganColumn;
-    
-    @FXML private TextField noPemesananField;
-    @FXML private TextField tglPemesananField;
-    @FXML private TextField totalPemesananField;
-    @FXML private Label totalDownPaymentLabel;
-    @FXML private Label sisaPembayaranLabel;
-    
+    @FXML
+    public TableView<Piutang> piutangTable;
+    @FXML
+    private TableColumn<Piutang, String> noPiutangColumn;
+    @FXML
+    private TableColumn<Piutang, String> tglPiutangColumn;
+    @FXML
+    private TableColumn<Piutang, Number> jumlahPembayaranColumn;
+    @FXML
+    private TableColumn<Piutang, String> tipeKeuanganColumn;
+
+    @FXML
+    private TextField noPemesananField;
+    @FXML
+    private TextField tglPemesananField;
+    @FXML
+    private TextField totalPemesananField;
+    @FXML
+    private Label totalDownPaymentLabel;
+    @FXML
+    private Label sisaPembayaranLabel;
+
     private ObservableList<Piutang> listPiutang = FXCollections.observableArrayList();
-    private Main mainApp;   
+    private Main mainApp;
     private Stage stage;
     private Stage owner;
+
     public void initialize() {
         noPiutangColumn.setCellValueFactory(cellData -> cellData.getValue().noPiutangProperty());
         tipeKeuanganColumn.setCellValueFactory(cellData -> cellData.getValue().tipeKeuanganProperty());
-        tglPiutangColumn.setCellValueFactory(cellData -> { 
-            try{
+        tglPiutangColumn.setCellValueFactory(cellData -> {
+            try {
                 return new SimpleStringProperty(tglLengkap.format(tglSql.parse(cellData.getValue().getTglPiutang())));
-            }catch(ParseException ex){
+            } catch (ParseException ex) {
                 return null;
             }
         });
         jumlahPembayaranColumn.setCellValueFactory(cellData -> cellData.getValue().jumlahPiutangProperty());
         jumlahPembayaranColumn.setCellFactory(col -> Function.getTableCell());
-    }    
+    }
+
     public void setMainApp(Main mainApp, Stage owner, Stage stage) {
         this.mainApp = mainApp;
         this.owner = owner;
@@ -74,11 +86,12 @@ public class DetailPembayaranDownPaymentController {
         stage.setOnCloseRequest((event) -> {
             mainApp.closeDialog(owner, stage);
         });
-    }     
-    public void setDetailPemesananPembelianBahan(PemesananPembelianBahanHead p){
+    }
+
+    public void setDetailPemesananPembelianBahan(PemesananPembelianBahanHead p) {
         Task<List<Piutang>> task = new Task<List<Piutang>>() {
-            @Override 
-            public List<Piutang> call()throws Exception {
+            @Override
+            public List<Piutang> call() throws Exception {
                 try (Connection con = Koneksi.getConnection()) {
                     return PiutangDAO.getAllByKategoriAndKeteranganAndStatus(
                             con, "Pembayaran Down Payment", p.getNoPemesanan(), "%");
@@ -92,14 +105,14 @@ public class DetailPembayaranDownPaymentController {
             try {
                 mainApp.closeLoading();
                 p.setListPiutang(task.getValue());
-                for(Piutang pt : p.getListPiutang()){
+                for (Piutang pt : p.getListPiutang()) {
                     pt.setPemesananPembelianBahanHead(p);
                 }
                 noPemesananField.setText(p.getNoPemesanan());
                 tglPemesananField.setText(tglLengkap.format(tglSql.parse(p.getTglPemesanan())));
                 totalPemesananField.setText(df.format(p.getTotalPemesanan()));
                 totalDownPaymentLabel.setText(df.format(p.getDownPayment()));
-                sisaPembayaranLabel.setText(df.format(p.getTotalPemesanan()-p.getDownPayment()));
+                sisaPembayaranLabel.setText(df.format(p.getTotalPemesanan() - p.getDownPayment()));
                 listPiutang.clear();
                 listPiutang.addAll(p.getListPiutang());
             } catch (Exception ex) {
@@ -112,9 +125,10 @@ public class DetailPembayaranDownPaymentController {
         });
         new Thread(task).start();
     }
+
     @FXML
     private void close() {
         mainApp.closeDialog(owner, stage);
     }
-    
+
 }

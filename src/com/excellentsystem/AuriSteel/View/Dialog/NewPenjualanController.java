@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.excellentsystem.AuriSteel.View.Dialog;
 
 import com.excellentsystem.AuriSteel.DAO.CustomerDAO;
@@ -45,71 +44,93 @@ import javafx.stage.Stage;
  */
 public class NewPenjualanController {
 
-    @FXML private TableView<PenjualanBarangDetail> penjualanDetailTable;
-    @FXML private TableColumn<PenjualanBarangDetail, String> kodeBarangColumn;
-    @FXML private TableColumn<PenjualanBarangDetail, String> namaBarangColumn;
-    @FXML private TableColumn<PenjualanBarangDetail, String> keteranganColumn;
-    @FXML private TableColumn<PenjualanBarangDetail, String> satuanColumn;
-    @FXML private TableColumn<PenjualanBarangDetail, Number> qtyColumn;
-    @FXML private TableColumn<PenjualanBarangDetail, Number> hargaJualColumn;
-    @FXML private TableColumn<PenjualanBarangDetail, Number> hargaJualPPNColumn;
-    @FXML private TableColumn<PenjualanBarangDetail, Number> subTotalColumn;
-    
-    @FXML private Label noPenjualanField;
-    @FXML private Label tglPenjualanField;
-    
-    @FXML private TextField namaField;
-    @FXML private TextArea alamatField;
-    @FXML private TextField namaSalesField;
-    @FXML private TextField gudangField;
-    
-    @FXML private TextField paymentTermField;
-    
-    @FXML private TextArea catatanField;
-    
-    @FXML private Label totalQtyField;
-    @FXML private TextField totalPenjualanField;
-    @FXML private TextField ppnField;
-    @FXML private TextField grandtotalField;
-    
+    @FXML
+    private TableView<PenjualanBarangDetail> penjualanDetailTable;
+    @FXML
+    private TableColumn<PenjualanBarangDetail, String> kodeBarangColumn;
+    @FXML
+    private TableColumn<PenjualanBarangDetail, String> namaBarangColumn;
+    @FXML
+    private TableColumn<PenjualanBarangDetail, String> keteranganColumn;
+    @FXML
+    private TableColumn<PenjualanBarangDetail, String> satuanColumn;
+    @FXML
+    private TableColumn<PenjualanBarangDetail, Number> qtyColumn;
+    @FXML
+    private TableColumn<PenjualanBarangDetail, Number> hargaJualColumn;
+    @FXML
+    private TableColumn<PenjualanBarangDetail, Number> hargaJualPPNColumn;
+    @FXML
+    private TableColumn<PenjualanBarangDetail, Number> subTotalColumn;
+
+    @FXML
+    private Label noPenjualanField;
+    @FXML
+    private Label tglPenjualanField;
+
+    @FXML
+    private TextField namaField;
+    @FXML
+    private TextArea alamatField;
+    @FXML
+    private TextField namaSalesField;
+    @FXML
+    private TextField gudangField;
+
+    @FXML
+    private TextField paymentTermField;
+
+    @FXML
+    private TextArea catatanField;
+
+    @FXML
+    private Label totalQtyField;
+    @FXML
+    private TextField totalPenjualanField;
+    @FXML
+    private TextField ppnField;
+    @FXML
+    private TextField grandtotalField;
+
     private PenjualanBarangHead penjualan;
     private ObservableList<PenjualanBarangDetail> allPenjualanDetail = FXCollections.observableArrayList();
-    private Main mainApp;   
+    private Main mainApp;
     private Stage stage;
     private Stage owner;
+
     public void initialize() {
         kodeBarangColumn.setCellValueFactory(cellData -> cellData.getValue().kodeBarangProperty());
         namaBarangColumn.setCellValueFactory(cellData -> cellData.getValue().namaBarangProperty());
         keteranganColumn.setCellValueFactory(cellData -> cellData.getValue().keteranganProperty());
         satuanColumn.setCellValueFactory(cellData -> cellData.getValue().satuanProperty());
-        hargaJualColumn.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getHargaJual()/1.1));
+        hargaJualColumn.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getHargaJual() / 1.1));
         hargaJualPPNColumn.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getHargaJual()));
-        subTotalColumn.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getTotal()/1.1));
+        subTotalColumn.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getTotal() / 1.1));
         qtyColumn.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getQty()));
         hargaJualColumn.setCellFactory(col -> Function.getTableCell());
         hargaJualPPNColumn.setCellFactory(col -> Function.getTableCell());
         subTotalColumn.setCellFactory(col -> Function.getTableCell());
         qtyColumn.setCellFactory(col -> Function.getTableCell());
         penjualanDetailTable.setItems(allPenjualanDetail);
-        
+
         ContextMenu cm = new ContextMenu();
         MenuItem refresh = new MenuItem("Refresh");
-        refresh.setOnAction((ActionEvent e)->{
+        refresh.setOnAction((ActionEvent e) -> {
             penjualanDetailTable.refresh();
         });
         cm.getItems().addAll(refresh);
         penjualanDetailTable.setContextMenu(cm);
         penjualanDetailTable.setRowFactory((TableView<PenjualanBarangDetail> tv) -> {
-            final TableRow<PenjualanBarangDetail> row = new TableRow<PenjualanBarangDetail>(){
+            final TableRow<PenjualanBarangDetail> row = new TableRow<PenjualanBarangDetail>() {
                 @Override
                 public void updateItem(PenjualanBarangDetail item, boolean empty) {
                     super.updateItem(item, empty);
                     if (empty) {
                         setContextMenu(cm);
-                    } else{
+                    } else {
                         final ContextMenu rm = new ContextMenu();
                         MenuItem refresh = new MenuItem("Refresh");
-                        refresh.setOnAction((ActionEvent e)->{
+                        refresh.setOnAction((ActionEvent e) -> {
                             penjualanDetailTable.refresh();
                         });
                         rm.getItems().addAll(refresh);
@@ -120,6 +141,7 @@ public class NewPenjualanController {
             return row;
         });
     }
+
     public void setMainApp(Main mainApp, Stage owner, Stage stage) {
         this.mainApp = mainApp;
         this.owner = owner;
@@ -127,15 +149,16 @@ public class NewPenjualanController {
         stage.setOnCloseRequest((event) -> {
             mainApp.closeDialog(owner, stage);
         });
-        stage.setHeight(mainApp.screenSize.getHeight()*0.9);
-        stage.setWidth(mainApp.screenSize.getWidth()*0.9);
+        stage.setHeight(mainApp.screenSize.getHeight() * 0.9);
+        stage.setWidth(mainApp.screenSize.getWidth() * 0.9);
         stage.setX((mainApp.screenSize.getWidth() - stage.getWidth()) / 2);
         stage.setY((mainApp.screenSize.getHeight() - stage.getHeight()) / 2);
     }
-    public void setDetailPenjualan(String noPenjualan){
+
+    public void setDetailPenjualan(String noPenjualan) {
         Task<String> task = new Task<String>() {
-            @Override 
-            public String call() throws Exception{
+            @Override
+            public String call() throws Exception {
                 try (Connection con = Koneksi.getConnection()) {
                     penjualan = PenjualanBarangHeadDAO.get(con, noPenjualan);
                     penjualan.setPemesananBarangHead(PemesananBarangHeadDAO.get(con, penjualan.getNoPemesanan()));
@@ -151,7 +174,7 @@ public class NewPenjualanController {
             mainApp.showLoadingScreen();
         });
         task.setOnSucceeded((ev) -> {
-            try{
+            try {
                 mainApp.closeLoading();
                 noPenjualanField.setText(penjualan.getNoPenjualan());
                 tglPenjualanField.setText(tglLengkap.format(tglSql.parse(penjualan.getTglPenjualan())));
@@ -162,15 +185,15 @@ public class NewPenjualanController {
                 namaSalesField.setText(penjualan.getSales().getNama());
                 catatanField.setText(penjualan.getCatatan());
                 allPenjualanDetail.addAll(penjualan.getListPenjualanBarangDetail());
-                totalPenjualanField.setText(df.format(penjualan.getTotalPenjualan()/1.1));
-                ppnField.setText(df.format(penjualan.getTotalPenjualan()/1.1*0.1));
+                totalPenjualanField.setText(df.format(penjualan.getTotalPenjualan() / 1.1));
+                ppnField.setText(df.format(penjualan.getTotalPenjualan() / 1.1 * 0.1));
                 grandtotalField.setText(df.format(penjualan.getTotalPenjualan()));
                 double qty = 0;
-                for(PenjualanBarangDetail d : allPenjualanDetail){
+                for (PenjualanBarangDetail d : allPenjualanDetail) {
                     qty = qty + d.getQty();
                 }
                 totalQtyField.setText(df.format(qty));
-            }catch(Exception e){
+            } catch (Exception e) {
                 mainApp.showMessage(Modality.NONE, "Error", e.toString());
             }
         });
@@ -180,8 +203,9 @@ public class NewPenjualanController {
         });
         new Thread(task).start();
     }
+
     @FXML
-    private void namaInvoice(){
+    private void namaInvoice() {
         Stage child = new Stage();
         FXMLLoader loader = mainApp.showDialog(stage, child, "View/Dialog/NamaInvoice.fxml");
         NamaInvoiceController controller = loader.getController();
@@ -189,8 +213,9 @@ public class NewPenjualanController {
         controller.setCustomer(penjualan.getCustomerInvoice());
         controller.setViewOnly();
     }
+
     @FXML
-    private void backToDataPenjualan(){
+    private void backToDataPenjualan() {
         mainApp.closeDialog(owner, stage);
     }
 }

@@ -14,13 +14,11 @@ import com.excellentsystem.AuriSteel.Function;
 import com.excellentsystem.AuriSteel.Koneksi;
 import com.excellentsystem.AuriSteel.Main;
 import static com.excellentsystem.AuriSteel.Main.df;
-import static com.excellentsystem.AuriSteel.Main.sistem;
 import static com.excellentsystem.AuriSteel.Main.tglBarang;
 import static com.excellentsystem.AuriSteel.Main.tglLengkap;
 import static com.excellentsystem.AuriSteel.Main.tglSql;
 import com.excellentsystem.AuriSteel.Model.Barang;
 import com.excellentsystem.AuriSteel.Model.Customer;
-import com.excellentsystem.AuriSteel.Model.Otoritas;
 import com.excellentsystem.AuriSteel.Model.Pegawai;
 import com.excellentsystem.AuriSteel.Model.PemesananBarangDetail;
 import com.excellentsystem.AuriSteel.Model.PemesananBarangHead;
@@ -175,42 +173,15 @@ public class AddPermintaanBarangController {
         }));
 
         final ContextMenu rm = new ContextMenu();
-        MenuItem spk = new MenuItem("Print SPK");
-        spk.setOnAction((ActionEvent e) -> {
-            printSPK();
-        });
         MenuItem refresh = new MenuItem("Refresh");
         refresh.setOnAction((ActionEvent e) -> {
             getPermintaan();
         });
-        for (Otoritas o : sistem.getUser().getOtoritas()) {
-            if (o.getJenis().equals("Print SPK") && o.isStatus()) {
-                rm.getItems().add(spk);
-            }
-        }
         rm.getItems().addAll(refresh);
         permintaanTable.setContextMenu(rm);
         permintaanTable.setRowFactory((TableView<PemesananBarangDetail> tableView) -> {
             final TableRow<PemesananBarangDetail> row = new TableRow<PemesananBarangDetail>() {
             };
-            row.itemProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue != null) {
-                    double hutang = newValue.getPemesananBarangHead().getCustomer().getHutang();
-                    double limitHutang = newValue.getPemesananBarangHead().getCustomer().getLimitHutang();
-                    double sisaPemesanan = 0;
-                    double downpayment = newValue.getPemesananBarangHead().getSisaDownPayment();
-                    for (PemesananBarangDetail d : newValue.getPemesananBarangHead().getListPemesananBarangDetail()) {
-                        sisaPemesanan = sisaPemesanan + ((d.getQty() - d.getQtyTerkirim()) * d.getHargaJual());
-                    }
-                    if (limitHutang - hutang - sisaPemesanan + downpayment < 0) {
-                        row.setStyle("-fx-background-color: #FFD8D1");//red
-                    } else {
-                        row.setStyle("");
-                    }
-                } else {
-                    row.setStyle("");
-                }
-            });
             row.setOnMouseClicked((MouseEvent mouseEvent) -> {
                 if (mouseEvent.getButton().equals(MouseButton.PRIMARY)
                         && mouseEvent.getClickCount() == 2) {

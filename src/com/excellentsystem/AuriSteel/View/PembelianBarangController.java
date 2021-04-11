@@ -25,7 +25,6 @@ import com.excellentsystem.AuriSteel.Model.PembelianBarangHead;
 import com.excellentsystem.AuriSteel.Model.Supplier;
 import com.excellentsystem.AuriSteel.Services.Service;
 import com.excellentsystem.AuriSteel.View.Dialog.DetailHutangController;
-import com.excellentsystem.AuriSteel.View.Dialog.JatuhTempoController;
 import com.excellentsystem.AuriSteel.View.Dialog.MessageController;
 import com.excellentsystem.AuriSteel.View.Dialog.NewPembayaranController;
 import com.excellentsystem.AuriSteel.View.Dialog.NewPembelianBarangController;
@@ -166,6 +165,7 @@ public class PembelianBarangController {
         tglAkhirPicker.setConverter(Function.getTglConverter());
         tglAkhirPicker.setValue(LocalDate.now());
         tglAkhirPicker.setDayCellFactory((final DatePicker datePicker) -> Function.getDateCellAkhir(tglMulaiPicker));
+        
         final ContextMenu rm = new ContextMenu();
         MenuItem addNew = new MenuItem("Add New Pembelian");
         addNew.setOnAction((ActionEvent e) -> {
@@ -218,10 +218,6 @@ public class PembelianBarangController {
                         bayar.setOnAction((ActionEvent e) -> {
                             showPembayaran(item);
                         });
-                        MenuItem tempo = new MenuItem("Set Jatuh Tempo");
-                        tempo.setOnAction((ActionEvent e) -> {
-                            setJatuhTempo(item);
-                        });
                         MenuItem export = new MenuItem("Export Excel");
                         export.setOnAction((ActionEvent e) -> {
                             exportExcel();
@@ -245,9 +241,6 @@ public class PembelianBarangController {
                             }
                             if (o.getJenis().equals("Pembayaran Pembelian Barang") && o.isStatus() && item.getSisaPembayaran() > 0) {
                                 rm.getItems().add(bayar);
-                            }
-                            if (o.getJenis().equals("Set Jatuh Tempo Pembelian Barang") && o.isStatus() && item.getSisaPembayaran() > 0) {
-                                rm.getItems().add(tempo);
                             }
                             if (o.getJenis().equals("Export Excel") && o.isStatus()) {
                                 rm.getItems().add(export);
@@ -506,7 +499,7 @@ public class PembelianBarangController {
                         setContextMenu(null);
                     } else {
                         final ContextMenu rm = new ContextMenu();
-                        MenuItem batal = new MenuItem("Batal Pembayaran Pembelian");
+                        MenuItem batal = new MenuItem("Batal Pembayaran");
                         batal.setOnAction((ActionEvent e) -> {
                             batalPembayaran(item, stage);
                         });
@@ -610,45 +603,6 @@ public class PembelianBarangController {
                 });
                 new Thread(task).start();
             }
-        });
-    }
-
-    private void setJatuhTempo(PembelianBarangHead p) {
-        Stage stage = new Stage();
-        FXMLLoader loader = mainApp.showDialog(mainApp.MainStage, stage, "View/Dialog/JatuhTempo.fxml");
-        JatuhTempoController controller = loader.getController();
-        controller.setMainApp(mainApp, mainApp.MainStage, stage);
-        controller.saveButton.setOnAction((event) -> {
-            String jatuhTempo = controller.jatuhTempoPicker.getValue().toString();
-            Task<String> task = new Task<String>() {
-                @Override
-                public String call() throws Exception {
-                    try (Connection con = Koneksi.getConnection()) {
-                        Hutang h = HutangDAO.getByKategoriAndKeteranganAndStatus(
-                                con, "Hutang Pembelian", p.getNoPembelian(), "open");
-                        h.setJatuhTempo(jatuhTempo);
-                        return Service.setJatuhTempoHutang(con, h);
-                    }
-                }
-            };
-            task.setOnRunning((e) -> {
-                mainApp.showLoadingScreen();
-            });
-            task.setOnSucceeded((e) -> {
-                mainApp.closeLoading();
-                getPembelian();
-                if (task.getValue().equals("true")) {
-                    mainApp.closeDialog(mainApp.MainStage, stage);
-                    mainApp.showMessage(Modality.NONE, "Success", "Jatuh tempo pembelian berhasil disimpan");
-                } else {
-                    mainApp.showMessage(Modality.NONE, "Error", task.getValue());
-                }
-            });
-            task.setOnFailed((e) -> {
-                mainApp.closeLoading();
-                mainApp.showMessage(Modality.NONE, "Error", task.getException().toString());
-            });
-            new Thread(task).start();
         });
     }
 

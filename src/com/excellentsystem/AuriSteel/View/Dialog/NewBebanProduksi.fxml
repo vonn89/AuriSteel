@@ -14,8 +14,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="400.0" stylesheets="@../../Resource/MyTheme.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.60" fx:controller="com.excellentsystem.AuriSteel.View.Dialog.NewBebanProduksiController">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="400.0" stylesheets="@../../Resource/MyTheme.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.excellentsystem.AuriSteel.View.Dialog.NewBebanProduksiController">
    <children>
       <GridPane fx:id="gridPane" hgap="7.0" layoutX="157.0" layoutY="56.0" vgap="7.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
@@ -54,7 +53,7 @@
             <Label text="Tipe Keuangan" GridPane.rowIndex="7" />
             <TextField fx:id="noBebanProduksiField" disable="true" prefHeight="30.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <TextField fx:id="tglBebanProduksiField" disable="true" prefHeight="30.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <TextArea fx:id="produksiField" disable="true" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <TextArea fx:id="produksiField" disable="true" editable="false" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <TextField fx:id="keteranganField" prefHeight="30.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <TextField fx:id="jumlahRpField" prefHeight="30.0" text="0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
             <ComboBox fx:id="tipeKeuanganCombo" maxWidth="1.7976931348623157E308" prefHeight="30.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />

@@ -290,8 +290,7 @@ public class DataUserController {
             ));
             root.getChildren().add(createTreeItem("Data Bahan",
                     Arrays.asList(
-                            "Edit Bahan",
-                            "Cetak Barcode"
+                            "Edit Bahan"
                     )
             ));
             root.getChildren().add(createTreeItem("Data Barang",
@@ -333,7 +332,6 @@ public class DataUserController {
                             "Detail Pembayaran Penjualan",
                             "Terima Pembayaran",
                             "Batal Terima Pembayaran",
-                            "Set Jatuh Tempo Penjualan",
                             "Print Invoice"
                     )
             ));
@@ -343,7 +341,6 @@ public class DataUserController {
                             "Detail Pembayaran Penjualan Coil",
                             "Terima Pembayaran Coil",
                             "Batal Terima Pembayaran Coil",
-                            "Set Jatuh Tempo Penjualan Coil",
                             "Print Invoice Coil"
                     )
             ));
@@ -363,10 +360,9 @@ public class DataUserController {
                             "Add New Pembelian Bahan",
                             "Detail Pembelian Bahan",
                             "Batal Pembelian Bahan",
-                            "Detail Pembayaran Pembelian Bahan",
                             "Pembayaran Pembelian Bahan",
-                            "Batal Pembayaran Pembelian Bahan",
-                            "Set Jatuh Tempo Pembelian Bahan"
+                            "Detail Pembayaran Pembelian Bahan",
+                            "Batal Pembayaran Pembelian Bahan"
                     )
             ));
             root.getChildren().add(createTreeItem("Pembelian Barang",
@@ -376,8 +372,7 @@ public class DataUserController {
                             "Batal Pembelian Barang",
                             "Detail Pembayaran Pembelian Barang",
                             "Pembayaran Pembelian Barang",
-                            "Batal Pembayaran Pembelian Barang",
-                            "Set Jatuh Tempo Pembelian Barang"
+                            "Batal Pembayaran Pembelian Barang"
                     )
             ));
             root.getChildren().add(createTreeItem("Permintaan Barang",
@@ -387,7 +382,7 @@ public class DataUserController {
             ));
             root.getChildren().add(createTreeItem("Rencana Produksi",
                     Arrays.asList(
-                            "Add Rencana Produksi",
+                            "Add New Rencana Produksi",
                             "Edit Rencana Produksi",
                             "Delete Rencana Produksi",
                             "Reset Rencana Produksi",
@@ -447,9 +442,15 @@ public class DataUserController {
             root.getChildren().add(createTreeItem("Keuangan",
                     Arrays.asList(
                             "Add New Transaksi",
+                            "Add New Beban Penjualan",
+                            "Add New Beban Produksi",
                             "Detail Transaksi",
+                            "Detail Beban Penjualan",
+                            "Detail Beban Produksi",
                             "Transfer Keuangan",
-                            "Batal Transaksi"
+                            "Batal Transaksi",
+                            "Batal Beban Penjualan",
+                            "Batal Beban Produksi"
                     )
             ));
             root.getChildren().add(createTreeItem("Hutang",
@@ -457,8 +458,7 @@ public class DataUserController {
                             "Add New Hutang",
                             "Detail Hutang",
                             "Pembayaran Hutang",
-                            "Batal Pembayaran Hutang",
-                            "Set Jatuh Tempo Hutang"
+                            "Batal Pembayaran Hutang"
                     )
             ));
             root.getChildren().add(createTreeItem("Piutang",
@@ -505,6 +505,7 @@ public class DataUserController {
                             "Data Mesin",
                             "Data Gudang",
                             "Print Laporan",
+                            "Print Barcode",
                             "Export Excel",
                             "Export Faktur Pajak",
                             "Penyesuaian Stok Bahan",
