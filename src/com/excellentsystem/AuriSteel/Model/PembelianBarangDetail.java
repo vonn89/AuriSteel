@@ -28,7 +28,16 @@ public class PembelianBarangDetail {
     private final DoubleProperty nilai = new SimpleDoubleProperty();
     private final DoubleProperty hargaBeli = new SimpleDoubleProperty();
     private final DoubleProperty total = new SimpleDoubleProperty();
+    private PembelianBarangHead pembelianBarangHead;
 
+    public PembelianBarangHead getPembelianBarangHead() {
+        return pembelianBarangHead;
+    }
+
+    public void setPembelianBarangHead(PembelianBarangHead pembelianBarangHead) {
+        this.pembelianBarangHead = pembelianBarangHead;
+    }
+    
     public double getHargaBeli() {
         return hargaBeli.get();
     }

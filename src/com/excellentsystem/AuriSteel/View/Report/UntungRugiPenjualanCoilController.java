@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.excellentsystem.AuriSteel.View.Report;
 
 import com.excellentsystem.AuriSteel.DAO.CustomerDAO;
@@ -60,36 +59,49 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  *
  * @author Xtreme
  */
-public class UntungRugiPenjualanCoilController  {
+public class UntungRugiPenjualanCoilController {
 
-    
-    @FXML private TreeTableView<PenjualanBahanHead> penjualanTable;
-    @FXML private TreeTableColumn<PenjualanBahanHead, String> noPenjualanColumn;
-    @FXML private TreeTableColumn<PenjualanBahanHead, String> tglPenjualanColumn;
-    @FXML private TreeTableColumn<PenjualanBahanHead, String> namaCustomerColumn;
-    @FXML private TreeTableColumn<PenjualanBahanHead, String> namaSalesColumn;
-    @FXML private TreeTableColumn<PenjualanBahanHead, String> totalPenjualanColumn;
-    @FXML private TreeTableColumn<PenjualanBahanHead, String> kursColumn;
-    @FXML private TreeTableColumn<PenjualanBahanHead, Number> totalPenjualanRpColumn;
-    @FXML private TreeTableColumn<PenjualanBahanHead, Number> pembayaranColumn;
-    @FXML private TreeTableColumn<PenjualanBahanHead, Number> sisaPembayaranColumn;
-    
-    @FXML private Label totalPenjualanField;
-    @FXML private Label totalPembayaranField;
-    @FXML private Label sisaPembayaranField;
-    
+    @FXML
+    private TreeTableView<PenjualanBahanHead> penjualanTable;
+    @FXML
+    private TreeTableColumn<PenjualanBahanHead, String> noPenjualanColumn;
+    @FXML
+    private TreeTableColumn<PenjualanBahanHead, String> tglPenjualanColumn;
+    @FXML
+    private TreeTableColumn<PenjualanBahanHead, String> namaCustomerColumn;
+    @FXML
+    private TreeTableColumn<PenjualanBahanHead, String> namaSalesColumn;
+    @FXML
+    private TreeTableColumn<PenjualanBahanHead, String> totalPenjualanColumn;
+    @FXML
+    private TreeTableColumn<PenjualanBahanHead, String> kursColumn;
+    @FXML
+    private TreeTableColumn<PenjualanBahanHead, Number> totalPenjualanRpColumn;
+    @FXML
+    private TreeTableColumn<PenjualanBahanHead, Number> pembayaranColumn;
+    @FXML
+    private TreeTableColumn<PenjualanBahanHead, Number> sisaPembayaranColumn;
+
+    @FXML
+    private Label totalPenjualanField;
+    @FXML
+    private Label totalPembayaranField;
+    @FXML
+    private Label sisaPembayaranField;
+
     private String tglAwal;
     private String tglAkhir;
     final TreeItem<PenjualanBahanHead> root = new TreeItem<>();
     private ObservableList<PenjualanBahanHead> allPenjualan = FXCollections.observableArrayList();
-    private Main mainApp;  
+    private Main mainApp;
     private Stage owner;
     private Stage stage;
+
     public void initialize() {
         noPenjualanColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().noPenjualanProperty());
         namaCustomerColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().getCustomer().namaProperty());
         namaSalesColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().getSales().namaProperty());
-        tglPenjualanColumn.setCellValueFactory(cellData -> { 
+        tglPenjualanColumn.setCellValueFactory(cellData -> {
             try {
                 return new SimpleStringProperty(tglLengkap.format(tglSql.parse(cellData.getValue().getValue().getTglPenjualan())));
             } catch (Exception ex) {
@@ -98,17 +110,19 @@ public class UntungRugiPenjualanCoilController  {
         });
         tglPenjualanColumn.setComparator(Function.sortDate(tglLengkap));
         kursColumn.setCellValueFactory(celldata -> {
-            if(celldata.getValue().getValue().getKurs()==1)
+            if (celldata.getValue().getValue().getKurs() == 1) {
                 return new SimpleStringProperty("-");
-            else
+            } else {
                 return new SimpleStringProperty(df.format(celldata.getValue().getValue().getKurs()));
+            }
         });
         kursColumn.setComparator(Function.sortString());
         totalPenjualanColumn.setCellValueFactory(celldata -> {
-            if(celldata.getValue().getValue().getKurs()==1)
+            if (celldata.getValue().getValue().getKurs() == 1) {
                 return new SimpleStringProperty("-");
-            else
-                return new SimpleStringProperty(df.format(celldata.getValue().getValue().getTotalPenjualan()/celldata.getValue().getValue().getKurs()));
+            } else {
+                return new SimpleStringProperty(df.format(celldata.getValue().getValue().getTotalPenjualan() / celldata.getValue().getValue().getKurs()));
+            }
         });
         totalPenjualanRpColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().totalPenjualanProperty());
         totalPenjualanRpColumn.setCellFactory(col -> Function.getTreeTableCell());
@@ -116,60 +130,54 @@ public class UntungRugiPenjualanCoilController  {
         pembayaranColumn.setCellFactory(col -> Function.getTreeTableCell());
         sisaPembayaranColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().sisaPembayaranProperty());
         sisaPembayaranColumn.setCellFactory(col -> Function.getTreeTableCell());
-        
+
         final ContextMenu rm = new ContextMenu();
-        MenuItem print = new MenuItem("Print Laporan");
-        print.setOnAction((ActionEvent event) -> {
-            print();
-        });
         MenuItem export = new MenuItem("Export Excel");
-        export.setOnAction((ActionEvent e)->{
+        export.setOnAction((ActionEvent e) -> {
             exportExcel();
         });
         MenuItem refresh = new MenuItem("Refresh");
         refresh.setOnAction((ActionEvent event) -> {
             getPenjualan(tglAwal, tglAkhir);
         });
-        rm.getItems().addAll(print, export, refresh);
+        rm.getItems().addAll(export, refresh);
         penjualanTable.setContextMenu(rm);
         penjualanTable.setRowFactory((TreeTableView<PenjualanBahanHead> tableView) -> {
-            final TreeTableRow<PenjualanBahanHead> row = new TreeTableRow<PenjualanBahanHead>(){
+            final TreeTableRow<PenjualanBahanHead> row = new TreeTableRow<PenjualanBahanHead>() {
                 @Override
                 public void updateItem(PenjualanBahanHead item, boolean empty) {
                     super.updateItem(item, empty);
                     if (empty) {
                         setContextMenu(rm);
-                    } else{
+                    } else {
                         final ContextMenu rm = new ContextMenu();
                         MenuItem detail = new MenuItem("Detail Penjualan Coil");
-                        detail.setOnAction((ActionEvent e)->{
+                        detail.setOnAction((ActionEvent e) -> {
                             lihatDetailPenjualan(item);
                         });
                         MenuItem pembayaran = new MenuItem("Detail Pembayaran Penjualan Coil");
-                        pembayaran.setOnAction((ActionEvent e)->{
+                        pembayaran.setOnAction((ActionEvent e) -> {
                             showDetailPiutang(item);
                         });
-                        MenuItem print = new MenuItem("Print Laporan");
-                        print.setOnAction((ActionEvent event) -> {
-                            print();
-                        });
                         MenuItem export = new MenuItem("Export Excel");
-                        export.setOnAction((ActionEvent e)->{
+                        export.setOnAction((ActionEvent e) -> {
                             exportExcel();
                         });
                         MenuItem refresh = new MenuItem("Refresh");
-                        refresh.setOnAction((ActionEvent e)->{
+                        refresh.setOnAction((ActionEvent e) -> {
                             getPenjualan(tglAwal, tglAkhir);
                         });
-                        for(Otoritas o : sistem.getUser().getOtoritas()){
-                            if(o.getJenis().equals("Detail Penjualan Coil")&&o.isStatus()
-                                    &&item.getStatus()!=null)
+                        for (Otoritas o : sistem.getUser().getOtoritas()) {
+                            if (o.getJenis().equals("Detail Penjualan Coil") && o.isStatus()
+                                    && item.getStatus() != null) {
                                 rm.getItems().add(detail);
-                            if(o.getJenis().equals("Detail Pembayaran Penjualan Coil")&&o.isStatus()
-                                    &&item.getPembayaran()>0&&item.getStatus()!=null)
+                            }
+                            if (o.getJenis().equals("Detail Pembayaran Penjualan Coil") && o.isStatus()
+                                    && item.getPembayaran() > 0 && item.getStatus() != null) {
                                 rm.getItems().add(pembayaran);
+                            }
                         }
-                        rm.getItems().addAll(print, export, refresh);
+                        rm.getItems().addAll(export, refresh);
                         setContextMenu(rm);
                     }
                 }
@@ -177,40 +185,45 @@ public class UntungRugiPenjualanCoilController  {
             return row;
         });
     }
-    public void setMainApp(Main mainApp, Stage owner,Stage stage){
+
+    public void setMainApp(Main mainApp, Stage owner, Stage stage) {
         this.mainApp = mainApp;
         this.owner = owner;
         this.stage = stage;
         stage.setOnCloseRequest((event) -> {
             mainApp.closeDialog(owner, stage);
         });
-        stage.setHeight(mainApp.screenSize.getHeight()*0.9);
-        stage.setWidth(mainApp.screenSize.getWidth()*0.9);
+        stage.setHeight(mainApp.screenSize.getHeight() * 0.9);
+        stage.setWidth(mainApp.screenSize.getWidth() * 0.9);
         stage.setX((mainApp.screenSize.getWidth() - stage.getWidth()) / 2);
         stage.setY((mainApp.screenSize.getHeight() - stage.getHeight()) / 2);
     }
-    public void getPenjualan(String tglMulai, String tglAkhir){
+
+    public void getPenjualan(String tglMulai, String tglAkhir) {
         Task<List<PenjualanBahanHead>> task = new Task<List<PenjualanBahanHead>>() {
-            @Override 
-            public List<PenjualanBahanHead> call() throws Exception{
-                try(Connection con = Koneksi.getConnection()){
-                    List<PenjualanBahanHead> allPenjualan = PenjualanBahanHeadDAO.getAllByDateAndStatus(con, tglMulai, tglAkhir,"true");
+            @Override
+            public List<PenjualanBahanHead> call() throws Exception {
+                try (Connection con = Koneksi.getConnection()) {
+                    List<PenjualanBahanHead> allPenjualan = PenjualanBahanHeadDAO.getAllByDateAndStatus(con, tglMulai, tglAkhir, "true");
                     List<PenjualanBahanDetail> allDetail = PenjualanBahanDetailDAO.getAllByDateAndStatus(con, tglMulai, tglAkhir, "true");
                     List<Customer> allCustomer = CustomerDAO.getAllByStatus(con, "%");
                     List<Pegawai> allSales = PegawaiDAO.getAllByStatus(con, "%");
-                    for(PenjualanBahanHead p : allPenjualan){
-                        for(Customer c: allCustomer){
-                            if(p.getKodeCustomer().equals(c.getKodeCustomer()))
+                    for (PenjualanBahanHead p : allPenjualan) {
+                        for (Customer c : allCustomer) {
+                            if (p.getKodeCustomer().equals(c.getKodeCustomer())) {
                                 p.setCustomer(c);
+                            }
                         }
-                        for(Pegawai s : allSales){
-                            if(p.getKodeSales().equals(s.getKodePegawai()))
+                        for (Pegawai s : allSales) {
+                            if (p.getKodeSales().equals(s.getKodePegawai())) {
                                 p.setSales(s);
+                            }
                         }
                         List<PenjualanBahanDetail> detail = new ArrayList<>();
-                        for(PenjualanBahanDetail d: allDetail){
-                            if(p.getNoPenjualan().equals(d.getNoPenjualan()))
+                        for (PenjualanBahanDetail d : allDetail) {
+                            if (p.getNoPenjualan().equals(d.getNoPenjualan())) {
                                 detail.add(d);
+                            }
                         }
                         p.setListPenjualanBahanDetail(detail);
                     }
@@ -222,7 +235,7 @@ public class UntungRugiPenjualanCoilController  {
             mainApp.showLoadingScreen();
         });
         task.setOnSucceeded((WorkerStateEvent e) -> {
-            try{
+            try {
                 mainApp.closeLoading();
                 this.tglAwal = tglMulai;
                 this.tglAkhir = tglAkhir;
@@ -230,7 +243,7 @@ public class UntungRugiPenjualanCoilController  {
                 allPenjualan.addAll(task.getValue());
                 setTable();
                 hitungTotal();
-            }catch(Exception ex){
+            } catch (Exception ex) {
                 mainApp.showMessage(Modality.NONE, "Error", ex.toString());
             }
         });
@@ -240,15 +253,18 @@ public class UntungRugiPenjualanCoilController  {
         });
         new Thread(task).start();
     }
-    private void setTable()throws Exception{
-        if(penjualanTable.getRoot()!=null)
+
+    private void setTable() throws Exception {
+        if (penjualanTable.getRoot() != null) {
             penjualanTable.getRoot().getChildren().clear();
-        List<String> groupBy = new ArrayList<>();
-        for(PenjualanBahanHead temp : allPenjualan){
-            if(!groupBy.contains(temp.getCustomer().getNama()))
-                groupBy.add(temp.getCustomer().getNama());
         }
-        for(String temp : groupBy){
+        List<String> groupBy = new ArrayList<>();
+        for (PenjualanBahanHead temp : allPenjualan) {
+            if (!groupBy.contains(temp.getCustomer().getNama())) {
+                groupBy.add(temp.getCustomer().getNama());
+            }
+        }
+        for (String temp : groupBy) {
             PenjualanBahanHead head = new PenjualanBahanHead();
             head.setNoPenjualan(temp);
             head.setCustomer(new Customer());
@@ -257,8 +273,8 @@ public class UntungRugiPenjualanCoilController  {
             double totalPenjualan = 0;
             double totalPembayaran = 0;
             double sisaPembayaran = 0;
-            for(PenjualanBahanHead pj: allPenjualan){
-                if(temp.equals(pj.getCustomer().getNama())){
+            for (PenjualanBahanHead pj : allPenjualan) {
+                if (temp.equals(pj.getCustomer().getNama())) {
                     totalPenjualan = totalPenjualan + pj.getTotalPenjualan();
                     totalPembayaran = totalPembayaran + pj.getPembayaran();
                     sisaPembayaran = sisaPembayaran + pj.getSisaPembayaran();
@@ -272,12 +288,13 @@ public class UntungRugiPenjualanCoilController  {
             root.getChildren().add(parent);
         }
         penjualanTable.setRoot(root);
-    }   
-    private void hitungTotal(){
-        double totalPenjualan=0;
-        double totalPembayaran=0;
-        double sisaPembayaran=0;
-        for(PenjualanBahanHead temp : allPenjualan){
+    }
+
+    private void hitungTotal() {
+        double totalPenjualan = 0;
+        double totalPembayaran = 0;
+        double sisaPembayaran = 0;
+        for (PenjualanBahanHead temp : allPenjualan) {
             totalPenjualan = totalPenjualan + temp.getTotalPenjualan();
             totalPembayaran = totalPembayaran + temp.getPembayaran();
             sisaPembayaran = sisaPembayaran + temp.getSisaPembayaran();
@@ -286,14 +303,15 @@ public class UntungRugiPenjualanCoilController  {
         totalPembayaranField.setText(df.format(totalPembayaran));
         sisaPembayaranField.setText(df.format(sisaPembayaran));
     }
-    private void lihatDetailPenjualan(PenjualanBahanHead p){
-        if(p.getKurs()!=1){
+
+    private void lihatDetailPenjualan(PenjualanBahanHead p) {
+        if (p.getKurs() != 1) {
             Stage child = new Stage();
             FXMLLoader loader = mainApp.showDialog(stage, child, "View/Dialog/NewPenjualanCoil.fxml");
             NewPenjualanCoilController controller = loader.getController();
             controller.setMainApp(mainApp, stage, child);
             controller.setDetailPenjualan(p.getNoPenjualan());
-        }else{
+        } else {
             Stage child = new Stage();
             FXMLLoader loader = mainApp.showDialog(stage, child, "View/Dialog/NewPenjualanCoilRp.fxml");
             NewPenjualanCoilRpController controller = loader.getController();
@@ -301,29 +319,22 @@ public class UntungRugiPenjualanCoilController  {
             controller.setDetailPenjualan(p.getNoPenjualan());
         }
     }
-    private void showDetailPiutang(PenjualanBahanHead p){
+
+    private void showDetailPiutang(PenjualanBahanHead p) {
         Stage child = new Stage();
         FXMLLoader loader = mainApp.showDialog(stage, child, "View/Dialog/DetailPiutang.fxml");
         DetailPiutangController x = loader.getController();
         x.setMainApp(mainApp, stage, child);
         x.setDetailPenjualanCoil(p);
     }
-    private void print(){
-        try{
-            Report report = new Report();
-            report.printLaporanPenjualanCoil(allPenjualan, tglAwal,
-                    tglAkhir, "Customer");
-        }catch(Exception e){
-            e.printStackTrace();
-            mainApp.showMessage(Modality.NONE, "Error", e.toString());
-        }
-    }
-    @FXML 
-    private void close(){
+
+    @FXML
+    private void close() {
         mainApp.closeDialog(owner, stage);
     }
-    private void exportExcel(){
-        try{
+
+    private void exportExcel() {
+        try {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Select location to export");
             fileChooser.getExtensionFilters().addAll(
@@ -344,54 +355,55 @@ public class UntungRugiPenjualanCoilController  {
                 int rc = 0;
                 int c = 11;
                 createRow(workbook, sheet, rc, c, "Header");
-                sheet.getRow(rc).getCell(0).setCellValue("No Penjualan"); 
-                sheet.getRow(rc).getCell(1).setCellValue("Tgl Penjualan");  
-                sheet.getRow(rc).getCell(2).setCellValue("Customer"); 
-                sheet.getRow(rc).getCell(3).setCellValue("Sales"); 
-                sheet.getRow(rc).getCell(4).setCellValue("Total Penjualan"); 
-                sheet.getRow(rc).getCell(5).setCellValue("Kurs"); 
-                sheet.getRow(rc).getCell(6).setCellValue("Total Penjualan Rp"); 
-                sheet.getRow(rc).getCell(7).setCellValue("Pembayaran"); 
-                sheet.getRow(rc).getCell(8).setCellValue("Sisa Pembayaran"); 
-                sheet.getRow(rc).getCell(9).setCellValue("Catatan"); 
-                sheet.getRow(rc).getCell(10).setCellValue("Kode User"); 
+                sheet.getRow(rc).getCell(0).setCellValue("No Penjualan");
+                sheet.getRow(rc).getCell(1).setCellValue("Tgl Penjualan");
+                sheet.getRow(rc).getCell(2).setCellValue("Customer");
+                sheet.getRow(rc).getCell(3).setCellValue("Sales");
+                sheet.getRow(rc).getCell(4).setCellValue("Total Penjualan");
+                sheet.getRow(rc).getCell(5).setCellValue("Kurs");
+                sheet.getRow(rc).getCell(6).setCellValue("Total Penjualan Rp");
+                sheet.getRow(rc).getCell(7).setCellValue("Pembayaran");
+                sheet.getRow(rc).getCell(8).setCellValue("Sisa Pembayaran");
+                sheet.getRow(rc).getCell(9).setCellValue("Catatan");
+                sheet.getRow(rc).getCell(10).setCellValue("Kode User");
                 rc++;
-                
+
                 List<String> groupBy = new ArrayList<>();
-                for(PenjualanBahanHead temp : allPenjualan){
-                    if(!groupBy.contains(temp.getCustomer().getNama()))
+                for (PenjualanBahanHead temp : allPenjualan) {
+                    if (!groupBy.contains(temp.getCustomer().getNama())) {
                         groupBy.add(temp.getCustomer().getNama());
+                    }
                 }
                 double grandtotalPenjualanRp = 0;
                 double grandtotalPembayaran = 0;
                 double grandsisaPembayaran = 0;
-                for(String temp : groupBy){
+                for (String temp : groupBy) {
                     rc++;
                     createRow(workbook, sheet, rc, c, "SubHeader");
-                    sheet.getRow(rc).getCell(0).setCellValue(temp);  
+                    sheet.getRow(rc).getCell(0).setCellValue(temp);
                     rc++;
                     double totalPenjualanRp = 0;
                     double totalPembayaran = 0;
                     double sisaPembayaran = 0;
-                    for(PenjualanBahanHead p: allPenjualan){
-                        if(temp.equals(p.getCustomer().getNama())){
+                    for (PenjualanBahanHead p : allPenjualan) {
+                        if (temp.equals(p.getCustomer().getNama())) {
                             createRow(workbook, sheet, rc, c, "Detail");
-                            sheet.getRow(rc).getCell(0).setCellValue(p.getNoPenjualan());  
-                            sheet.getRow(rc).getCell(1).setCellValue(tglLengkap.format(tglSql.parse(p.getTglPenjualan())));  
-                            sheet.getRow(rc).getCell(2).setCellValue(p.getCustomer().getNama());  
-                            sheet.getRow(rc).getCell(3).setCellValue(p.getSales().getNama()); 
-                            if(p.getKurs()==1){
-                                sheet.getRow(rc).getCell(4).setCellValue("-"); 
-                                sheet.getRow(rc).getCell(5).setCellValue("-"); 
-                            }else{
-                                sheet.getRow(rc).getCell(4).setCellValue(p.getTotalPenjualan()/p.getKurs()); 
-                                sheet.getRow(rc).getCell(5).setCellValue(p.getKurs()); 
+                            sheet.getRow(rc).getCell(0).setCellValue(p.getNoPenjualan());
+                            sheet.getRow(rc).getCell(1).setCellValue(tglLengkap.format(tglSql.parse(p.getTglPenjualan())));
+                            sheet.getRow(rc).getCell(2).setCellValue(p.getCustomer().getNama());
+                            sheet.getRow(rc).getCell(3).setCellValue(p.getSales().getNama());
+                            if (p.getKurs() == 1) {
+                                sheet.getRow(rc).getCell(4).setCellValue("-");
+                                sheet.getRow(rc).getCell(5).setCellValue("-");
+                            } else {
+                                sheet.getRow(rc).getCell(4).setCellValue(p.getTotalPenjualan() / p.getKurs());
+                                sheet.getRow(rc).getCell(5).setCellValue(p.getKurs());
                             }
-                            sheet.getRow(rc).getCell(6).setCellValue(p.getTotalPenjualan()); 
-                            sheet.getRow(rc).getCell(7).setCellValue(p.getPembayaran()); 
-                            sheet.getRow(rc).getCell(8).setCellValue(p.getSisaPembayaran()); 
-                            sheet.getRow(rc).getCell(9).setCellValue(p.getCatatan()); 
-                            sheet.getRow(rc).getCell(10).setCellValue(p.getKodeUser()); 
+                            sheet.getRow(rc).getCell(6).setCellValue(p.getTotalPenjualan());
+                            sheet.getRow(rc).getCell(7).setCellValue(p.getPembayaran());
+                            sheet.getRow(rc).getCell(8).setCellValue(p.getSisaPembayaran());
+                            sheet.getRow(rc).getCell(9).setCellValue(p.getCatatan());
+                            sheet.getRow(rc).getCell(10).setCellValue(p.getKodeUser());
                             rc++;
                             totalPenjualanRp = totalPenjualanRp + p.getTotalPenjualan();
                             totalPembayaran = totalPembayaran + p.getPembayaran();
@@ -399,10 +411,10 @@ public class UntungRugiPenjualanCoilController  {
                         }
                     }
                     createRow(workbook, sheet, rc, c, "SubHeader");
-                    sheet.getRow(rc).getCell(0).setCellValue("Total "+temp);  
-                    sheet.getRow(rc).getCell(6).setCellValue(totalPenjualanRp); 
-                    sheet.getRow(rc).getCell(7).setCellValue(totalPembayaran); 
-                    sheet.getRow(rc).getCell(8).setCellValue(sisaPembayaran); 
+                    sheet.getRow(rc).getCell(0).setCellValue("Total " + temp);
+                    sheet.getRow(rc).getCell(6).setCellValue(totalPenjualanRp);
+                    sheet.getRow(rc).getCell(7).setCellValue(totalPembayaran);
+                    sheet.getRow(rc).getCell(8).setCellValue(sisaPembayaran);
                     rc++;
                     grandtotalPenjualanRp = grandtotalPenjualanRp + totalPenjualanRp;
                     grandtotalPembayaran = grandtotalPembayaran + totalPembayaran;
@@ -410,16 +422,18 @@ public class UntungRugiPenjualanCoilController  {
                 }
                 createRow(workbook, sheet, rc, c, "Header");
                 sheet.getRow(rc).getCell(0).setCellValue("Total");
-                sheet.getRow(rc).getCell(6).setCellValue(grandtotalPenjualanRp); 
-                sheet.getRow(rc).getCell(7).setCellValue(grandtotalPembayaran); 
-                sheet.getRow(rc).getCell(8).setCellValue(grandsisaPembayaran); 
+                sheet.getRow(rc).getCell(6).setCellValue(grandtotalPenjualanRp);
+                sheet.getRow(rc).getCell(7).setCellValue(grandtotalPembayaran);
+                sheet.getRow(rc).getCell(8).setCellValue(grandsisaPembayaran);
                 rc++;
-                for(int i=0 ; i<c ; i++){ sheet.autoSizeColumn(i);}
+                for (int i = 0; i < c; i++) {
+                    sheet.autoSizeColumn(i);
+                }
                 try (FileOutputStream outputStream = new FileOutputStream(file)) {
                     workbook.write(outputStream);
                 }
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             mainApp.showMessage(Modality.NONE, "Error", e.toString());
             e.printStackTrace();
         }

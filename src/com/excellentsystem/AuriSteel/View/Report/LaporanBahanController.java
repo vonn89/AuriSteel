@@ -137,10 +137,6 @@ public class LaporanBahanController {
         barcode.setOnAction((ActionEvent e) -> {
             cetakBarcode(filterData);
         });
-        MenuItem print = new MenuItem("Print Laporan");
-        print.setOnAction((ActionEvent e) -> {
-            print();
-        });
         MenuItem export = new MenuItem("Export Excel");
         export.setOnAction((ActionEvent e) -> {
             exportExcel();
@@ -152,9 +148,6 @@ public class LaporanBahanController {
         for (Otoritas o : sistem.getUser().getOtoritas()) {
             if (o.getJenis().equals("Print Barcode") && o.isStatus()) {
                 rm.getItems().add(barcode);
-            }
-            if (o.getJenis().equals("Print Laporan") && o.isStatus()) {
-                rm.getItems().addAll(print);
             }
             if (o.getJenis().equals("Export Excel") && o.isStatus()) {
                 rm.getItems().addAll(export);
@@ -187,10 +180,6 @@ public class LaporanBahanController {
                         barcode.setOnAction((ActionEvent e) -> {
                             cetakBarcode(filterData);
                         });
-                        MenuItem print = new MenuItem("Print Laporan");
-                        print.setOnAction((ActionEvent e) -> {
-                            print();
-                        });
                         MenuItem export = new MenuItem("Export Excel");
                         export.setOnAction((ActionEvent e) -> {
                             exportExcel();
@@ -210,9 +199,6 @@ public class LaporanBahanController {
                             }
                             if (o.getJenis().equals("Print Barcode") && o.isStatus()) {
                                 rm.getItems().add(barcode);
-                            }
-                            if (o.getJenis().equals("Print Laporan") && o.isStatus()) {
-                                rm.getItems().addAll(print);
                             }
                             if (o.getJenis().equals("Export Excel") && o.isStatus()) {
                                 rm.getItems().addAll(export);
@@ -493,19 +479,6 @@ public class LaporanBahanController {
         });
     }
 
-    private void print() {
-        try {
-            List<StokBahan> listStokBahan = new ArrayList<>();
-            for (StokBahan d : allBahan) {
-                listStokBahan.add(d);
-            }
-            Report report = new Report();
-            report.printLaporanBahan(listStokBahan);
-        } catch (Exception e) {
-            e.printStackTrace();
-            mainApp.showMessage(Modality.NONE, "Error", e.toString());
-        }
-    }
 
     private void exportExcel() {
         try {

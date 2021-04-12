@@ -63,6 +63,7 @@ import com.excellentsystem.AuriSteel.View.RencanaProduksiController;
 import com.excellentsystem.AuriSteel.View.Report.LaporanBahanController;
 import com.excellentsystem.AuriSteel.View.Report.LaporanBahanDibeliController;
 import com.excellentsystem.AuriSteel.View.Report.LaporanBarangController;
+import com.excellentsystem.AuriSteel.View.Report.LaporanBarangDibeliController;
 import com.excellentsystem.AuriSteel.View.Report.LaporanBarangDipesanController;
 import com.excellentsystem.AuriSteel.View.Report.LaporanBarangDiproduksiController;
 import com.excellentsystem.AuriSteel.View.Report.LaporanBarangTerjualController;
@@ -70,6 +71,7 @@ import com.excellentsystem.AuriSteel.View.Report.LaporanCoilTerjualController;
 import com.excellentsystem.AuriSteel.View.Report.LaporanHutangController;
 import com.excellentsystem.AuriSteel.View.Report.LaporanKeuanganController;
 import com.excellentsystem.AuriSteel.View.Report.LaporanNeracaController;
+import com.excellentsystem.AuriSteel.View.Report.LaporanPembelianBarangController;
 import com.excellentsystem.AuriSteel.View.Report.LaporanPembelianController;
 import com.excellentsystem.AuriSteel.View.Report.LaporanPemesananController;
 import com.excellentsystem.AuriSteel.View.Report.LaporanPenjualanCoilController;
@@ -139,7 +141,7 @@ public class Main extends Application {
     public static Sistem sistem;
     private double x = 0;
     private double y = 0;
-    public final String version = "2.6.2";
+    public final String version = "2.6.3";
     public static SecretKeySpec key;
 
     @Override
@@ -654,7 +656,7 @@ public class Main extends Application {
         FXMLLoader loader = changeStage("View/Report/LaporanPembelian.fxml");
         LaporanPembelianController controller = loader.getController();
         controller.setMainApp(this);
-        setTitle("Laporan Pembelian");
+        setTitle("Laporan Pembelian Bahan");
         return controller;
     }
 
@@ -663,6 +665,22 @@ public class Main extends Application {
         LaporanBahanDibeliController controller = loader.getController();
         controller.setMainApp(this);
         setTitle("Laporan Bahan Dibeli");
+        return controller;
+    }
+
+    public LaporanPembelianBarangController showLaporanPembelianBarang() {
+        FXMLLoader loader = changeStage("View/Report/LaporanPembelianBarang.fxml");
+        LaporanPembelianBarangController controller = loader.getController();
+        controller.setMainApp(this);
+        setTitle("Laporan Pembelian Barang");
+        return controller;
+    }
+
+    public LaporanBarangDibeliController showLaporanBarangDibeli() {
+        FXMLLoader loader = changeStage("View/Report/LaporanBarangDibeli.fxml");
+        LaporanBarangDibeliController controller = loader.getController();
+        controller.setMainApp(this);
+        setTitle("Laporan Barang Dibeli");
         return controller;
     }
 

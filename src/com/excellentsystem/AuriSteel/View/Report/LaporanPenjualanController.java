@@ -194,10 +194,6 @@ public class LaporanPenjualanController {
         filterData.addAll(allPenjualan);
 
         final ContextMenu rm = new ContextMenu();
-        MenuItem print = new MenuItem("Print Laporan");
-        print.setOnAction((ActionEvent event) -> {
-            print();
-        });
         MenuItem export = new MenuItem("Export Excel");
         export.setOnAction((ActionEvent e) -> {
             exportExcel();
@@ -207,9 +203,6 @@ public class LaporanPenjualanController {
             getPenjualan();
         });
         for (Otoritas o : sistem.getUser().getOtoritas()) {
-            if (o.getJenis().equals("Print Laporan") && o.isStatus()) {
-                rm.getItems().addAll(print);
-            }
             if (o.getJenis().equals("Export Excel") && o.isStatus()) {
                 rm.getItems().addAll(export);
             }
@@ -233,10 +226,6 @@ public class LaporanPenjualanController {
                         pembayaran.setOnAction((ActionEvent e) -> {
                             showDetailPiutang(item);
                         });
-                        MenuItem print = new MenuItem("Print Laporan");
-                        print.setOnAction((ActionEvent event) -> {
-                            print();
-                        });
                         MenuItem export = new MenuItem("Export Excel");
                         export.setOnAction((ActionEvent e) -> {
                             exportExcel();
@@ -253,9 +242,6 @@ public class LaporanPenjualanController {
                             if (o.getJenis().equals("Detail Pembayaran Penjualan") && o.isStatus()
                                     && item.getPembayaran() > 0 && item.getStatus() != null) {
                                 rm.getItems().add(pembayaran);
-                            }
-                            if (o.getJenis().equals("Print Laporan") && o.isStatus()) {
-                                rm.getItems().addAll(print);
                             }
                             if (o.getJenis().equals("Export Excel") && o.isStatus()) {
                                 rm.getItems().addAll(export);
@@ -482,17 +468,6 @@ public class LaporanPenjualanController {
         DetailPiutangController x = loader.getController();
         x.setMainApp(mainApp, mainApp.MainStage, stage);
         x.setDetailPenjualan(p);
-    }
-
-    private void print() {
-        try {
-            Report report = new Report();
-            report.printLaporanPenjualan(allPenjualan, tglMulaiPenjualanPicker.getValue().toString(),
-                    tglAkhirPenjualanPicker.getValue().toString(), groupByCombo.getSelectionModel().getSelectedItem());
-        } catch (Exception e) {
-            e.printStackTrace();
-            mainApp.showMessage(Modality.NONE, "Error", e.toString());
-        }
     }
 
     private void exportExcel() {

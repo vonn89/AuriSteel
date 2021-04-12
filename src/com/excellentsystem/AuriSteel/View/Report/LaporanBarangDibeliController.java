@@ -5,8 +5,9 @@
  */
 package com.excellentsystem.AuriSteel.View.Report;
 
-import com.excellentsystem.AuriSteel.DAO.PembelianBahanDetailDAO;
+import com.excellentsystem.AuriSteel.DAO.PembelianBarangDetailDAO;
 import com.excellentsystem.AuriSteel.DAO.PembelianBahanHeadDAO;
+import com.excellentsystem.AuriSteel.DAO.PembelianBarangHeadDAO;
 import com.excellentsystem.AuriSteel.DAO.SupplierDAO;
 import com.excellentsystem.AuriSteel.Function;
 import static com.excellentsystem.AuriSteel.Function.createRow;
@@ -19,11 +20,14 @@ import static com.excellentsystem.AuriSteel.Main.tglBarang;
 import static com.excellentsystem.AuriSteel.Main.tglLengkap;
 import static com.excellentsystem.AuriSteel.Main.tglSql;
 import com.excellentsystem.AuriSteel.Model.Otoritas;
-import com.excellentsystem.AuriSteel.Model.PembelianBahanDetail;
+import com.excellentsystem.AuriSteel.Model.PembelianBarangDetail;
 import com.excellentsystem.AuriSteel.Model.PembelianBahanHead;
+import com.excellentsystem.AuriSteel.Model.PembelianBarangDetail;
+import com.excellentsystem.AuriSteel.Model.PembelianBarangHead;
 import com.excellentsystem.AuriSteel.Model.Supplier;
 import com.excellentsystem.AuriSteel.PrintOut.Report;
 import com.excellentsystem.AuriSteel.View.Dialog.DetailHutangController;
+import com.excellentsystem.AuriSteel.View.Dialog.NewPembelianBarangController;
 import com.excellentsystem.AuriSteel.View.Dialog.NewPembelianController;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -65,32 +69,32 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  *
  * @author Xtreme
  */
-public class LaporanBahanDibeliController {
+public class LaporanBarangDibeliController {
 
     @FXML
-    private TreeTableView<PembelianBahanDetail> pembelianDetailTable;
+    private TreeTableView<PembelianBarangDetail> pembelianDetailTable;
     @FXML
-    private TreeTableColumn<PembelianBahanDetail, String> noPembelianColumn;
+    private TreeTableColumn<PembelianBarangDetail, String> noPembelianColumn;
     @FXML
-    private TreeTableColumn<PembelianBahanDetail, String> tglPembelianColumn;
+    private TreeTableColumn<PembelianBarangDetail, String> tglPembelianColumn;
     @FXML
-    private TreeTableColumn<PembelianBahanDetail, String> gudangColumn;
+    private TreeTableColumn<PembelianBarangDetail, String> gudangColumn;
     @FXML
-    private TreeTableColumn<PembelianBahanDetail, String> namaSupplierColumn;
+    private TreeTableColumn<PembelianBarangDetail, String> namaSupplierColumn;
     @FXML
-    private TreeTableColumn<PembelianBahanDetail, String> kodeKategoriColumn;
+    private TreeTableColumn<PembelianBarangDetail, String> kodeBarangColumn;
     @FXML
-    private TreeTableColumn<PembelianBahanDetail, String> kodeBahanColumn;
+    private TreeTableColumn<PembelianBarangDetail, String> namaBarangColumn;
     @FXML
-    private TreeTableColumn<PembelianBahanDetail, String> namaBahanColumn;
+    private TreeTableColumn<PembelianBarangDetail, String> keteranganColumn;
     @FXML
-    private TreeTableColumn<PembelianBahanDetail, Number> qtyColumn;
+    private TreeTableColumn<PembelianBarangDetail, Number> qtyColumn;
     @FXML
-    private TreeTableColumn<PembelianBahanDetail, Number> nilaiPokokColumn;
+    private TreeTableColumn<PembelianBarangDetail, Number> nilaiPokokColumn;
     @FXML
-    private TreeTableColumn<PembelianBahanDetail, Number> hargaBeliColumn;
+    private TreeTableColumn<PembelianBarangDetail, Number> hargaBeliColumn;
     @FXML
-    private TreeTableColumn<PembelianBahanDetail, Number> totalColumn;
+    private TreeTableColumn<PembelianBarangDetail, Number> totalColumn;
 
     @FXML
     private ComboBox<String> groupByCombo;
@@ -99,41 +103,39 @@ public class LaporanBahanDibeliController {
     @FXML
     private Label totalQtyField;
     @FXML
-    private Label totalBarangField;
-    @FXML
     private Label totalPembelianField;
     @FXML
     private DatePicker tglPembelianMulaiPicker;
     @FXML
     private DatePicker tglPembelianAkhirPicker;
 
-    private final TreeItem<PembelianBahanDetail> root = new TreeItem<>();
-    private ObservableList<PembelianBahanDetail> allPembelian = FXCollections.observableArrayList();
-    private ObservableList<PembelianBahanDetail> filterData = FXCollections.observableArrayList();
+    private final TreeItem<PembelianBarangDetail> root = new TreeItem<>();
+    private ObservableList<PembelianBarangDetail> allPembelian = FXCollections.observableArrayList();
+    private ObservableList<PembelianBarangDetail> filterData = FXCollections.observableArrayList();
     private Main mainApp;
 
     public void initialize() {
         noPembelianColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().noPembelianProperty());
         noPembelianColumn.setCellFactory(col -> Function.getWrapTreeTableCell(noPembelianColumn));
 
-        gudangColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().getPembelianBahanHead().kodeGudangProperty());
+        gudangColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().getPembelianBarangHead().kodeGudangProperty());
         gudangColumn.setCellFactory(col -> Function.getWrapTreeTableCell(gudangColumn));
 
-        namaSupplierColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().getPembelianBahanHead().getSupplier().namaProperty());
+        namaSupplierColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().getPembelianBarangHead().getSupplier().namaProperty());
         namaSupplierColumn.setCellFactory(col -> Function.getWrapTreeTableCell(namaSupplierColumn));
 
-        kodeKategoriColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().kodeKategoriProperty());
-        kodeKategoriColumn.setCellFactory(col -> Function.getWrapTreeTableCell(kodeKategoriColumn));
+        kodeBarangColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().kodeBarangProperty());
+        kodeBarangColumn.setCellFactory(col -> Function.getWrapTreeTableCell(kodeBarangColumn));
 
-        kodeBahanColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().kodeBahanProperty());
-        kodeBahanColumn.setCellFactory(col -> Function.getWrapTreeTableCell(kodeBahanColumn));
+        namaBarangColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().namaBarangProperty());
+        namaBarangColumn.setCellFactory(col -> Function.getWrapTreeTableCell(namaBarangColumn));
 
-        namaBahanColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().namaBahanProperty());
-        namaBahanColumn.setCellFactory(col -> Function.getWrapTreeTableCell(namaBahanColumn));
+        keteranganColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().keteranganProperty());
+        keteranganColumn.setCellFactory(col -> Function.getWrapTreeTableCell(keteranganColumn));
 
         tglPembelianColumn.setCellValueFactory(cellData -> {
             try {
-                return new SimpleStringProperty(tglLengkap.format(tglSql.parse(cellData.getValue().getValue().getPembelianBahanHead().getTglPembelian())));
+                return new SimpleStringProperty(tglLengkap.format(tglSql.parse(cellData.getValue().getValue().getPembelianBarangHead().getTglPembelian())));
             } catch (Exception ex) {
                 return null;
             }
@@ -160,7 +162,7 @@ public class LaporanBahanDibeliController {
         tglPembelianAkhirPicker.setValue(LocalDate.now());
         tglPembelianAkhirPicker.setDayCellFactory((final DatePicker datePicker) -> Function.getDateCellAkhir(tglPembelianMulaiPicker));
 
-        allPembelian.addListener((ListChangeListener.Change<? extends PembelianBahanDetail> change) -> {
+        allPembelian.addListener((ListChangeListener.Change<? extends PembelianBarangDetail> change) -> {
             searchPembelian();
         });
         searchField.textProperty().addListener(
@@ -184,10 +186,10 @@ public class LaporanBahanDibeliController {
         }
         rm.getItems().addAll(refresh);
         pembelianDetailTable.setContextMenu(rm);
-        pembelianDetailTable.setRowFactory((TreeTableView<PembelianBahanDetail> tableView) -> {
-            final TreeTableRow<PembelianBahanDetail> row = new TreeTableRow<PembelianBahanDetail>() {
+        pembelianDetailTable.setRowFactory((TreeTableView<PembelianBarangDetail> tableView) -> {
+            final TreeTableRow<PembelianBarangDetail> row = new TreeTableRow<PembelianBarangDetail>() {
                 @Override
-                public void updateItem(PembelianBahanDetail item, boolean empty) {
+                public void updateItem(PembelianBarangDetail item, boolean empty) {
                     super.updateItem(item, empty);
                     if (empty) {
                         setContextMenu(rm);
@@ -195,11 +197,11 @@ public class LaporanBahanDibeliController {
                         final ContextMenu rm = new ContextMenu();
                         MenuItem detail = new MenuItem("Detail Pembelian");
                         detail.setOnAction((ActionEvent e) -> {
-                            lihatDetailPembelian(item.getPembelianBahanHead());
+                            lihatDetailPembelian(item.getPembelianBarangHead());
                         });
                         MenuItem pembayaran = new MenuItem("Detail Pembayaran");
                         pembayaran.setOnAction((ActionEvent e) -> {
-                            showDetailHutang(item.getPembelianBahanHead());
+                            showDetailHutang(item.getPembelianBarangHead());
                         });
                         MenuItem export = new MenuItem("Export Excel");
                         export.setOnAction((ActionEvent e) -> {
@@ -210,11 +212,11 @@ public class LaporanBahanDibeliController {
                             getPembelian();
                         });
                         for (Otoritas o : sistem.getUser().getOtoritas()) {
-                            if (o.getJenis().equals("Detail Pembelian Bahan") && o.isStatus() && item.getPembelianBahanHead().getStatus() != null) {
+                            if (o.getJenis().equals("Detail Pembelian Barang") && o.isStatus() && item.getPembelianBarangHead().getStatus() != null) {
                                 rm.getItems().add(detail);
                             }
-                            if (o.getJenis().equals("Detail Pembayaran Pembelian Bahan") && o.isStatus()
-                                    && item.getPembelianBahanHead().getPembayaran() > 0 && item.getPembelianBahanHead().getStatus() != null) {
+                            if (o.getJenis().equals("Detail Pembayaran Pembelian Barang") && o.isStatus()
+                                    && item.getPembelianBarangHead().getPembayaran() > 0 && item.getPembelianBarangHead().getStatus() != null) {
                                 rm.getItems().add(pembayaran);
                             }
                             if (o.getJenis().equals("Export Excel") && o.isStatus()) {
@@ -236,7 +238,7 @@ public class LaporanBahanDibeliController {
         groupBy.add("No Pembelian");
         groupBy.add("Gudang");
         groupBy.add("Supplier");
-        groupBy.add("Kategori Bahan");
+        groupBy.add("Barang");
         groupBy.add("Tanggal");
         groupBy.add("Bulan");
         groupBy.add("Tahun");
@@ -247,24 +249,24 @@ public class LaporanBahanDibeliController {
 
     @FXML
     private void getPembelian() {
-        Task<List<PembelianBahanDetail>> task = new Task<List<PembelianBahanDetail>>() {
+        Task<List<PembelianBarangDetail>> task = new Task<List<PembelianBarangDetail>>() {
             @Override
-            public List<PembelianBahanDetail> call() throws Exception {
+            public List<PembelianBarangDetail> call() throws Exception {
                 try (Connection con = Koneksi.getConnection()) {
-                    List<PembelianBahanHead> head = PembelianBahanHeadDAO.getAllByDateAndStatus(con,
+                    List<PembelianBarangHead> head = PembelianBarangHeadDAO.getAllByDateAndStatus(con,
                             tglPembelianMulaiPicker.getValue().toString(), tglPembelianAkhirPicker.getValue().toString(), "true");
                     List<Supplier> allSupplier = SupplierDAO.getAllByStatus(con, "%");
-                    List<PembelianBahanDetail> temp = PembelianBahanDetailDAO.getAllByDateAndStatus(con,
+                    List<PembelianBarangDetail> temp = PembelianBarangDetailDAO.getAllByDateAndStatus(con,
                             tglPembelianMulaiPicker.getValue().toString(), tglPembelianAkhirPicker.getValue().toString(), "true");
-                    for (PembelianBahanDetail p : temp) {
-                        for (PembelianBahanHead pb : head) {
+                    for (PembelianBarangDetail p : temp) {
+                        for (PembelianBarangHead pb : head) {
                             if (pb.getNoPembelian().equals(p.getNoPembelian())) {
-                                p.setPembelianBahanHead(pb);
+                                p.setPembelianBarangHead(pb);
                             }
                         }
                         for (Supplier s : allSupplier) {
-                            if (p.getPembelianBahanHead().getKodeSupplier().equals(s.getKodeSupplier())) {
-                                p.getPembelianBahanHead().setSupplier(s);
+                            if (p.getPembelianBarangHead().getKodeSupplier().equals(s.getKodeSupplier())) {
+                                p.getPembelianBarangHead().setSupplier(s);
                             }
                         }
                     }
@@ -299,18 +301,18 @@ public class LaporanBahanDibeliController {
     private void searchPembelian() {
         try {
             filterData.clear();
-            for (PembelianBahanDetail temp : allPembelian) {
+            for (PembelianBarangDetail temp : allPembelian) {
                 if (searchField.getText() == null || searchField.getText().equals("")) {
                     filterData.add(temp);
                 } else {
                     if (checkColumn(temp.getNoPembelian())
-                            || checkColumn(temp.getKodeKategori())
-                            || checkColumn(tglLengkap.format(tglSql.parse(temp.getPembelianBahanHead().getTglPembelian())))
-                            || checkColumn(temp.getPembelianBahanHead().getSupplier().getNama())
-                            || checkColumn(temp.getPembelianBahanHead().getKodeGudang())
-                            || checkColumn(temp.getPembelianBahanHead().getCatatan())
-                            || checkColumn(temp.getKodeBahan())
-                            || checkColumn(temp.getNamaBahan())
+                            || checkColumn(temp.getKeterangan())
+                            || checkColumn(tglLengkap.format(tglSql.parse(temp.getPembelianBarangHead().getTglPembelian())))
+                            || checkColumn(temp.getPembelianBarangHead().getSupplier().getNama())
+                            || checkColumn(temp.getPembelianBarangHead().getKodeGudang())
+                            || checkColumn(temp.getPembelianBarangHead().getCatatan())
+                            || checkColumn(temp.getKodeBarang())
+                            || checkColumn(temp.getNamaBarang())
                             || checkColumn(df.format(temp.getQty()))
                             || checkColumn(df.format(temp.getHargaBeli()))
                             || checkColumn(df.format(temp.getNilai()))
@@ -331,57 +333,57 @@ public class LaporanBahanDibeliController {
             pembelianDetailTable.getRoot().getChildren().clear();
         }
         List<String> groupBy = new ArrayList<>();
-        for (PembelianBahanDetail temp : filterData) {
+        for (PembelianBarangDetail temp : filterData) {
             String group = "";
             if (groupByCombo.getSelectionModel().getSelectedItem().equals("No Pembelian")) {
                 group = temp.getNoPembelian();
             } else if (groupByCombo.getSelectionModel().getSelectedItem().equals("Gudang")) {
-                group = temp.getPembelianBahanHead().getKodeGudang();
+                group = temp.getPembelianBarangHead().getKodeGudang();
             } else if (groupByCombo.getSelectionModel().getSelectedItem().equals("Supplier")) {
-                group = temp.getPembelianBahanHead().getSupplier().getNama();
-            } else if (groupByCombo.getSelectionModel().getSelectedItem().equals("Kategori Bahan")) {
-                group = temp.getKodeKategori();
+                group = temp.getPembelianBarangHead().getSupplier().getNama();
+            } else if (groupByCombo.getSelectionModel().getSelectedItem().equals("Barang")) {
+                group = temp.getKodeBarang();
             } else if (groupByCombo.getSelectionModel().getSelectedItem().equals("Tanggal")) {
-                group = tgl.format(tglSql.parse(temp.getPembelianBahanHead().getTglPembelian()));
+                group = tgl.format(tglSql.parse(temp.getPembelianBarangHead().getTglPembelian()));
             } else if (groupByCombo.getSelectionModel().getSelectedItem().equals("Bulan")) {
-                group = new SimpleDateFormat("MMM yyyy").format(tglSql.parse(temp.getPembelianBahanHead().getTglPembelian()));
+                group = new SimpleDateFormat("MMM yyyy").format(tglSql.parse(temp.getPembelianBarangHead().getTglPembelian()));
             } else if (groupByCombo.getSelectionModel().getSelectedItem().equals("Tahun")) {
-                group = new SimpleDateFormat("yyyy").format(tglSql.parse(temp.getPembelianBahanHead().getTglPembelian()));
+                group = new SimpleDateFormat("yyyy").format(tglSql.parse(temp.getPembelianBarangHead().getTglPembelian()));
             }
             if (!groupBy.contains(group)) {
                 groupBy.add(group);
             }
         }
         for (String temp : groupBy) {
-            PembelianBahanDetail head = new PembelianBahanDetail();
+            PembelianBarangDetail head = new PembelianBarangDetail();
             head.setNoPembelian(temp);
-            head.setPembelianBahanHead(new PembelianBahanHead());
-            head.getPembelianBahanHead().setSupplier(new Supplier());
-            TreeItem<PembelianBahanDetail> parent = new TreeItem<>(head);
+            head.setPembelianBarangHead(new PembelianBarangHead());
+            head.getPembelianBarangHead().setSupplier(new Supplier());
+            TreeItem<PembelianBarangDetail> parent = new TreeItem<>(head);
             double totalQty = 0;
             double totalHarga = 0;
-            for (PembelianBahanDetail detail : filterData) {
+            for (PembelianBarangDetail detail : filterData) {
                 boolean status = false;
                 if (groupByCombo.getSelectionModel().getSelectedItem().equals("No Pembelian")
                         && temp.equals(detail.getNoPembelian())) {
                     status = true;
                 } else if (groupByCombo.getSelectionModel().getSelectedItem().equals("Tanggal")
-                        && temp.equals(tgl.format(tglSql.parse(detail.getPembelianBahanHead().getTglPembelian())))) {
+                        && temp.equals(tgl.format(tglSql.parse(detail.getPembelianBarangHead().getTglPembelian())))) {
                     status = true;
                 } else if (groupByCombo.getSelectionModel().getSelectedItem().equals("Bulan")
-                        && temp.equals(new SimpleDateFormat("MMM yyyy").format(tglSql.parse(detail.getPembelianBahanHead().getTglPembelian())))) {
+                        && temp.equals(new SimpleDateFormat("MMM yyyy").format(tglSql.parse(detail.getPembelianBarangHead().getTglPembelian())))) {
                     status = true;
                 } else if (groupByCombo.getSelectionModel().getSelectedItem().equals("Tahun")
-                        && temp.equals(new SimpleDateFormat("yyyy").format(tglSql.parse(detail.getPembelianBahanHead().getTglPembelian())))) {
+                        && temp.equals(new SimpleDateFormat("yyyy").format(tglSql.parse(detail.getPembelianBarangHead().getTglPembelian())))) {
                     status = true;
                 } else if (groupByCombo.getSelectionModel().getSelectedItem().equals("Supplier")
-                        && temp.equals(detail.getPembelianBahanHead().getSupplier().getNama())) {
+                        && temp.equals(detail.getPembelianBarangHead().getSupplier().getNama())) {
                     status = true;
                 } else if (groupByCombo.getSelectionModel().getSelectedItem().equals("Gudang")
-                        && temp.equals(detail.getPembelianBahanHead().getKodeGudang())) {
+                        && temp.equals(detail.getPembelianBarangHead().getKodeGudang())) {
                     status = true;
-                } else if (groupByCombo.getSelectionModel().getSelectedItem().equals("Kategori Bahan")
-                        && temp.equals(detail.getKodeKategori())) {
+                } else if (groupByCombo.getSelectionModel().getSelectedItem().equals("Barang")
+                        && temp.equals(detail.getKodeBarang())) {
                     status = true;
                 }
                 if (status) {
@@ -398,33 +400,30 @@ public class LaporanBahanDibeliController {
     }
 
     private void hitungTotal() {
-        double totalBarang = 0;
         double totalQty = 0;
         double totalBeli = 0;
-        for (PembelianBahanDetail temp : filterData) {
-            totalBarang = totalBarang + 1;
+        for (PembelianBarangDetail temp : filterData) {
             totalQty = totalQty + temp.getQty();
             totalBeli = totalBeli + temp.getTotal();
         }
-        totalBarangField.setText(df.format(totalBarang));
         totalQtyField.setText(df.format(totalQty));
         totalPembelianField.setText(df.format(totalBeli));
     }
 
-    private void lihatDetailPembelian(PembelianBahanHead p) {
+    private void lihatDetailPembelian(PembelianBarangHead p) {
         Stage stage = new Stage();
-        FXMLLoader loader = mainApp.showDialog(mainApp.MainStage, stage, "View/Dialog/NewPembelian.fxml");
-        NewPembelianController controller = loader.getController();
+        FXMLLoader loader = mainApp.showDialog(mainApp.MainStage, stage, "View/Dialog/NewPembelianBarang.fxml");
+        NewPembelianBarangController controller = loader.getController();
         controller.setMainApp(mainApp, mainApp.MainStage, stage);
         controller.setDetailPembelian(p.getNoPembelian());
     }
 
-    private void showDetailHutang(PembelianBahanHead p) {
+    private void showDetailHutang(PembelianBarangHead p) {
         Stage stage = new Stage();
         FXMLLoader loader = mainApp.showDialog(mainApp.MainStage, stage, "View/Dialog/DetailHutang.fxml");
         DetailHutangController x = loader.getController();
         x.setMainApp(mainApp, mainApp.MainStage, stage);
-        x.setDetailPembelian(p);
+        x.setDetailPembelianBarang(p);
     }
 
     private void exportExcel() {
@@ -445,7 +444,7 @@ public class LaporanBahanDibeliController {
                 } else {
                     throw new IllegalArgumentException("The specified file is not Excel file");
                 }
-                Sheet sheet = workbook.createSheet("Laporan Bahan Dibeli");
+                Sheet sheet = workbook.createSheet("Laporan Barang Dibeli");
                 int rc = 0;
                 int c = 11;
                 createRow(workbook, sheet, rc, c, "Bold");
@@ -464,9 +463,9 @@ public class LaporanBahanDibeliController {
                 sheet.getRow(rc).getCell(1).setCellValue("Tgl Pembelian");
                 sheet.getRow(rc).getCell(2).setCellValue("Gudang");
                 sheet.getRow(rc).getCell(3).setCellValue("Supplier");
-                sheet.getRow(rc).getCell(4).setCellValue("Kode Kategori");
-                sheet.getRow(rc).getCell(5).setCellValue("Kode Bahan");
-                sheet.getRow(rc).getCell(6).setCellValue("Nama Bahan");
+                sheet.getRow(rc).getCell(4).setCellValue("Kode Barang");
+                sheet.getRow(rc).getCell(5).setCellValue("Nama Bahan");
+                sheet.getRow(rc).getCell(6).setCellValue("Keterangan");
                 sheet.getRow(rc).getCell(7).setCellValue("Qty");
                 sheet.getRow(rc).getCell(8).setCellValue("Nilai");
                 sheet.getRow(rc).getCell(9).setCellValue("Harga Beli");
@@ -474,22 +473,22 @@ public class LaporanBahanDibeliController {
                 rc++;
 
                 List<String> groupBy = new ArrayList<>();
-                for (PembelianBahanDetail temp : filterData) {
+                for (PembelianBarangDetail temp : filterData) {
                     String group = "";
                     if (groupByCombo.getSelectionModel().getSelectedItem().equals("No Pembelian")) {
                         group = temp.getNoPembelian();
                     } else if (groupByCombo.getSelectionModel().getSelectedItem().equals("Gudang")) {
-                        group = temp.getPembelianBahanHead().getKodeGudang();
+                        group = temp.getPembelianBarangHead().getKodeGudang();
                     } else if (groupByCombo.getSelectionModel().getSelectedItem().equals("Supplier")) {
-                        group = temp.getPembelianBahanHead().getSupplier().getNama();
-                    } else if (groupByCombo.getSelectionModel().getSelectedItem().equals("Kategori Bahan")) {
-                        group = temp.getKodeKategori();
+                        group = temp.getPembelianBarangHead().getSupplier().getNama();
+                    } else if (groupByCombo.getSelectionModel().getSelectedItem().equals("Barang")) {
+                        group = temp.getKodeBarang();
                     } else if (groupByCombo.getSelectionModel().getSelectedItem().equals("Tanggal")) {
-                        group = tgl.format(tglSql.parse(temp.getPembelianBahanHead().getTglPembelian()));
+                        group = tgl.format(tglSql.parse(temp.getPembelianBarangHead().getTglPembelian()));
                     } else if (groupByCombo.getSelectionModel().getSelectedItem().equals("Bulan")) {
-                        group = new SimpleDateFormat("MMM yyyy").format(tglSql.parse(temp.getPembelianBahanHead().getTglPembelian()));
+                        group = new SimpleDateFormat("MMM yyyy").format(tglSql.parse(temp.getPembelianBarangHead().getTglPembelian()));
                     } else if (groupByCombo.getSelectionModel().getSelectedItem().equals("Tahun")) {
-                        group = new SimpleDateFormat("yyyy").format(tglSql.parse(temp.getPembelianBahanHead().getTglPembelian()));
+                        group = new SimpleDateFormat("yyyy").format(tglSql.parse(temp.getPembelianBarangHead().getTglPembelian()));
                     }
                     if (!groupBy.contains(group)) {
                         groupBy.add(group);
@@ -504,39 +503,39 @@ public class LaporanBahanDibeliController {
                     rc++;
                     double totalQty = 0;
                     double totalHarga = 0;
-                    for (PembelianBahanDetail detail : filterData) {
+                    for (PembelianBarangDetail detail : filterData) {
                         boolean status = false;
                         if (groupByCombo.getSelectionModel().getSelectedItem().equals("No Pembelian")
                                 && temp.equals(detail.getNoPembelian())) {
                             status = true;
                         } else if (groupByCombo.getSelectionModel().getSelectedItem().equals("Tanggal")
-                                && temp.equals(tgl.format(tglSql.parse(detail.getPembelianBahanHead().getTglPembelian())))) {
+                                && temp.equals(tgl.format(tglSql.parse(detail.getPembelianBarangHead().getTglPembelian())))) {
                             status = true;
                         } else if (groupByCombo.getSelectionModel().getSelectedItem().equals("Bulan")
-                                && temp.equals(new SimpleDateFormat("MMM yyyy").format(tglSql.parse(detail.getPembelianBahanHead().getTglPembelian())))) {
+                                && temp.equals(new SimpleDateFormat("MMM yyyy").format(tglSql.parse(detail.getPembelianBarangHead().getTglPembelian())))) {
                             status = true;
                         } else if (groupByCombo.getSelectionModel().getSelectedItem().equals("Tahun")
-                                && temp.equals(new SimpleDateFormat("yyyy").format(tglSql.parse(detail.getPembelianBahanHead().getTglPembelian())))) {
+                                && temp.equals(new SimpleDateFormat("yyyy").format(tglSql.parse(detail.getPembelianBarangHead().getTglPembelian())))) {
                             status = true;
                         } else if (groupByCombo.getSelectionModel().getSelectedItem().equals("Supplier")
-                                && temp.equals(detail.getPembelianBahanHead().getSupplier().getNama())) {
+                                && temp.equals(detail.getPembelianBarangHead().getSupplier().getNama())) {
                             status = true;
                         } else if (groupByCombo.getSelectionModel().getSelectedItem().equals("Gudang")
-                                && temp.equals(detail.getPembelianBahanHead().getKodeGudang())) {
+                                && temp.equals(detail.getPembelianBarangHead().getKodeGudang())) {
                             status = true;
-                        } else if (groupByCombo.getSelectionModel().getSelectedItem().equals("Kategori Bahan")
-                                && temp.equals(detail.getKodeKategori())) {
+                        } else if (groupByCombo.getSelectionModel().getSelectedItem().equals("Barang")
+                                && temp.equals(detail.getKodeBarang())) {
                             status = true;
                         }
                         if (status) {
                             createRow(workbook, sheet, rc, c, "Detail");
                             sheet.getRow(rc).getCell(0).setCellValue(detail.getNoPembelian());
-                            sheet.getRow(rc).getCell(1).setCellValue(tglLengkap.format(tglSql.parse(detail.getPembelianBahanHead().getTglPembelian())));
-                            sheet.getRow(rc).getCell(2).setCellValue(detail.getPembelianBahanHead().getKodeGudang());
-                            sheet.getRow(rc).getCell(3).setCellValue(detail.getPembelianBahanHead().getSupplier().getNama());
-                            sheet.getRow(rc).getCell(4).setCellValue(detail.getKodeKategori());
-                            sheet.getRow(rc).getCell(5).setCellValue(detail.getKodeBahan());
-                            sheet.getRow(rc).getCell(6).setCellValue(detail.getNamaBahan());
+                            sheet.getRow(rc).getCell(1).setCellValue(tglLengkap.format(tglSql.parse(detail.getPembelianBarangHead().getTglPembelian())));
+                            sheet.getRow(rc).getCell(2).setCellValue(detail.getPembelianBarangHead().getKodeGudang());
+                            sheet.getRow(rc).getCell(3).setCellValue(detail.getPembelianBarangHead().getSupplier().getNama());
+                            sheet.getRow(rc).getCell(4).setCellValue(detail.getKodeBarang());
+                            sheet.getRow(rc).getCell(5).setCellValue(detail.getNamaBarang());
+                            sheet.getRow(rc).getCell(6).setCellValue(detail.getKeterangan());
                             sheet.getRow(rc).getCell(7).setCellValue(detail.getQty());
                             sheet.getRow(rc).getCell(8).setCellValue(detail.getNilai());
                             sheet.getRow(rc).getCell(9).setCellValue(detail.getHargaBeli());

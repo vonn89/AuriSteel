@@ -298,8 +298,10 @@
                               </MenuButton>
                               <MenuButton fx:id="menuLaporanPembelian" layoutX="21.0" layoutY="51.0" mnemonicParsing="false" popupSide="RIGHT" prefHeight="35.0" prefWidth="270.0" text="Laporan Pembelian">
                                  <items>
-                                  <MenuItem mnemonicParsing="false" onAction="#menuLaporanPembelian" text="Laporan Pembelian" />
+                                  <MenuItem mnemonicParsing="false" onAction="#menuLaporanPembelian" text="Laporan Pembelian Bahan" />
                                     <MenuItem mnemonicParsing="false" onAction="#menuLaporanBahanDibeli" text="Laporan Bahan Dibeli" />
+                                    <MenuItem mnemonicParsing="false" onAction="#menuLaporanPembelianBarang" text="Laporan Pembelian Barang" />
+                                    <MenuItem mnemonicParsing="false" onAction="#menuLaporanBarangDibeli" text="Laporan Barang Dibeli" />
                                  </items>
                                  <padding>
                                     <Insets left="50.0" />

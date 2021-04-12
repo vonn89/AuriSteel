@@ -185,10 +185,6 @@ public class LaporanBarangDiproduksiController {
                 });
         filterData.addAll(allProduksi);
         final ContextMenu rm = new ContextMenu();
-        MenuItem print = new MenuItem("Print Laporan");
-        print.setOnAction((ActionEvent event) -> {
-            print();
-        });
         MenuItem export = new MenuItem("Export Excel");
         export.setOnAction((ActionEvent e) -> {
             exportExcel();
@@ -198,9 +194,6 @@ public class LaporanBarangDiproduksiController {
             getProduksi();
         });
         for (Otoritas o : sistem.getUser().getOtoritas()) {
-            if (o.getJenis().equals("Print Laporan") && o.isStatus()) {
-                rm.getItems().addAll(print);
-            }
             if (o.getJenis().equals("Export Excel") && o.isStatus()) {
                 rm.getItems().addAll(export);
             }
@@ -220,10 +213,6 @@ public class LaporanBarangDiproduksiController {
                         detail.setOnAction((ActionEvent e) -> {
                             lihatDetailProduksi(item.getProduksiHead());
                         });
-                        MenuItem print = new MenuItem("Print Laporan");
-                        print.setOnAction((ActionEvent event) -> {
-                            print();
-                        });
                         MenuItem export = new MenuItem("Export Excel");
                         export.setOnAction((ActionEvent e) -> {
                             exportExcel();
@@ -235,9 +224,6 @@ public class LaporanBarangDiproduksiController {
                         for (Otoritas o : sistem.getUser().getOtoritas()) {
                             if (o.getJenis().equals("Detail Produksi") && o.isStatus() && item.getKodeBarang() != null) {
                                 rm.getItems().add(detail);
-                            }
-                            if (o.getJenis().equals("Print Laporan") && o.isStatus()) {
-                                rm.getItems().addAll(print);
                             }
                             if (o.getJenis().equals("Export Excel") && o.isStatus()) {
                                 rm.getItems().addAll(export);
@@ -460,18 +446,6 @@ public class LaporanBarangDiproduksiController {
         NewProduksiBarangController controller = loader.getController();
         controller.setMainApp(mainApp, mainApp.MainStage, stage);
         controller.setDetailProduksi(p.getKodeProduksi(),false);
-    }
-
-    private void print() {
-        try {
-            allProduksi.sort(Comparator.comparing(ProduksiDetailBarang::getKodeBarang));
-            Report report = new Report();
-            report.printLaporanBarangDiproduksi(allProduksi, tglProduksiMulaiPicker.getValue().toString(),
-                    tglProduksiAkhirPicker.getValue().toString(), groupByCombo.getSelectionModel().getSelectedItem());
-        } catch (Exception e) {
-            e.printStackTrace();
-            mainApp.showMessage(Modality.NONE, "Error", e.toString());
-        }
     }
 
     private void exportExcel() {

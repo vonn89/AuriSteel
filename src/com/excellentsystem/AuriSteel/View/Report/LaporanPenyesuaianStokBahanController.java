@@ -5,7 +5,6 @@
  */
 package com.excellentsystem.AuriSteel.View.Report;
 
-
 import com.excellentsystem.AuriSteel.DAO.BahanDAO;
 import com.excellentsystem.AuriSteel.DAO.PenyesuaianStokBahanDAO;
 import com.excellentsystem.AuriSteel.Function;
@@ -63,23 +62,39 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * @author Xtreme
  */
 public class LaporanPenyesuaianStokBahanController {
-    @FXML private TableView<PenyesuaianStokBahan> penyesuaianStokTable;
-    @FXML private TableColumn<PenyesuaianStokBahan, String> noPenyesuaianColumn;
-    @FXML private TableColumn<PenyesuaianStokBahan, String> tglPenyesuaianColumn;
-    @FXML private TableColumn<PenyesuaianStokBahan, String> kodeBahanColumn;
-    @FXML private TableColumn<PenyesuaianStokBahan, String> kodeGudangColumn;
-    @FXML private TableColumn<PenyesuaianStokBahan, String> namaBahanColumn;
-    @FXML private TableColumn<PenyesuaianStokBahan, String> statusColumn;
-    @FXML private TableColumn<PenyesuaianStokBahan, Number> qtyColumn;
-    @FXML private TableColumn<PenyesuaianStokBahan, String> catatanColumn;
-    @FXML private TableColumn<PenyesuaianStokBahan, String> kodeUserColumn;
-    @FXML private TextField searchField;
-    @FXML private Label totalQtyField;
-    @FXML private DatePicker tglMulaiPenyesuaianPicker;
-    @FXML private DatePicker tglAkhirPenyesuaianPicker;
+
+    @FXML
+    private TableView<PenyesuaianStokBahan> penyesuaianStokTable;
+    @FXML
+    private TableColumn<PenyesuaianStokBahan, String> noPenyesuaianColumn;
+    @FXML
+    private TableColumn<PenyesuaianStokBahan, String> tglPenyesuaianColumn;
+    @FXML
+    private TableColumn<PenyesuaianStokBahan, String> kodeBahanColumn;
+    @FXML
+    private TableColumn<PenyesuaianStokBahan, String> kodeGudangColumn;
+    @FXML
+    private TableColumn<PenyesuaianStokBahan, String> namaBahanColumn;
+    @FXML
+    private TableColumn<PenyesuaianStokBahan, String> statusColumn;
+    @FXML
+    private TableColumn<PenyesuaianStokBahan, Number> qtyColumn;
+    @FXML
+    private TableColumn<PenyesuaianStokBahan, String> catatanColumn;
+    @FXML
+    private TableColumn<PenyesuaianStokBahan, String> kodeUserColumn;
+    @FXML
+    private TextField searchField;
+    @FXML
+    private Label totalQtyField;
+    @FXML
+    private DatePicker tglMulaiPenyesuaianPicker;
+    @FXML
+    private DatePicker tglAkhirPenyesuaianPicker;
     private ObservableList<PenyesuaianStokBahan> allPenyesuaianStok = FXCollections.observableArrayList();
     private ObservableList<PenyesuaianStokBahan> filterData = FXCollections.observableArrayList();
     private Main mainApp;
+
     public void initialize() {
         noPenyesuaianColumn.setCellValueFactory(cellData -> cellData.getValue().noPenyesuaianProperty());
         tglPenyesuaianColumn.setCellValueFactory(cellData -> {
@@ -95,21 +110,23 @@ public class LaporanPenyesuaianStokBahanController {
         namaBahanColumn.setCellValueFactory(cellData -> cellData.getValue().getBahan().namaBahanProperty());
         statusColumn.setCellValueFactory(cellData -> {
             double qty = cellData.getValue().getQty();
-            if(qty<0)
+            if (qty < 0) {
                 return new SimpleStringProperty("Pengurangan Stok");
-            else
+            } else {
                 return new SimpleStringProperty("Penambahan Stok");
+            }
         });
         qtyColumn.setCellValueFactory(cellData -> {
             double qty = cellData.getValue().getQty();
-            if(qty<0)
+            if (qty < 0) {
                 qty = qty * -1;
+            }
             return new SimpleDoubleProperty(qty);
         });
         qtyColumn.setCellFactory((c) -> getTableCell());
         catatanColumn.setCellValueFactory(cellData -> cellData.getValue().catatanProperty());
         kodeUserColumn.setCellValueFactory(cellData -> cellData.getValue().kodeUserProperty());
-        
+
         tglMulaiPenyesuaianPicker.setConverter(Function.getTglConverter());
         tglMulaiPenyesuaianPicker.setValue(LocalDate.now().minusMonths(1));
         tglMulaiPenyesuaianPicker.setDayCellFactory((final DatePicker datePicker) -> Function.getDateCellMulai(tglAkhirPenyesuaianPicker));
@@ -125,23 +142,18 @@ public class LaporanPenyesuaianStokBahanController {
         filterData.addAll(allPenyesuaianStok);
         penyesuaianStokTable.setItems(filterData);
         final ContextMenu rm = new ContextMenu();
-        MenuItem print = new MenuItem("Print Laporan");
-        print.setOnAction((ActionEvent e)->{
-            print();
-        });
         MenuItem export = new MenuItem("Export Excel");
-        export.setOnAction((ActionEvent e)->{
+        export.setOnAction((ActionEvent e) -> {
             exportExcel();
         });
         MenuItem refresh = new MenuItem("Refresh");
         refresh.setOnAction((ActionEvent event) -> {
             getPenyesuaianStok();
         });
-        for(Otoritas o : sistem.getUser().getOtoritas()){
-//            if(o.getJenis().equals("Print Laporan")&&o.isStatus())
-//                rm.getItems().addAll(print);
-            if(o.getJenis().equals("Export Excel")&&o.isStatus())
+        for (Otoritas o : sistem.getUser().getOtoritas()) {
+            if (o.getJenis().equals("Export Excel") && o.isStatus()) {
                 rm.getItems().addAll(export);
+            }
         }
         rm.getItems().addAll(refresh);
         penyesuaianStokTable.setContextMenu(rm);
@@ -152,18 +164,14 @@ public class LaporanPenyesuaianStokBahanController {
                     super.updateItem(item, empty);
                     if (empty) {
                         setContextMenu(rm);
-                    } else{
+                    } else {
                         ContextMenu rm = new ContextMenu();
-                        MenuItem lihat = new MenuItem("Lihat Detail Penyesuaian Stok");
+                        MenuItem lihat = new MenuItem("Detail Penyesuaian Stok");
                         lihat.setOnAction((ActionEvent event) -> {
                             showDetailPenyesuaianStok(item);
                         });
-                        MenuItem print = new MenuItem("Print Laporan");
-                        print.setOnAction((ActionEvent e)->{
-                            print();
-                        });
                         MenuItem export = new MenuItem("Export Excel");
-                        export.setOnAction((ActionEvent e)->{
+                        export.setOnAction((ActionEvent e) -> {
                             exportExcel();
                         });
                         MenuItem refresh = new MenuItem("Refresh");
@@ -171,11 +179,10 @@ public class LaporanPenyesuaianStokBahanController {
                             getPenyesuaianStok();
                         });
                         rm.getItems().addAll(lihat);
-                        for(Otoritas o : sistem.getUser().getOtoritas()){
-//                            if(o.getJenis().equals("Print Laporan")&&o.isStatus())
-//                                rm.getItems().addAll(print);
-                            if(o.getJenis().equals("Export Excel")&&o.isStatus())
+                        for (Otoritas o : sistem.getUser().getOtoritas()) {
+                            if (o.getJenis().equals("Export Excel") && o.isStatus()) {
                                 rm.getItems().addAll(export);
+                            }
                         }
                         rm.getItems().addAll(refresh);
                         setContextMenu(rm);
@@ -183,31 +190,35 @@ public class LaporanPenyesuaianStokBahanController {
                 }
             };
             row.setOnMouseClicked((MouseEvent mouseEvent) -> {
-                if(mouseEvent.getButton().equals(MouseButton.PRIMARY)&&mouseEvent.getClickCount() == 2){
-                    if(row.getItem()!=null)
+                if (mouseEvent.getButton().equals(MouseButton.PRIMARY) && mouseEvent.getClickCount() == 2) {
+                    if (row.getItem() != null) {
                         showDetailPenyesuaianStok(row.getItem());
+                    }
                 }
             });
             return row;
         });
     }
+
     public void setMainApp(Main mainApp) {
         this.mainApp = mainApp;
         getPenyesuaianStok();
     }
+
     @FXML
     private void getPenyesuaianStok() {
         Task<List<PenyesuaianStokBahan>> task = new Task<List<PenyesuaianStokBahan>>() {
-            @Override 
-            public List<PenyesuaianStokBahan> call()throws Exception{ 
-                try(Connection con = Koneksi.getConnection()){
-                    List<Bahan> listBahan = BahanDAO.getAllByStatus(con,"%");
+            @Override
+            public List<PenyesuaianStokBahan> call() throws Exception {
+                try (Connection con = Koneksi.getConnection()) {
+                    List<Bahan> listBahan = BahanDAO.getAllByStatus(con, "%");
                     List<PenyesuaianStokBahan> listHead = PenyesuaianStokBahanDAO.getAllByDateAndBahanAndGudang(con,
-                            tglMulaiPenyesuaianPicker.getValue().toString(), tglAkhirPenyesuaianPicker.getValue().toString(),"%", "%");
+                            tglMulaiPenyesuaianPicker.getValue().toString(), tglAkhirPenyesuaianPicker.getValue().toString(), "%", "%");
                     for (PenyesuaianStokBahan d : listHead) {
-                        for(Bahan b : listBahan){
-                            if(d.getKodeBahan().equals(b.getKodeBahan()))
+                        for (Bahan b : listBahan) {
+                            if (d.getKodeBahan().equals(b.getKodeBahan())) {
                                 d.setBahan(b);
+                            }
                         }
                     }
                     return listHead;
@@ -229,6 +240,7 @@ public class LaporanPenyesuaianStokBahanController {
         });
         new Thread(task).start();
     }
+
     private Boolean checkColumn(String column) {
         if (column != null) {
             if (column.toLowerCase().contains(searchField.getText().toLowerCase())) {
@@ -237,6 +249,7 @@ public class LaporanPenyesuaianStokBahanController {
         }
         return false;
     }
+
     private void searchPenyesuaianStok() {
         try {
             filterData.clear();
@@ -263,13 +276,15 @@ public class LaporanPenyesuaianStokBahanController {
             mainApp.showMessage(Modality.NONE, "Error", e.toString());
         }
     }
-    private void showDetailPenyesuaianStok(PenyesuaianStokBahan p ){
+
+    private void showDetailPenyesuaianStok(PenyesuaianStokBahan p) {
         Stage child = new Stage();
-        FXMLLoader loader = mainApp.showDialog(mainApp.MainStage, child ,"View/Dialog/Child/PenyesuaianStok.fxml");
+        FXMLLoader loader = mainApp.showDialog(mainApp.MainStage, child, "View/Dialog/Child/PenyesuaianStok.fxml");
         PenyesuaianStokController controller = loader.getController();
         controller.setMainApp(mainApp, mainApp.MainStage, child);
         controller.setPenyesuaianStokBahan(p.getNoPenyesuaian());
     }
+
     private void hitungTotal() {
         double totalQty = 0;
         for (PenyesuaianStokBahan temp : filterData) {
@@ -277,15 +292,9 @@ public class LaporanPenyesuaianStokBahanController {
         }
         totalQtyField.setText(df.format(totalQty));
     }
-    private void print(){
-        try{
-        }catch(Exception e){
-            e.printStackTrace();
-            mainApp.showMessage(Modality.NONE, "Error", e.toString());
-        }
-    }
+
     private void exportExcel() {
-        try{
+        try {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Select location to export");
             fileChooser.getExtensionFilters().addAll(
@@ -307,21 +316,21 @@ public class LaporanPenyesuaianStokBahanController {
                 int c = 8;
                 createRow(workbook, sheet, rc, c, "Bold");
                 sheet.getRow(rc).getCell(0).setCellValue("Tgl Penyesuaian Stok : "
-                        +tgl.format(tglBarang.parse(tglMulaiPenyesuaianPicker.getValue().toString()))+" - "
-                        +tgl.format(tglBarang.parse(tglAkhirPenyesuaianPicker.getValue().toString())));
+                        + tgl.format(tglBarang.parse(tglMulaiPenyesuaianPicker.getValue().toString())) + " - "
+                        + tgl.format(tglBarang.parse(tglAkhirPenyesuaianPicker.getValue().toString())));
                 rc++;
                 createRow(workbook, sheet, rc, c, "Bold");
-                sheet.getRow(rc).getCell(0).setCellValue("Filter : "+searchField.getText());
+                sheet.getRow(rc).getCell(0).setCellValue("Filter : " + searchField.getText());
                 rc++;
                 createRow(workbook, sheet, rc, c, "Header");
-                sheet.getRow(rc).getCell(0).setCellValue("No Penyesuaian"); 
-                sheet.getRow(rc).getCell(1).setCellValue("Tgl Penyesuaian"); 
-                sheet.getRow(rc).getCell(2).setCellValue("Kode Bahan"); 
-                sheet.getRow(rc).getCell(3).setCellValue("Nama Bahan"); 
-                sheet.getRow(rc).getCell(4).setCellValue("Status"); 
-                sheet.getRow(rc).getCell(5).setCellValue("Qty"); 
-                sheet.getRow(rc).getCell(6).setCellValue("Catatan"); 
-                sheet.getRow(rc).getCell(7).setCellValue("Kode User"); 
+                sheet.getRow(rc).getCell(0).setCellValue("No Penyesuaian");
+                sheet.getRow(rc).getCell(1).setCellValue("Tgl Penyesuaian");
+                sheet.getRow(rc).getCell(2).setCellValue("Kode Bahan");
+                sheet.getRow(rc).getCell(3).setCellValue("Nama Bahan");
+                sheet.getRow(rc).getCell(4).setCellValue("Status");
+                sheet.getRow(rc).getCell(5).setCellValue("Qty");
+                sheet.getRow(rc).getCell(6).setCellValue("Catatan");
+                sheet.getRow(rc).getCell(7).setCellValue("Kode User");
                 rc++;
                 double totalPenambahan = 0;
                 double totalPengurangan = 0;
@@ -331,11 +340,11 @@ public class LaporanPenyesuaianStokBahanController {
                     sheet.getRow(rc).getCell(1).setCellValue(s.getTglPenyesuaian());
                     sheet.getRow(rc).getCell(2).setCellValue(s.getKodeBahan());
                     sheet.getRow(rc).getCell(3).setCellValue(s.getBahan().getNamaBahan());
-                    if(s.getQty()<0){
+                    if (s.getQty() < 0) {
                         sheet.getRow(rc).getCell(4).setCellValue("Pengurangan Stok");
-                        sheet.getRow(rc).getCell(5).setCellValue(s.getQty()*-1);
-                        totalPengurangan = totalPengurangan + (s.getQty()*-1);
-                    }else{
+                        sheet.getRow(rc).getCell(5).setCellValue(s.getQty() * -1);
+                        totalPengurangan = totalPengurangan + (s.getQty() * -1);
+                    } else {
                         sheet.getRow(rc).getCell(4).setCellValue("Penambahan Stok");
                         sheet.getRow(rc).getCell(5).setCellValue(s.getQty());
                         totalPenambahan = totalPenambahan + s.getQty();
@@ -352,17 +361,19 @@ public class LaporanPenyesuaianStokBahanController {
                 sheet.getRow(rc).getCell(1).setCellValue("Total Pengurangan Stok");
                 sheet.getRow(rc).getCell(5).setCellValue(totalPengurangan);
                 rc++;
-                
-                for(int i=0 ; i<c ; i++){ sheet.autoSizeColumn(i);}
+
+                for (int i = 0; i < c; i++) {
+                    sheet.autoSizeColumn(i);
+                }
                 try (FileOutputStream outputStream = new FileOutputStream(file)) {
                     workbook.write(outputStream);
                 }
 
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             mainApp.showMessage(Modality.NONE, "Error", e.toString());
             e.printStackTrace();
         }
     }
-    
+
 }

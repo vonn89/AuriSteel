@@ -194,10 +194,6 @@ public class LaporanBarangDipesanController {
                 });
         filterData.addAll(allPemesanan);
         final ContextMenu rm = new ContextMenu();
-        MenuItem print = new MenuItem("Print Laporan");
-        print.setOnAction((ActionEvent event) -> {
-            print();
-        });
         MenuItem export = new MenuItem("Export Excel");
         export.setOnAction((ActionEvent e) -> {
             exportExcel();
@@ -207,9 +203,6 @@ public class LaporanBarangDipesanController {
             getPemesanan();
         });
         for (Otoritas o : sistem.getUser().getOtoritas()) {
-            if (o.getJenis().equals("Print Laporan") && o.isStatus()) {
-                rm.getItems().addAll(print);
-            }
             if (o.getJenis().equals("Export Excel") && o.isStatus()) {
                 rm.getItems().addAll(export);
             }
@@ -229,10 +222,6 @@ public class LaporanBarangDipesanController {
                         detail.setOnAction((ActionEvent e) -> {
                             lihatDetailPemesanan(item.getPemesananBarangHead());
                         });
-                        MenuItem print = new MenuItem("Print Laporan");
-                        print.setOnAction((ActionEvent event) -> {
-                            print();
-                        });
                         MenuItem export = new MenuItem("Export Excel");
                         export.setOnAction((ActionEvent e) -> {
                             exportExcel();
@@ -245,9 +234,6 @@ public class LaporanBarangDipesanController {
                             if (o.getJenis().equals("Detail Pemesanan") && o.isStatus()
                                     && item.getPemesananBarangHead().getStatus() != null) {
                                 rm.getItems().add(detail);
-                            }
-                            if (o.getJenis().equals("Print Laporan") && o.isStatus()) {
-                                rm.getItems().addAll(print);
                             }
                             if (o.getJenis().equals("Export Excel") && o.isStatus()) {
                                 rm.getItems().addAll(export);
@@ -483,18 +469,6 @@ public class LaporanBarangDipesanController {
         NewPemesananController controller = loader.getController();
         controller.setMainApp(mainApp, mainApp.MainStage, stage);
         controller.setDetailPemesanan(p.getNoPemesanan());
-    }
-
-
-    private void print() {
-//        try {
-//            Report report = new Report();
-//            report.printLaporanBarangTerjual(allPemesanan, tglPemesananMulaiPicker.getValue().toString(),
-//                    tglPemesananAkhirPicker.getValue().toString(), groupByCombo.getSelectionModel().getSelectedItem());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            mainApp.showMessage(Modality.NONE, "Error", e.toString());
-//        }
     }
 
     private void exportExcel() {

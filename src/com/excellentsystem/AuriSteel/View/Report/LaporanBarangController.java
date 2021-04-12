@@ -125,10 +125,6 @@ public class LaporanBarangController {
         barcode.setOnAction((ActionEvent e) -> {
             cetakBarcode(null);
         });
-        MenuItem print = new MenuItem("Print Laporan");
-        print.setOnAction((ActionEvent e) -> {
-            print();
-        });
         MenuItem export = new MenuItem("Export Excel");
         export.setOnAction((ActionEvent e) -> {
             exportExcel();
@@ -140,9 +136,6 @@ public class LaporanBarangController {
         for (Otoritas o : sistem.getUser().getOtoritas()) {
             if (o.getJenis().equals("Cetak Barcode") && o.isStatus()) {
                 rm.getItems().add(barcode);
-            }
-            if (o.getJenis().equals("Print Laporan") && o.isStatus()) {
-                rm.getItems().addAll(print);
             }
             if (o.getJenis().equals("Export Excel") && o.isStatus()) {
                 rm.getItems().addAll(export);
@@ -175,10 +168,6 @@ public class LaporanBarangController {
                         penyesuaian.setOnAction((ActionEvent e) -> {
                             showPenyesuaianStok(item);
                         });
-                        MenuItem print = new MenuItem("Print Laporan");
-                        print.setOnAction((ActionEvent e) -> {
-                            print();
-                        });
                         MenuItem export = new MenuItem("Export Excel");
                         export.setOnAction((ActionEvent e) -> {
                             exportExcel();
@@ -194,9 +183,6 @@ public class LaporanBarangController {
                             }
                             if (o.getJenis().equals("Penyesuaian Stok Barang") && o.isStatus()) {
                                 rm.getItems().addAll(penyesuaian);
-                            }
-                            if (o.getJenis().equals("Print Laporan") && o.isStatus()) {
-                                rm.getItems().addAll(print);
                             }
                             if (o.getJenis().equals("Export Excel") && o.isStatus()) {
                                 rm.getItems().addAll(export);
@@ -437,20 +423,6 @@ public class LaporanBarangController {
             CetakLabelController x = loader.getController();
             x.setMainApp(mainApp, mainApp.MainStage, stage);
             x.setBarang(b.getKodeBarang());
-        }
-    }
-
-    private void print() {
-        try {
-            List<StokBarang> listStokBarang = new ArrayList<>();
-            for (StokBarang d : allBarang) {
-                listStokBarang.add(d);
-            }
-            Report report = new Report();
-            report.printLaporanBarang(listStokBarang);
-        } catch (Exception e) {
-            e.printStackTrace();
-            mainApp.showMessage(Modality.NONE, "Error", e.toString());
         }
     }
 

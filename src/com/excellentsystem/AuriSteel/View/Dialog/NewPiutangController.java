@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.excellentsystem.AuriSteel.View.Dialog;
 
 import com.excellentsystem.AuriSteel.Function;
@@ -27,24 +26,31 @@ import javafx.stage.Stage;
  *
  * @author Xtreme
  */
-public class NewPiutangController  {
- 
-    @FXML public ComboBox<String> kategoriCombo;
-    @FXML public TextField keteranganField;
-    @FXML public TextField jumlahRpField;
-    @FXML public ComboBox<String> tipeKeuanganCombo;
-    @FXML public Button saveButton;
-    @FXML public DatePicker jatuhTempoField;
-    private Main mainApp; 
+public class NewPiutangController {
+
+    @FXML
+    public ComboBox<String> kategoriCombo;
+    @FXML
+    public TextField keteranganField;
+    @FXML
+    public TextField jumlahRpField;
+    @FXML
+    public ComboBox<String> tipeKeuanganCombo;
+    @FXML
+    public Button saveButton;
+    @FXML
+    public DatePicker jatuhTempoField;
+    private Main mainApp;
     private Stage stage;
     private Stage owner;
-    
-    public void initialize(){
+
+    public void initialize() {
         Function.setNumberField(jumlahRpField);
         jatuhTempoField.setConverter(Function.getTglConverter());
         jatuhTempoField.setDayCellFactory((final DatePicker datePicker) -> Function.getDateCellDisableBefore(LocalDate.now()));
     }
-    public void setMainApp(Main mainApp,Stage owner, Stage stage) {
+
+    public void setMainApp(Main mainApp, Stage owner, Stage stage) {
         this.mainApp = mainApp;
         this.owner = owner;
         this.stage = stage;
@@ -52,19 +58,20 @@ public class NewPiutangController  {
             mainApp.closeDialog(owner, stage);
         });
         ObservableList<String> listKeuangan = FXCollections.observableArrayList();
-        for(KategoriKeuangan kk : sistem.getListKategoriKeuangan()){
+        for (KategoriKeuangan kk : sistem.getListKategoriKeuangan()) {
             listKeuangan.add(kk.getKodeKeuangan());
         }
         tipeKeuanganCombo.setItems(listKeuangan);
-        
+
         ObservableList<String> allKategori = FXCollections.observableArrayList();
         List<KategoriPiutang> listKategoriPiutang = sistem.getListKategoriPiutang();
-        for(KategoriPiutang k : listKategoriPiutang){
+        for (KategoriPiutang k : listKategoriPiutang) {
             allKategori.add(k.getKodeKategori());
         }
         kategoriCombo.setItems(allKategori);
-    }   
-    public void close(){
+    }
+
+    public void close() {
         mainApp.closeDialog(owner, stage);
-    }  
+    }
 }

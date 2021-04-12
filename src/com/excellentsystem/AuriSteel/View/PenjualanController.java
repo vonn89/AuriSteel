@@ -644,7 +644,7 @@ public class PenjualanController {
                 }
                 Sheet sheet = workbook.createSheet("Data Penjualan");
                 int rc = 0;
-                int c = 9;
+                int c = 10;
                 createRow(workbook, sheet, rc, c, "Bold");
                 sheet.getRow(rc).getCell(0).setCellValue("Tanggal : "
                         + tgl.format(tglBarang.parse(tglMulaiPicker.getValue().toString())) + "-"
@@ -662,10 +662,11 @@ public class PenjualanController {
                 sheet.getRow(rc).getCell(2).setCellValue("Tgl Penjualan");
                 sheet.getRow(rc).getCell(3).setCellValue("Gudang");
                 sheet.getRow(rc).getCell(4).setCellValue("Customer");
-                sheet.getRow(rc).getCell(5).setCellValue("Sales");
-                sheet.getRow(rc).getCell(6).setCellValue("Total Penjualan");
-                sheet.getRow(rc).getCell(7).setCellValue("Pembayaran");
-                sheet.getRow(rc).getCell(8).setCellValue("Sisa Pembayaran");
+                sheet.getRow(rc).getCell(5).setCellValue("Customer Invoice");
+                sheet.getRow(rc).getCell(6).setCellValue("Sales");
+                sheet.getRow(rc).getCell(7).setCellValue("Total Penjualan");
+                sheet.getRow(rc).getCell(8).setCellValue("Pembayaran");
+                sheet.getRow(rc).getCell(9).setCellValue("Sisa Pembayaran");
                 rc++;
                 double penjualan = 0;
                 double pembayaran = 0;
@@ -677,10 +678,11 @@ public class PenjualanController {
                     sheet.getRow(rc).getCell(2).setCellValue(tglLengkap.format(tglSql.parse(b.getTglPenjualan())));
                     sheet.getRow(rc).getCell(3).setCellValue(b.getKodeGudang());
                     sheet.getRow(rc).getCell(4).setCellValue(b.getCustomer().getNama());
-                    sheet.getRow(rc).getCell(5).setCellValue(b.getSales().getNama());
-                    sheet.getRow(rc).getCell(6).setCellValue(b.getTotalPenjualan());
-                    sheet.getRow(rc).getCell(7).setCellValue(b.getPembayaran());
-                    sheet.getRow(rc).getCell(8).setCellValue(b.getSisaPembayaran());
+                    sheet.getRow(rc).getCell(5).setCellValue(b.getCustomerInvoice().getNama());
+                    sheet.getRow(rc).getCell(6).setCellValue(b.getSales().getNama());
+                    sheet.getRow(rc).getCell(7).setCellValue(b.getTotalPenjualan());
+                    sheet.getRow(rc).getCell(8).setCellValue(b.getPembayaran());
+                    sheet.getRow(rc).getCell(9).setCellValue(b.getSisaPembayaran());
                     rc++;
                     penjualan = penjualan + b.getTotalPenjualan();
                     pembayaran = pembayaran + b.getPembayaran();
@@ -688,9 +690,9 @@ public class PenjualanController {
                 }
                 createRow(workbook, sheet, rc, c, "Header");
                 sheet.getRow(rc).getCell(0).setCellValue("Total :");
-                sheet.getRow(rc).getCell(6).setCellValue(penjualan);
-                sheet.getRow(rc).getCell(7).setCellValue(pembayaran);
-                sheet.getRow(rc).getCell(8).setCellValue(sisaPembayaran);
+                sheet.getRow(rc).getCell(7).setCellValue(penjualan);
+                sheet.getRow(rc).getCell(8).setCellValue(pembayaran);
+                sheet.getRow(rc).getCell(9).setCellValue(sisaPembayaran);
                 for (int i = 0; i < c; i++) {
                     sheet.autoSizeColumn(i);
                 }

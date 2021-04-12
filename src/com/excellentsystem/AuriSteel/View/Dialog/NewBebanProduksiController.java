@@ -46,26 +46,38 @@ import javafx.stage.Stage;
  *
  * @author ASUS
  */
-public class NewBebanProduksiController  {
+public class NewBebanProduksiController {
 
-    @FXML private TextField noBebanProduksiField;
-    @FXML private TextField tglBebanProduksiField;
-    @FXML private TextArea produksiField;
-    @FXML public TextField keteranganField;
-    @FXML public TextField jumlahRpField;
-    @FXML public ComboBox<String> tipeKeuanganCombo;
-    
-    @FXML private Button addProduksiButton;
-    @FXML private Button resetProduksiButton;
-    @FXML public Button saveButton;
-    @FXML private Button cancelButton;
-    @FXML private GridPane gridPane;
-    
+    @FXML
+    private TextField noBebanProduksiField;
+    @FXML
+    private TextField tglBebanProduksiField;
+    @FXML
+    private TextArea produksiField;
+    @FXML
+    public TextField keteranganField;
+    @FXML
+    public TextField jumlahRpField;
+    @FXML
+    public ComboBox<String> tipeKeuanganCombo;
+
+    @FXML
+    private Button addProduksiButton;
+    @FXML
+    private Button resetProduksiButton;
+    @FXML
+    public Button saveButton;
+    @FXML
+    private Button cancelButton;
+    @FXML
+    private GridPane gridPane;
+
     public List<BebanProduksiDetail> listDetail = new ArrayList<>();
-    private Main mainApp;   
+    private Main mainApp;
     private Stage stage;
     private Stage owner;
-    public void setMainApp(Main mainApp,Stage owner,Stage stage) {
+
+    public void setMainApp(Main mainApp, Stage owner, Stage stage) {
         this.mainApp = mainApp;
         this.stage = stage;
         this.owner = owner;
@@ -73,20 +85,22 @@ public class NewBebanProduksiController  {
         stage.setOnCloseRequest((event) -> {
             mainApp.closeDialog(owner, stage);
         });
-    }  
-    public void setNewBebanProduksi(){
+    }
+
+    public void setNewBebanProduksi() {
         noBebanProduksiField.setText("");
         tglBebanProduksiField.setText("");
         ObservableList<String> listKeuangan = FXCollections.observableArrayList();
-        for(KategoriKeuangan kk : sistem.getListKategoriKeuangan()){
+        for (KategoriKeuangan kk : sistem.getListKategoriKeuangan()) {
             listKeuangan.add(kk.getKodeKeuangan());
         }
         tipeKeuanganCombo.setItems(listKeuangan);
     }
-    public void setDetailBebanProduksi(String noBeban){
+
+    public void setDetailBebanProduksi(String noBeban) {
         Task<BebanProduksiHead> task = new Task<BebanProduksiHead>() {
-            @Override 
-            public BebanProduksiHead call()throws Exception {
+            @Override
+            public BebanProduksiHead call() throws Exception {
                 try (Connection con = Koneksi.getConnection()) {
                     BebanProduksiHead b = BebanProduksiHeadDAO.get(con, noBeban);
                     b.setListBebanProduksiDetail(BebanProduksiDetailDAO.getAllByNoBeban(con, noBeban));
@@ -113,10 +127,11 @@ public class NewBebanProduksiController  {
                 noBebanProduksiField.setText(b.getNoBebanProduksi());
                 tglBebanProduksiField.setText(tglLengkap.format(tglSql.parse(b.getTglBebanProduksi())));
                 String produksi = "";
-                for(BebanProduksiDetail d : b.getListBebanProduksiDetail()){
+                for (BebanProduksiDetail d : b.getListBebanProduksiDetail()) {
                     produksi = produksi + d.getNoProduksi();
-                    if(b.getListBebanProduksiDetail().indexOf(d) < b.getListBebanProduksiDetail().size()-1)
+                    if (b.getListBebanProduksiDetail().indexOf(d) < b.getListBebanProduksiDetail().size() - 1) {
                         produksi = produksi + "\n";
+                    }
                 }
                 produksiField.setText(produksi);
                 keteranganField.setText(b.getKeterangan());
@@ -132,27 +147,28 @@ public class NewBebanProduksiController  {
         });
         new Thread(task).start();
     }
+
     @FXML
-    private void addProduksi(){
+    private void addProduksi() {
         Stage child = new Stage();
         FXMLLoader loader = mainApp.showDialog(stage, child, "View/Dialog/AddProduksi.fxml");
         AddProduksiController x = loader.getController();
         x.setMainApp(mainApp, stage, child);
         x.produksiHeadTable.setRowFactory(table -> {
-            final TableRow<ProduksiHead> row = new TableRow<ProduksiHead>(){
+            final TableRow<ProduksiHead> row = new TableRow<ProduksiHead>() {
                 @Override
                 public void updateItem(ProduksiHead item, boolean empty) {
                     super.updateItem(item, empty);
                     if (empty) {
                         setContextMenu(null);
-                    } else{
+                    } else {
                         final ContextMenu rm = new ContextMenu();
                         MenuItem detailProduksi = new MenuItem("Detail Produksi");
-                        detailProduksi.setOnAction((ActionEvent e)->{
+                        detailProduksi.setOnAction((ActionEvent e) -> {
                             detailProduksi(item, child);
                         });
                         MenuItem detailBebanProduksi = new MenuItem("Detail Beban Produksi");
-                        detailBebanProduksi.setOnAction((ActionEvent e)->{
+                        detailBebanProduksi.setOnAction((ActionEvent e) -> {
                             detailBebanProduksi(item, child);
                         });
                         rm.getItems().addAll(detailProduksi, detailBebanProduksi);
@@ -161,27 +177,28 @@ public class NewBebanProduksiController  {
                 }
             };
             row.setOnMouseClicked((MouseEvent mouseEvent) -> {
-                if(mouseEvent.getButton().equals(MouseButton.PRIMARY)&&
-                        mouseEvent.getClickCount() == 2){
-                    if(row.getItem()!=null){
-                        try{
+                if (mouseEvent.getButton().equals(MouseButton.PRIMARY)
+                        && mouseEvent.getClickCount() == 2) {
+                    if (row.getItem() != null) {
+                        try {
                             mainApp.closeDialog(stage, child);
                             ProduksiHead p = row.getItem();
                             boolean status = true;
-                            for(BebanProduksiDetail d : listDetail){
-                                if(d.getNoProduksi().equals(p.getKodeProduksi()))
+                            for (BebanProduksiDetail d : listDetail) {
+                                if (d.getNoProduksi().equals(p.getKodeProduksi())) {
                                     status = false;
+                                }
                             }
-                            if(status){
+                            if (status) {
                                 BebanProduksiDetail d = new BebanProduksiDetail();
                                 d.setNoProduksi(p.getKodeProduksi());
                                 d.setProduksiHead(p);
                                 listDetail.add(d);
-                                produksiField.appendText(p.getKodeProduksi()+"\n");
-                            }else{
+                                produksiField.appendText(p.getKodeProduksi() + "\n");
+                            } else {
                                 mainApp.showMessage(Modality.NONE, "Warning", "Produksi sudah diinput");
                             }
-                        }catch(Exception e){
+                        } catch (Exception e) {
                             mainApp.showMessage(Modality.NONE, "Error", e.toString());
                         }
                     }
@@ -190,26 +207,30 @@ public class NewBebanProduksiController  {
             return row;
         });
     }
+
     @FXML
-    private void resetProduksi(){
+    private void resetProduksi() {
         produksiField.setText("");
         listDetail.clear();
     }
-    private void detailProduksi(ProduksiHead p, Stage owner){
+
+    private void detailProduksi(ProduksiHead p, Stage owner) {
         Stage child = new Stage();
         FXMLLoader loader = mainApp.showDialog(owner, child, "View/Dialog/NewProduksiBarang.fxml");
         NewProduksiBarangController controller = loader.getController();
         controller.setMainApp(mainApp, owner, child);
-        controller.setDetailProduksi(p.getKodeProduksi(),false);
+        controller.setDetailProduksi(p.getKodeProduksi(), false);
     }
-    private void detailBebanProduksi(ProduksiHead p, Stage owner){
+
+    private void detailBebanProduksi(ProduksiHead p, Stage owner) {
         Stage child = new Stage();
         FXMLLoader loader = mainApp.showDialog(owner, child, "View/Dialog/DetailBebanProduksi.fxml");
         DetailBebanProduksiController controller = loader.getController();
         controller.setMainApp(mainApp, owner, child);
         controller.setDetailBebanProduksi(p.getKodeProduksi());
     }
-    public void close(){
+
+    public void close() {
         mainApp.closeDialog(owner, stage);
-    }  
+    }
 }
