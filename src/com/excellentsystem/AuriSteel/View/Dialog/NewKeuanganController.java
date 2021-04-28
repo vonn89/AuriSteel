@@ -78,7 +78,7 @@ public class NewKeuanganController {
         saveButton.setVisible(false);
         cancelButton.setVisible(false);
         kategoriCombo.setDisable(true);
-        keteranganField.setDisable(true);
+        keteranganField.setEditable(false);
         jumlahRpField.setDisable(true);
         tipeKeuanganCombo.setDisable(true);
 

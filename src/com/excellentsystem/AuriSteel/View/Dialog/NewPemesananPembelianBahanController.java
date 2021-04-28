@@ -255,7 +255,7 @@ public class NewPemesananPembelianBahanController {
                 paymentTermCombo.setDisable(true);
                 deliveryTermCombo.setDisable(true);
                 noKontrakField.setDisable(true);
-                catatanField.setDisable(true);
+                catatanField.setEditable(false);
                 saveButton.setVisible(false);
                 cancelButton.setVisible(false);
                 AnchorPane.setBottomAnchor(gridPane, 0.0);

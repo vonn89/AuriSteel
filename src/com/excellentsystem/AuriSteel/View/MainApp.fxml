@@ -276,6 +276,8 @@
                                   <MenuItem mnemonicParsing="false" onAction="#menuLaporanBarang" text="Laporan Barang" />
                                     <MenuItem mnemonicParsing="false" onAction="#menuLaporanProduksiBarang" text="Laporan Produksi Barang" />
                                     <MenuItem mnemonicParsing="false" onAction="#menuLaporanBarangDiproduksi" text="Laporan Barang Diproduksi" />
+                                    <MenuItem mnemonicParsing="false" onAction="#menuLaporanPengirimanBarang" text="Laporan Pengiriman Barang" />
+                                    <MenuItem mnemonicParsing="false" onAction="#menuLaporanBarangDikirim" text="Laporan Barang Dikirim" />
                                     <MenuItem mnemonicParsing="false" onAction="#menuLaporanPenyesuaianStokBahan" text="Laporan Penyesuaian Stok Bahan" />
                                     <MenuItem mnemonicParsing="false" onAction="#menuLaporanPenyesuaianStokBarang" text="Laporan Penyesuaian Stok Barang" />
                                  </items>

@@ -265,7 +265,7 @@ public class NewPembelianController {
             try {
                 mainApp.closeLoading();
                 addPemesananButton.setVisible(false);
-                catatanField.setDisable(true);
+                catatanField.setEditable(false);
                 gudangCombo.setDisable(true);
                 saveButton.setVisible(false);
                 cancelButton.setVisible(false);

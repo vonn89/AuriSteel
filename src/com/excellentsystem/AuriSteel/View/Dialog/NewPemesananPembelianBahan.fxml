@@ -116,7 +116,7 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
                   </TableView>
-                  <HBox alignment="TOP_RIGHT" minHeight="25.0" prefHeight="25.0" prefWidth="200.0" spacing="10.0" style="-fx-background-color: seccolor6;">
+                  <HBox alignment="CENTER_RIGHT" minHeight="25.0" prefHeight="25.0" prefWidth="200.0" spacing="10.0" style="-fx-background-color: seccolor6;">
                      <children>
                         <Label text="Total Qty" />
                         <Label fx:id="totalQtyField" alignment="CENTER" style="-fx-font-weight: bold;" text="0" />

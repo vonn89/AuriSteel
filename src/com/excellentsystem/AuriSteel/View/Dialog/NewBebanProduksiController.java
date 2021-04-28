@@ -5,6 +5,7 @@
  */
 package com.excellentsystem.AuriSteel.View.Dialog;
 
+import com.excellentsystem.AuriSteel.View.Dialog.NewProduksiBarangController;
 import com.excellentsystem.AuriSteel.DAO.BebanProduksiDetailDAO;
 import com.excellentsystem.AuriSteel.DAO.BebanProduksiHeadDAO;
 import com.excellentsystem.AuriSteel.Function;
@@ -55,7 +56,7 @@ public class NewBebanProduksiController {
     @FXML
     private TextArea produksiField;
     @FXML
-    public TextField keteranganField;
+    public TextArea keteranganField;
     @FXML
     public TextField jumlahRpField;
     @FXML
@@ -120,7 +121,7 @@ public class NewBebanProduksiController {
                 resetProduksiButton.setVisible(false);
                 saveButton.setVisible(false);
                 cancelButton.setVisible(false);
-                keteranganField.setDisable(true);
+                keteranganField.setEditable(false);
                 jumlahRpField.setDisable(true);
                 tipeKeuanganCombo.setDisable(true);
 

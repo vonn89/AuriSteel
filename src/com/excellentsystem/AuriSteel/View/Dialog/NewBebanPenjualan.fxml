@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="400.0" stylesheets="@../../Resource/MyTheme.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.excellentsystem.AuriSteel.View.Dialog.NewBebanPenjualanController">
+<AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="400.0" stylesheets="@../../Resource/MyTheme.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.excellentsystem.AuriSteel.View.Dialog.NewBebanPenjualanController">
    <children>
       <GridPane fx:id="gridPane" hgap="7.0" layoutX="169.0" layoutY="118.0" vgap="7.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
@@ -27,7 +27,7 @@
             <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
@@ -50,15 +50,15 @@
             <Label text="Keterangan" GridPane.rowIndex="5" />
             <Label text="Jumlah Rp" GridPane.rowIndex="6" />
             <Label text="No Beban" GridPane.rowIndex="2" />
-            <TextField fx:id="noBebanPenjualanField" disable="true" prefHeight="30.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <TextField fx:id="keteranganField" prefHeight="30.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <TextField fx:id="jumlahRpField" prefHeight="30.0" text="0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-            <Button fx:id="addPenjualanButton" mnemonicParsing="false" onAction="#addPenjualan" prefHeight="30.0" prefWidth="30.0" styleClass="button2" text="..." GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="TOP" />
-            <Label text="Tipe Keuangan" GridPane.rowIndex="7" />
-            <ComboBox fx:id="tipeKeuanganCombo" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="7" />
             <Label text="Tgl Beban" GridPane.rowIndex="3" />
+            <Label text="Tipe Keuangan" GridPane.rowIndex="7" />
+            <TextField fx:id="noBebanPenjualanField" disable="true" prefHeight="30.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <TextField fx:id="tglBebanPenjualanField" disable="true" prefHeight="30.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <Button fx:id="resetPenjualanButton" mnemonicParsing="false" onAction="#resetPenjualan" prefHeight="20.0" prefWidth="50.0" text="Reset" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="BOTTOM" />
+            <Button fx:id="addPenjualanButton" mnemonicParsing="false" onAction="#addPenjualan" prefHeight="30.0" prefWidth="30.0" styleClass="button2" text="..." GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="TOP" />
+            <TextArea fx:id="keteranganField" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <TextField fx:id="jumlahRpField" prefHeight="30.0" text="0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <ComboBox fx:id="tipeKeuanganCombo" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="7" />
          </children>
       </GridPane>
       <HBox alignment="CENTER_RIGHT" prefWidth="200.0" spacing="1.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">

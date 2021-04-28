@@ -200,7 +200,7 @@ public class NewPindahBarangController {
                 namaSupirField.setDisable(true);
                 gudangAsalCombo.setDisable(true);
                 gudangTujuanCombo.setDisable(true);
-                catatanField.setDisable(true);
+                catatanField.setEditable(false);
                 if (verifikasi) {
                     saveButton.setText("Verifikasi");
                     saveButton.setVisible(true);

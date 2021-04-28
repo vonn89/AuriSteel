@@ -1614,7 +1614,22 @@ public class Service {
             for (PenjualanBarangDetail d : p.getListPenjualanBarangDetail()) {
                 d.setNoPenjualan(noPenjualan);
                 PenjualanBarangDetailDAO.insert(con, d);
+
+                PemesananBarangDetail detailPemesanan = PemesananBarangDetailDAO.get(con, d.getNoPemesanan(), d.getNoUrut());
+                detailPemesanan.setQtyTerkirim(detailPemesanan.getQtyTerkirim() + d.getQty());
+                PemesananBarangDetailDAO.update(con, detailPemesanan);
             }
+
+            double qtyBelumDikirim = 0;
+            PemesananBarangHead pemesanan = PemesananBarangHeadDAO.get(con, p.getNoPemesanan());
+            List<PemesananBarangDetail> listPemesanan = PemesananBarangDetailDAO.getAllByNoPemesanan(con, p.getNoPemesanan());
+            for (PemesananBarangDetail d : listPemesanan) {
+                qtyBelumDikirim = qtyBelumDikirim + d.getQty() - d.getQtyTerkirim();
+            }
+            if (qtyBelumDikirim == 0) {
+                pemesanan.setStatus("close");
+            }
+            PemesananBarangHeadDAO.update(con, pemesanan);
 
             if (status.equals("true")) {
                 con.commit();
@@ -1757,19 +1772,19 @@ public class Service {
             }
             CustomerDAO.update(con, customer);
 
-            for (PenjualanBarangDetail detail : penjualan.getListPenjualanBarangDetail()) {
-                PemesananBarangDetail d = PemesananBarangDetailDAO.get(con, detail.getNoPemesanan(), detail.getNoUrut());
-                d.setQtyTerkirim(d.getQtyTerkirim() + detail.getQty());
-                PemesananBarangDetailDAO.update(con, d);
-            }
-            double qtyBelumDikirim = 0;
-            List<PemesananBarangDetail> listPemesanan = PemesananBarangDetailDAO.getAllByNoPemesanan(con, pemesanan.getNoPemesanan());
-            for (PemesananBarangDetail d : listPemesanan) {
-                qtyBelumDikirim = qtyBelumDikirim + d.getQty() - d.getQtyTerkirim();
-            }
-            if (qtyBelumDikirim == 0) {
-                pemesanan.setStatus("close");
-            }
+//            for (PenjualanBarangDetail detail : penjualan.getListPenjualanBarangDetail()) {
+//                PemesananBarangDetail d = PemesananBarangDetailDAO.get(con, detail.getNoPemesanan(), detail.getNoUrut());
+//                d.setQtyTerkirim(d.getQtyTerkirim() + detail.getQty());
+//                PemesananBarangDetailDAO.update(con, d);
+//            }
+//            double qtyBelumDikirim = 0;
+//            List<PemesananBarangDetail> listPemesanan = PemesananBarangDetailDAO.getAllByNoPemesanan(con, pemesanan.getNoPemesanan());
+//            for (PemesananBarangDetail d : listPemesanan) {
+//                qtyBelumDikirim = qtyBelumDikirim + d.getQty() - d.getQtyTerkirim();
+//            }
+//            if (qtyBelumDikirim == 0) {
+//                pemesanan.setStatus("close");
+//            }
             PemesananBarangHeadDAO.update(con, pemesanan);
 
             List<PenjualanBarangDetail> stokBarang = new ArrayList<>();
@@ -1849,6 +1864,16 @@ public class Service {
             p.setUserBatal(sistem.getUser().getKodeUser());
             p.setStatus("false");
             PenjualanBarangHeadDAO.update(con, p);
+
+            p.setListPenjualanBarangDetail(PenjualanBarangDetailDAO.getAllPenjualanDetail(con, p.getNoPenjualan()));
+            PemesananBarangHead pemesanan = PemesananBarangHeadDAO.get(con, p.getNoPemesanan());
+            for (PenjualanBarangDetail detail : p.getListPenjualanBarangDetail()) {
+                PemesananBarangDetail d = PemesananBarangDetailDAO.get(con, detail.getNoPemesanan(), detail.getNoUrut());
+                d.setQtyTerkirim(d.getQtyTerkirim() - detail.getQty());
+                PemesananBarangDetailDAO.update(con, d);
+            }
+            pemesanan.setStatus("open");
+            PemesananBarangHeadDAO.update(con, pemesanan);
 
             if (status.equals("true")) {
                 con.commit();
@@ -1939,12 +1964,12 @@ public class Service {
             CustomerDAO.update(con, customer);
 
             penjualan.setListPenjualanBarangDetail(PenjualanBarangDetailDAO.getAllPenjualanDetail(con, penjualan.getNoPenjualan()));
-            for (PenjualanBarangDetail detail : penjualan.getListPenjualanBarangDetail()) {
-                PemesananBarangDetail d = PemesananBarangDetailDAO.get(con, detail.getNoPemesanan(), detail.getNoUrut());
-                d.setQtyTerkirim(d.getQtyTerkirim() - detail.getQty());
-                PemesananBarangDetailDAO.update(con, d);
-            }
-            pemesanan.setStatus("open");
+//            for (PenjualanBarangDetail detail : penjualan.getListPenjualanBarangDetail()) {
+//                PemesananBarangDetail d = PemesananBarangDetailDAO.get(con, detail.getNoPemesanan(), detail.getNoUrut());
+//                d.setQtyTerkirim(d.getQtyTerkirim() - detail.getQty());
+//                PemesananBarangDetailDAO.update(con, d);
+//            }
+//            pemesanan.setStatus("open");
             PemesananBarangHeadDAO.update(con, pemesanan);
 
             List<PenjualanBarangDetail> stokBarang = new ArrayList<>();
@@ -3317,7 +3342,7 @@ public class Service {
                     resetStokDanLogBarang(con, d.getKodeBarang(), p.getGudangTujuan(), p.getTglPindah(), date);
                 }
             }
-            
+
             p.setTglBatal(tglSql.format(date));
             p.setUserBatal(sistem.getUser().getKodeUser());
             p.setStatus("false");
@@ -3357,7 +3382,7 @@ public class Service {
             produksi.setTglMulai(tglSql.format(date));
             produksi.setTglSelesai(tglSql.format(date));
 
-            if (produksi.getJenisProduksi().equals("Bahan - Barang")) {
+            if (produksi.getJenisProduksi().equals("Bahan - Barang") || produksi.getJenisProduksi().equals("Bahan - Bahan")) {
                 for (ProduksiDetailBahan d : produksi.getListProduksiDetailBahan()) {
                     Bahan b = BahanDAO.get(con, d.getKodeBarang());
                     d.setBahan(b);
@@ -3406,36 +3431,62 @@ public class Service {
             }
             ProduksiHeadDAO.insert(con, produksi);
 
-            insertKeuangan(con, noKeuangan, tglSql.format(date), "Stok Barang", produksi.getKodeGudang(),
-                    "Produksi Barang - " + produksi.getKodeProduksi(), produksi.getMaterialCost(), sistem.getUser().getKodeUser());
+            if (produksi.getJenisProduksi().equals("Bahan - Barang") || produksi.getJenisProduksi().equals("Barang - Barang")) {
 
-            double totalProduksi = 0;
-            for (ProduksiDetailBarang d : produksi.getListProduksiDetailBarang()) {
-                totalProduksi = totalProduksi + (d.getQty() * d.getBarang().getBerat());
-            }
+                double totalProduksi = 0;
+                for (ProduksiDetailBarang d : produksi.getListProduksiDetailBarang()) {
+                    totalProduksi = totalProduksi + (d.getQty() * d.getBarang().getBerat());
+                }
 
-            List<ProduksiDetailBarang> groupByBarang = new ArrayList<>();
-            for (ProduksiDetailBarang d : produksi.getListProduksiDetailBarang()) {
-                d.setKodeProduksi(noProduksi);
-                d.setNilai(produksi.getMaterialCost() / totalProduksi * (d.getQty() * d.getBarang().getBerat()));
-                ProduksiDetailBarangDAO.insert(con, d);
-                boolean x = true;
-                for (ProduksiDetailBarang p : groupByBarang) {
-                    if (d.getKodeBarang().equals(p.getKodeBarang())) {
-                        p.setQty(p.getQty() + d.getQty());
-                        p.setNilai(p.getNilai() + d.getNilai());
-                        x = false;
+                List<ProduksiDetailBarang> groupByBarang = new ArrayList<>();
+                for (ProduksiDetailBarang d : produksi.getListProduksiDetailBarang()) {
+                    d.setKodeProduksi(noProduksi);
+                    d.setNilai(produksi.getMaterialCost() / totalProduksi * (d.getQty() * d.getBarang().getBerat()));
+                    ProduksiDetailBarangDAO.insert(con, d);
+                    boolean x = true;
+                    for (ProduksiDetailBarang p : groupByBarang) {
+                        if (d.getKodeBarang().equals(p.getKodeBarang())) {
+                            p.setQty(p.getQty() + d.getQty());
+                            p.setNilai(p.getNilai() + d.getNilai());
+                            x = false;
+                        }
+                    }
+                    if (x) {
+                        groupByBarang.add(d);
                     }
                 }
-                if (x) {
-                    groupByBarang.add(d);
-                }
-            }
-            for (ProduksiDetailBarang d : groupByBarang) {
-                status = insertStokAndLogBarang(con, date, d.getKodeBarang(), produksi.getKodeGudang(), "Produksi", produksi.getKodeProduksi(),
-                        d.getQty(), d.getNilai(), 0, 0, status);
+                for (ProduksiDetailBarang d : groupByBarang) {
+                    status = insertStokAndLogBarang(con, date, d.getKodeBarang(), produksi.getKodeGudang(), "Produksi", produksi.getKodeProduksi(),
+                            d.getQty(), d.getNilai(), 0, 0, status);
 
+                }
+                insertKeuangan(con, noKeuangan, tglSql.format(date), "Stok Barang", produksi.getKodeGudang(),
+                        "Produksi Barang - " + produksi.getKodeProduksi(), produksi.getMaterialCost(), sistem.getUser().getKodeUser());
+
+            } else if (produksi.getJenisProduksi().equals("Bahan - Bahan")) {
+
+                double totalProduksi = 0;
+                for (ProduksiDetailBarang d : produksi.getListProduksiDetailBarang()) {
+                    totalProduksi = totalProduksi + d.getQty();
+                }
+
+                for (ProduksiDetailBarang d : produksi.getListProduksiDetailBarang()) {
+                    double nilai = produksi.getMaterialCost() / totalProduksi * d.getQty();
+                    d.getBahan().setNoKontrak(noProduksi);
+                    d.getBahan().setHargaBeli(nilai);
+                    BahanDAO.insert(con, d.getBahan());
+
+                    d.setKodeProduksi(noProduksi);
+                    d.setNilai(nilai);
+                    ProduksiDetailBarangDAO.insert(con, d);
+
+                    status = insertStokAndLogBahan(con, date, d.getKodeBarang(), produksi.getKodeGudang(),
+                            "Produksi", produksi.getKodeProduksi(), d.getQty(), d.getNilai(), 0, 0, status);
+                }
+                insertKeuangan(con, noKeuangan, tglSql.format(date), "Stok Bahan", produksi.getKodeGudang(),
+                        "Produksi Barang - " + produksi.getKodeProduksi(), produksi.getMaterialCost(), sistem.getUser().getKodeUser());
             }
+
             for (ProduksiOperator op : produksi.getListProduksiOperator()) {
                 op.setKodeProduksi(noProduksi);
                 ProduksiOperatorDAO.insert(con, op);
@@ -3592,41 +3643,81 @@ public class Service {
             produksi.setUserBatal(sistem.getUser().getKodeUser());
             produksi.setStatus("false");
 
-            for (ProduksiDetailBahan d : produksi.getListProduksiDetailBahan()) {
-                Bahan b = BahanDAO.get(con, d.getKodeBarang());
-                b.setStatus("true");
-                BahanDAO.update(con, b);
+            if (produksi.getJenisProduksi().equals("Bahan - Barang") || produksi.getJenisProduksi().equals("Bahan - Bahan")) {
+                for (ProduksiDetailBahan d : produksi.getListProduksiDetailBahan()) {
+                    Bahan b = BahanDAO.get(con, d.getKodeBarang());
+                    b.setStatus("true");
+                    BahanDAO.update(con, b);
 
-                d.setNilai(d.getQty() * b.getHargaBeli() / b.getBeratBersih());
+                    d.setNilai(d.getQty() * b.getHargaBeli() / b.getBeratBersih());
 
-                status = insertStokAndLogBahan(con, date, d.getKodeBarang(), produksi.getKodeGudang(),
-                        "Batal Produksi", produksi.getKodeProduksi(), d.getQty(), d.getNilai(), 0, 0, status);
+                    status = insertStokAndLogBahan(con, date, d.getKodeBarang(), produksi.getKodeGudang(),
+                            "Batal Produksi", produksi.getKodeProduksi(), d.getQty(), d.getNilai(), 0, 0, status);
+                }
+                insertKeuangan(con, noKeuangan, tglSql.format(date), "Stok Bahan", produksi.getKodeGudang(),
+                        "Batal Produksi Barang - " + produksi.getKodeProduksi(), produksi.getMaterialCost(), sistem.getUser().getKodeUser());
+
+            } else if (produksi.getJenisProduksi().equals("Barang - Barang")) {
+                
+                produksi.setListProduksiDetailBahan(ProduksiDetailBahanDAO.get(con, produksi.getKodeProduksi()));
+                List<ProduksiDetailBahan> groupByBarang = new ArrayList<>();
+                for (ProduksiDetailBahan d : produksi.getListProduksiDetailBahan()) {
+                    boolean x = true;
+                    for (ProduksiDetailBahan p : groupByBarang) {
+                        if (d.getKodeBarang().equals(p.getKodeBarang())) {
+                            p.setQty(p.getQty() + d.getQty());
+                            p.setNilai(p.getNilai() + d.getNilai());
+                            x = false;
+                        }
+                    }
+                    if (x) {
+                        groupByBarang.add(d);
+                    }
+                }
+                for (ProduksiDetailBahan d : groupByBarang) {
+                    status = insertStokAndLogBarang(con, date, d.getKodeBarang(), produksi.getKodeGudang(), "Batal Produksi", produksi.getKodeProduksi(),
+                            d.getQty(), d.getNilai(), 0, 0,  status);
+                }
+                insertKeuangan(con, noKeuangan, tglSql.format(date), "Stok Barang", produksi.getKodeGudang(),
+                        "Batal Produksi Barang - " + produksi.getKodeProduksi(), produksi.getMaterialCost(), sistem.getUser().getKodeUser());
+
             }
             ProduksiHeadDAO.update(con, produksi);
 
-            insertKeuangan(con, noKeuangan, tglSql.format(date), "Stok Bahan", produksi.getKodeGudang(),
-                    "Batal Produksi Barang - " + produksi.getKodeProduksi(), produksi.getMaterialCost(), sistem.getUser().getKodeUser());
-            insertKeuangan(con, noKeuangan, tglSql.format(date), "Stok Barang", produksi.getKodeGudang(),
-                    "Batal Produksi Barang - " + produksi.getKodeProduksi(), -produksi.getMaterialCost(), sistem.getUser().getKodeUser());
-
-            produksi.setListProduksiDetailBarang(ProduksiDetailBarangDAO.get(con, produksi.getKodeProduksi()));
-            List<ProduksiDetailBarang> groupByBarang = new ArrayList<>();
-            for (ProduksiDetailBarang d : produksi.getListProduksiDetailBarang()) {
-                boolean x = true;
-                for (ProduksiDetailBarang p : groupByBarang) {
-                    if (d.getKodeBarang().equals(p.getKodeBarang())) {
-                        p.setQty(p.getQty() + d.getQty());
-                        p.setNilai(p.getNilai() + d.getNilai());
-                        x = false;
+            if (produksi.getJenisProduksi().equals("Bahan - Barang") || produksi.getJenisProduksi().equals("Barang - Barang")) {
+                produksi.setListProduksiDetailBarang(ProduksiDetailBarangDAO.get(con, produksi.getKodeProduksi()));
+                List<ProduksiDetailBarang> groupByBarang = new ArrayList<>();
+                for (ProduksiDetailBarang d : produksi.getListProduksiDetailBarang()) {
+                    boolean x = true;
+                    for (ProduksiDetailBarang p : groupByBarang) {
+                        if (d.getKodeBarang().equals(p.getKodeBarang())) {
+                            p.setQty(p.getQty() + d.getQty());
+                            p.setNilai(p.getNilai() + d.getNilai());
+                            x = false;
+                        }
+                    }
+                    if (x) {
+                        groupByBarang.add(d);
                     }
                 }
-                if (x) {
-                    groupByBarang.add(d);
+                for (ProduksiDetailBarang d : groupByBarang) {
+                    status = insertStokAndLogBarang(con, date, d.getKodeBarang(), produksi.getKodeGudang(),
+                            "Batal Produksi", produksi.getKodeProduksi(), 0, 0, d.getQty(), d.getNilai(), status);
                 }
-            }
-            for (ProduksiDetailBarang d : groupByBarang) {
-                status = insertStokAndLogBarang(con, date, d.getKodeBarang(), produksi.getKodeGudang(),
-                        "Batal Produksi", produksi.getKodeProduksi(), 0, 0, d.getQty(), d.getNilai(), status);
+                insertKeuangan(con, noKeuangan, tglSql.format(date), "Stok Barang", produksi.getKodeGudang(),
+                        "Batal Produksi Barang - " + produksi.getKodeProduksi(), -produksi.getMaterialCost(), sistem.getUser().getKodeUser());
+
+            } else if (produksi.getJenisProduksi().equals("Bahan - Bahan")) {
+                for (ProduksiDetailBarang d : produksi.getListProduksiDetailBarang()) {
+                    Bahan b = BahanDAO.get(con, d.getKodeBarang());
+                    b.setStatus("false");
+                    BahanDAO.update(con, b);
+
+                    status = insertStokAndLogBahan(con, date, d.getKodeBarang(), produksi.getKodeGudang(),
+                            "Batal Produksi", produksi.getKodeProduksi(), 0, 0, d.getQty(), d.getNilai(), status);
+                }
+                insertKeuangan(con, noKeuangan, tglSql.format(date), "Stok Bahan", produksi.getKodeGudang(),
+                        "Batal Produksi Barang - " + produksi.getKodeProduksi(), -produksi.getMaterialCost(), sistem.getUser().getKodeUser());
 
             }
 

@@ -55,7 +55,7 @@ public class NewBebanPenjualanController {
     @FXML
     private TextArea penjualanField;
     @FXML
-    public TextField keteranganField;
+    public TextArea keteranganField;
     @FXML
     public TextField jumlahRpField;
     @FXML
@@ -120,7 +120,7 @@ public class NewBebanPenjualanController {
                 resetPenjualanButton.setVisible(false);
                 saveButton.setVisible(false);
                 cancelButton.setVisible(false);
-                keteranganField.setDisable(true);
+                keteranganField.setEditable(false);
                 jumlahRpField.setDisable(true);
                 tipeKeuanganCombo.setDisable(true);
 

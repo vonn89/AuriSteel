@@ -714,6 +714,16 @@ public class MainAppController {
     }
 
     @FXML
+    private void menuLaporanPengirimanBarang() {
+        mainApp.showLaporanPengirimanBarang();
+    }
+
+    @FXML
+    private void menuLaporanBarangDikirim() {
+        mainApp.showLaporanBarangDikirim();
+    }
+    
+    @FXML
     private void menuLaporanPenyesuaianStokBahan() {
         mainApp.showLaporanPenyesuaianStokBahan();
     }

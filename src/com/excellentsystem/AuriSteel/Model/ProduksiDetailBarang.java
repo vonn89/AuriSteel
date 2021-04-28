@@ -22,6 +22,15 @@ public class ProduksiDetailBarang {
     private final DoubleProperty nilai = new SimpleDoubleProperty();
     private ProduksiHead produksiHead;
     private Barang barang;
+    private Bahan bahan;
+
+    public Bahan getBahan() {
+        return bahan;
+    }
+
+    public void setBahan(Bahan bahan) {
+        this.bahan = bahan;
+    }
 
     public Barang getBarang() {
         return barang;

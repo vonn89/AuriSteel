@@ -17,7 +17,7 @@
     <children>
         <GridPane hgap="7.0" prefWidth="430.0" vgap="7.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <columnConstraints>
-                <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="80.0" minWidth="80.0" prefWidth="80.0" />
+                <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" />
                 <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" />
             </columnConstraints>
             <rowConstraints>
@@ -62,7 +62,7 @@
             <Button mnemonicParsing="false" onAction="#close" prefHeight="30.0" prefWidth="100.0" styleClass="button2" text="Cancel" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
             </children>
         </AnchorPane>
-        <AnchorPane fx:id="penyusutanPane" layoutX="14.0" layoutY="341.0" prefHeight="95.0" style="-fx-border-color: black; -fx-border-radius: 1;" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
+        <AnchorPane fx:id="penyusutanPane" layoutX="14.0" layoutY="341.0" prefHeight="95.0" style="-fx-border-color: gray; -fx-border-radius: 3;" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
             <children>
                 <Label layoutX="26.0" layoutY="46.0" prefHeight="30.0" text="Masa Pakai" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0">
                     <font>

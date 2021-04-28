@@ -22,7 +22,6 @@ import com.excellentsystem.AuriSteel.Model.Otoritas;
 import com.excellentsystem.AuriSteel.Model.ProduksiDetailBahan;
 import com.excellentsystem.AuriSteel.Model.ProduksiDetailBarang;
 import com.excellentsystem.AuriSteel.Model.ProduksiHead;
-import com.excellentsystem.AuriSteel.PrintOut.Report;
 import com.excellentsystem.AuriSteel.View.Dialog.NewProduksiBarangController;
 import java.io.File;
 import java.io.FileOutputStream;

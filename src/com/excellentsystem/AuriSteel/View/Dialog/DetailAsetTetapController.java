@@ -76,12 +76,12 @@ public class DetailAsetTetapController {
             keteranganField.setText(aset.getKeterangan());
             tglBeliField.setText(tglLengkap.format(tglSql.parse(aset.getTglBeli())));
             userBeliField.setText(aset.getUserBeli());
-            hargaBeliField.setText("Rp " + df.format(aset.getNilaiAwal()));
+            hargaBeliField.setText(df.format(aset.getNilaiAwal()));
             masaPakaiField.setText(df.format(aset.getMasaPakai()) + " Bulan");
-            penyusutanPerBulanFIeld.setText("Rp " + df.format(aset.getNilaiAwal() / aset.getMasaPakai()));
-            penyusutanField.setText("Rp " + df.format(aset.getPenyusutan()));
-            nilaiAkhirField.setText("Rp " + df.format(aset.getNilaiAkhir()));
-            if (aset.getStatus().equals("true")) {
+            penyusutanPerBulanFIeld.setText(df.format(aset.getNilaiAwal() / aset.getMasaPakai()));
+            penyusutanField.setText(df.format(aset.getPenyusutan()));
+            nilaiAkhirField.setText(df.format(aset.getNilaiAkhir()));
+            if (aset.getStatus().equals("open")) {
                 statusField.setText("Tersedia");
                 tglJualField.setText("-");
                 userJualField.setText("-");
@@ -90,7 +90,7 @@ public class DetailAsetTetapController {
                 statusField.setText("Terjual");
                 tglJualField.setText(tglLengkap.format(tglSql.parse(aset.getTglJual())));
                 userJualField.setText(aset.getUserJual());
-                hargaJualField.setText("Rp " + df.format(aset.getHargaJual()));
+                hargaJualField.setText( df.format(aset.getHargaJual()));
             }
         } catch (ParseException ex) {
             mainApp.showMessage(Modality.NONE, "Error", ex.toString());

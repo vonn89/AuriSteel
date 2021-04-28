@@ -223,7 +223,7 @@ public class NewPengirimanController {
             try {
                 mainApp.closeLoading();
                 addPemesananButton.setVisible(false);
-                alamatKirimField.setDisable(true);
+                alamatKirimField.setEditable(false);
                 namaSupirField.setDisable(true);
                 gudangCombo.setDisable(true);
                 if (verifikasi) {

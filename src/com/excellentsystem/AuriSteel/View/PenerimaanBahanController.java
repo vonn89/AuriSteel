@@ -49,6 +49,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -252,6 +254,17 @@ public class PenerimaanBahanController {
                     }
                 }
             };
+            row.setOnMouseClicked((MouseEvent mouseEvent) -> {
+                if (mouseEvent.getButton().equals(MouseButton.PRIMARY) && mouseEvent.getClickCount() == 2) {
+                    if (row.getItem() != null) {
+                        for (Otoritas o : sistem.getUser().getOtoritas()) {
+                            if (o.getJenis().equals("Detail Penerimaan") && o.isStatus()) {
+                                detailPenerimaan(row.getItem());
+                            }
+                        }
+                    }
+                }
+            });
             return row;
         });
         allPenerimaan.addListener((ListChangeListener.Change<? extends PenerimaanBahan> change) -> {

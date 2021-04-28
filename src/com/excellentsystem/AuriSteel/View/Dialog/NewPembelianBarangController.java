@@ -235,7 +235,7 @@ public class NewPembelianBarangController {
                 mainApp.closeLoading();
                 addSupplierButton.setVisible(false);
                 gudangCombo.setDisable(true);
-                catatanField.setDisable(true);
+                catatanField.setEditable(false);
                 saveButton.setVisible(false);
                 cancelButton.setVisible(false);
                 AnchorPane.setBottomAnchor(gridPane, 0.0);

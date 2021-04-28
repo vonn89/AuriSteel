@@ -62,19 +62,6 @@ import javafx.stage.Stage;
 public class NewProduksiBarangController {
 
     @FXML
-    private TableView<ProduksiDetailBarang> barangProduksiTable;
-    @FXML
-    private TableColumn<ProduksiDetailBarang, String> kodeBarangJadiColumn;
-    @FXML
-    private TableColumn<ProduksiDetailBarang, Number> qtyBarangJadiColumn;
-    @FXML
-    private TableColumn<ProduksiDetailBarang, Number> beratBarangJadiColumn;
-    @FXML
-    public Label totalQtyBarangLabel;
-    @FXML
-    public Label totalBeratBarangLabel;
-
-    @FXML
     private TableView<ProduksiDetailBahan> bahanDiproduksiTable;
     @FXML
     private TableColumn<ProduksiDetailBahan, String> kategoriBahanColumn;
@@ -90,9 +77,35 @@ public class NewProduksiBarangController {
     private TableColumn<ProduksiDetailBahan, Number> sisaBeratColumn;
 
     @FXML
+    private TableColumn<ProduksiDetailBahan, String> kodeBarangColumn;
+    @FXML
+    private TableColumn<ProduksiDetailBahan, Number> qtyColumn;
+    @FXML
+    private TableColumn<ProduksiDetailBahan, Number> beratColumn;
+    @FXML
     public Label totalQtyBahanLabel;
     @FXML
     public Label totalBeratBahanLabel;
+
+    @FXML
+    private TableView<ProduksiDetailBarang> barangProduksiTable;
+    @FXML
+    private TableColumn<ProduksiDetailBarang, String> kategoriBahanJadiColumn;
+    @FXML
+    private TableColumn<ProduksiDetailBarang, String> kodeBahanJadiColumn;
+    @FXML
+    private TableColumn<ProduksiDetailBarang, Number> beratBahanJadiColumn;
+
+    @FXML
+    private TableColumn<ProduksiDetailBarang, String> kodeBarangJadiColumn;
+    @FXML
+    private TableColumn<ProduksiDetailBarang, Number> qtyBarangJadiColumn;
+    @FXML
+    private TableColumn<ProduksiDetailBarang, Number> beratBarangJadiColumn;
+    @FXML
+    public Label totalQtyBarangLabel;
+    @FXML
+    public Label totalBeratBarangLabel;
 
     @FXML
     private GridPane gridPane;
@@ -110,6 +123,8 @@ public class NewProduksiBarangController {
     public ComboBox<String> mesinCombo;
     @FXML
     public ComboBox<String> gudangCombo;
+    @FXML
+    public ComboBox<String> jenisCombo;
 
     @FXML
     public TextArea catatanField;
@@ -155,6 +170,25 @@ public class NewProduksiBarangController {
             }
         });
         sisaBeratColumn.setCellFactory(col -> Function.getTableCell());
+
+        kodeBarangColumn.setCellValueFactory(cellData -> cellData.getValue().kodeBarangProperty());
+        qtyColumn.setCellValueFactory(cellData -> cellData.getValue().qtyProperty());
+        qtyColumn.setCellFactory(col -> Function.getTableCell());
+        beratColumn.setCellValueFactory(cellData -> {
+            return new SimpleDoubleProperty(cellData.getValue().getQty() * cellData.getValue().getBarang().getBerat());
+        });
+        beratColumn.setCellFactory(col -> Function.getTableCell());
+
+        kategoriBahanJadiColumn.setCellValueFactory(cellData -> {
+            String kodeKategori = "";
+            if (cellData.getValue().getBahan() != null) {
+                kodeKategori = cellData.getValue().getBahan().getKodeKategori();
+            }
+            return new SimpleStringProperty(kodeKategori);
+        });
+        kodeBahanJadiColumn.setCellValueFactory(cellData -> cellData.getValue().kodeBarangProperty());
+        beratBahanJadiColumn.setCellValueFactory(cellData -> cellData.getValue().qtyProperty());
+        beratBahanJadiColumn.setCellFactory(col -> Function.getTableCell());
 
         kodeBarangJadiColumn.setCellValueFactory(cellData -> cellData.getValue().kodeBarangProperty());
         qtyBarangJadiColumn.setCellValueFactory(cellData -> cellData.getValue().qtyProperty());
@@ -280,6 +314,12 @@ public class NewProduksiBarangController {
             listMesin.add(m.getKodeMesin());
         }
         mesinCombo.setItems(listMesin);
+        ObservableList<String> listJenis = FXCollections.observableArrayList();
+        listJenis.add("Bahan - Bahan");
+        listJenis.add("Bahan - Barang");
+        listJenis.add("Barang - Barang");
+        jenisCombo.setItems(listJenis);
+        jenisCombo.getSelectionModel().select("Bahan - Barang");
     }
 
     public void setNewProduksi() {
@@ -295,6 +335,74 @@ public class NewProduksiBarangController {
         hitungTotalBarang();
     }
 
+    @FXML
+    private void changeJenis() {
+        if (jenisCombo.getSelectionModel().getSelectedItem().equals("Bahan - Barang")) {
+            kategoriBahanColumn.setVisible(true);
+            kodeBahanColumn.setVisible(true);
+            stokBahanColumn.setVisible(true);
+            beratBahanDiproduksiColumn.setVisible(true);
+            bahanHabisColumn.setVisible(true);
+            sisaBeratColumn.setVisible(true);
+
+            kodeBarangColumn.setVisible(false);
+            qtyColumn.setVisible(false);
+            beratColumn.setVisible(false);
+
+            kategoriBahanJadiColumn.setVisible(false);
+            kodeBahanJadiColumn.setVisible(false);
+            beratBahanJadiColumn.setVisible(false);
+
+            kodeBarangJadiColumn.setVisible(true);
+            qtyBarangJadiColumn.setVisible(true);
+            beratBarangJadiColumn.setVisible(true);
+
+            changeGudang();
+        } else if (jenisCombo.getSelectionModel().getSelectedItem().equals("Barang - Barang")) {
+            kategoriBahanColumn.setVisible(false);
+            kodeBahanColumn.setVisible(false);
+            stokBahanColumn.setVisible(false);
+            beratBahanDiproduksiColumn.setVisible(false);
+            bahanHabisColumn.setVisible(false);
+            sisaBeratColumn.setVisible(false);
+
+            kodeBarangColumn.setVisible(true);
+            qtyColumn.setVisible(true);
+            beratColumn.setVisible(true);
+
+            kategoriBahanJadiColumn.setVisible(false);
+            kodeBahanJadiColumn.setVisible(false);
+            beratBahanJadiColumn.setVisible(false);
+
+            kodeBarangJadiColumn.setVisible(true);
+            qtyBarangJadiColumn.setVisible(true);
+            beratBarangJadiColumn.setVisible(true);
+
+            changeGudang();
+        } else if (jenisCombo.getSelectionModel().getSelectedItem().equals("Bahan - Bahan")) {
+            kategoriBahanColumn.setVisible(true);
+            kodeBahanColumn.setVisible(true);
+            stokBahanColumn.setVisible(true);
+            beratBahanDiproduksiColumn.setVisible(true);
+            bahanHabisColumn.setVisible(true);
+            sisaBeratColumn.setVisible(true);
+
+            kodeBarangColumn.setVisible(false);
+            qtyColumn.setVisible(false);
+            beratColumn.setVisible(false);
+
+            kategoriBahanJadiColumn.setVisible(true);
+            kodeBahanJadiColumn.setVisible(true);
+            beratBahanJadiColumn.setVisible(true);
+
+            kodeBarangJadiColumn.setVisible(false);
+            qtyBarangJadiColumn.setVisible(false);
+            beratBarangJadiColumn.setVisible(false);
+
+            changeGudang();
+        }
+    }
+
     public void setDetailProduksi(String kodeProduksi, boolean verifikasi) {
         Task<ProduksiHead> task = new Task<ProduksiHead>() {
             @Override
@@ -302,12 +410,28 @@ public class NewProduksiBarangController {
                 try (Connection con = Koneksi.getConnection()) {
                     ProduksiHead produksi = ProduksiHeadDAO.get(con, kodeProduksi);
                     produksi.setListProduksiDetailBahan(ProduksiDetailBahanDAO.get(con, kodeProduksi));
-                    for (ProduksiDetailBahan d : produksi.getListProduksiDetailBahan()) {
-                        d.setBahan(BahanDAO.get(con, d.getKodeBarang()));
-                    }
                     produksi.setListProduksiDetailBarang(ProduksiDetailBarangDAO.get(con, kodeProduksi));
-                    for (ProduksiDetailBarang d : produksi.getListProduksiDetailBarang()) {
-                        d.setBarang(BarangDAO.get(con, d.getKodeBarang()));
+                    if (produksi.getJenisProduksi().equals("Bahan - Barang")) {
+                        for (ProduksiDetailBahan d : produksi.getListProduksiDetailBahan()) {
+                            d.setBahan(BahanDAO.get(con, d.getKodeBarang()));
+                        }
+                        for (ProduksiDetailBarang d : produksi.getListProduksiDetailBarang()) {
+                            d.setBarang(BarangDAO.get(con, d.getKodeBarang()));
+                        }
+                    } else if (produksi.getJenisProduksi().equals("Barang - Barang")) {
+                        for (ProduksiDetailBahan d : produksi.getListProduksiDetailBahan()) {
+                            d.setBarang(BarangDAO.get(con, d.getKodeBarang()));
+                        }
+                        for (ProduksiDetailBarang d : produksi.getListProduksiDetailBarang()) {
+                            d.setBarang(BarangDAO.get(con, d.getKodeBarang()));
+                        }
+                    } else if (produksi.getJenisProduksi().equals("Bahan - Bahan")) {
+                        for (ProduksiDetailBahan d : produksi.getListProduksiDetailBahan()) {
+                            d.setBahan(BahanDAO.get(con, d.getKodeBarang()));
+                        }
+                        for (ProduksiDetailBarang d : produksi.getListProduksiDetailBarang()) {
+                            d.setBahan(BahanDAO.get(con, d.getKodeBarang()));
+                        }
                     }
                     return produksi;
                 }
@@ -323,8 +447,10 @@ public class NewProduksiBarangController {
                 noProduksiField.setText(produksi.getKodeProduksi());
                 tglProduksiField.setText(tglLengkap.format(tglSql.parse(produksi.getTglProduksi())));
                 gudangCombo.getSelectionModel().select(produksi.getKodeGudang());
+                jenisCombo.getSelectionModel().select(produksi.getJenisProduksi());
                 mesinCombo.getSelectionModel().select(produksi.getKodeMesin());
                 catatanField.setText(produksi.getCatatan());
+                changeJenis();
 
                 if (verifikasi) {
                     saveButton.setText("Verifikasi");
@@ -335,13 +461,14 @@ public class NewProduksiBarangController {
                     saveButton.setVisible(false);
                     cancelButton.setVisible(false);
                 }
-                catatanField.setDisable(true);
+                catatanField.setEditable(false);
                 addOperatorButton.setVisible(false);
                 resetOperatorButton.setVisible(false);
                 stokBahanColumn.setVisible(false);
                 bahanHabisColumn.setVisible(false);
                 sisaBeratColumn.setVisible(false);
                 gudangCombo.setDisable(true);
+                jenisCombo.setDisable(true);
                 mesinCombo.setDisable(true);
                 List<MenuItem> removeBarangProduksi = new ArrayList<>();
                 for (MenuItem m : barangProduksiTable.getContextMenu().getItems()) {
@@ -425,36 +552,95 @@ public class NewProduksiBarangController {
         if (gudangCombo.getSelectionModel().getSelectedItem() == null) {
             mainApp.showMessage(Modality.NONE, "Warning", "Gudang belum dipilih");
         } else {
-            Stage child = new Stage();
-            FXMLLoader loader = mainApp.showDialog(stage, child, "View/Dialog/AddBarangProduksi.fxml");
-            AddBarangProduksiController controller = loader.getController();
-            controller.setMainApp(mainApp, stage, child);
-            controller.addButton.setOnAction((ActionEvent event) -> {
-                if (controller.barang == null) {
-                    mainApp.showMessage(Modality.NONE, "Warning", "Barang belum dipilih atau kode barang masih kosong");
-                } else if (controller.qtyField.getText().equals("0") || controller.qtyField.getText().equals("")) {
-                    mainApp.showMessage(Modality.NONE, "Warning", "Qty tidak boleh kosong");
-                } else {
+            if (jenisCombo.getSelectionModel().getSelectedItem().equals("Bahan - Barang")
+                    || jenisCombo.getSelectionModel().getSelectedItem().equals("Barang - Barang")) {
+                Stage child = new Stage();
+                FXMLLoader loader = mainApp.showDialog(stage, child, "View/Dialog/AddBarangProduksi.fxml");
+                AddBarangProduksiController controller = loader.getController();
+                controller.setMainApp(mainApp, stage, child);
+                controller.addButton.setOnAction((ActionEvent event) -> {
+                    if (controller.barang == null) {
+                        mainApp.showMessage(Modality.NONE, "Warning", "Barang belum dipilih atau kode barang masih kosong");
+                    } else if (controller.qtyField.getText().equals("0") || controller.qtyField.getText().equals("")) {
+                        mainApp.showMessage(Modality.NONE, "Warning", "Qty tidak boleh kosong");
+                    } else {
+                        mainApp.closeDialog(stage, child);
+                        ProduksiDetailBarang b = null;
+                        for (ProduksiDetailBarang temp : listBarangProduksi) {
+                            if (temp.getKodeBarang().equals(controller.barang.getKodeBarang())) {
+                                b = temp;
+                            }
+                        }
+                        if (b == null) {
+                            b = new ProduksiDetailBarang();
+                            b.setBarang(controller.barang);
+                            b.setKodeBarang(controller.barang.getKodeBarang());
+                            b.setQty(Double.parseDouble(controller.qtyField.getText().replaceAll(",", "")));
+                            listBarangProduksi.add(b);
+                        } else {
+                            b.setQty(b.getQty() + Double.parseDouble(controller.qtyField.getText().replaceAll(",", "")));
+                        }
+                        barangProduksiTable.refresh();
+                        hitungTotalBarang();
+                    }
+                });
+            }
+            if (jenisCombo.getSelectionModel().getSelectedItem().equals("Bahan - Bahan")) {
+                Stage child = new Stage();
+                FXMLLoader loader = mainApp.showDialog(stage, child, "View/Dialog/AddBahanProduksi.fxml");
+                AddBahanProduksiController controller = loader.getController();
+                controller.setMainApp(mainApp, stage, child);
+                controller.setBahan(bahanDiproduksiTable.getSelectionModel().getSelectedItem());
+                controller.saveButton.setOnAction((ActionEvent event) -> {
                     mainApp.closeDialog(stage, child);
-                    ProduksiDetailBarang b = null;
-                    for (ProduksiDetailBarang temp : listBarangProduksi) {
-                        if (temp.getKodeBarang().equals(controller.barang.getKodeBarang())) {
-                            b = temp;
+                    if (controller.kodeKategoriCombo.getSelectionModel().getSelectedItem() == null) {
+                        mainApp.showMessage(Modality.NONE, "Warning", "Kategori bahan belum dipilih");
+                    } else if (controller.kodeBahanField.getText().equals("")) {
+                        mainApp.showMessage(Modality.NONE, "Warning", "Kode bahan masih kosong");
+                    } else if (controller.namaBahanField.getText().equals("")) {
+                        mainApp.showMessage(Modality.NONE, "Warning", "Nama bahan masih kosong");
+                    } else if (controller.beratKotorField.getText().equals("")
+                            || Double.parseDouble(controller.beratKotorField.getText().replaceAll(",", "")) == 0) {
+                        mainApp.showMessage(Modality.NONE, "Warning", "Berat kotor masih kosong");
+                    } else if (controller.beratBersihField.getText().equals("")
+                            || Double.parseDouble(controller.beratBersihField.getText().replaceAll(",", "")) == 0) {
+                        mainApp.showMessage(Modality.NONE, "Warning", "Berat bersih masih kosong");
+                    } else {
+                        Bahan b = new Bahan();
+                        b.setKodeBahan(controller.kodeBahanField.getText());
+                        b.setKodeKategori(controller.kodeKategoriCombo.getSelectionModel().getSelectedItem());
+                        b.setNoKontrak("");
+                        b.setNamaBahan(controller.namaBahanField.getText());
+                        b.setSpesifikasi(controller.spesifikasiField.getText());
+                        b.setKeterangan(controller.keteranganField.getText());
+                        b.setBeratKotor(Double.parseDouble(controller.beratKotorField.getText().replaceAll(",", "")));
+                        b.setBeratBersih(Double.parseDouble(controller.beratBersihField.getText().replaceAll(",", "")));
+                        b.setPanjang(Double.parseDouble(controller.panjangField.getText().replaceAll(",", "")));
+                        b.setHargaBeli(0);
+                        b.setStatus("true");
+
+                        boolean statusInput = false;
+                        for (ProduksiDetailBarang temp : listBarangProduksi) {
+                            if (temp.getKodeBarang().equals(b.getKodeBahan())) {
+                                statusInput = true;
+                            }
+                        }
+                        if (statusInput) {
+                            mainApp.showMessage(Modality.NONE, "Warning", "Kode bahan sudah diinput");
+                        } else {
+                            ProduksiDetailBarang detail = new ProduksiDetailBarang();
+                            detail.setBahan(b);
+                            detail.setKodeBarang(b.getKodeBahan());
+                            detail.setQty(b.getBeratBersih());
+                            detail.setNilai(0);
+                            listBarangProduksi.add(detail);
+                            bahanDiproduksiTable.refresh();
+                            hitungTotalBarang();
                         }
                     }
-                    if (b == null) {
-                        b = new ProduksiDetailBarang();
-                        b.setBarang(controller.barang);
-                        b.setKodeBarang(controller.barang.getKodeBarang());
-                        b.setQty(Double.parseDouble(controller.qtyField.getText().replaceAll(",", "")));
-                        listBarangProduksi.add(b);
-                    } else {
-                        b.setQty(b.getQty() + Double.parseDouble(controller.qtyField.getText().replaceAll(",", "")));
-                    }
-                    barangProduksiTable.refresh();
-                    hitungTotalBarang();
-                }
-            });
+
+                });
+            }
         }
     }
 
@@ -462,59 +648,88 @@ public class NewProduksiBarangController {
         if (gudangCombo.getSelectionModel().getSelectedItem() == null) {
             mainApp.showMessage(Modality.NONE, "Warning", "Gudang belum dipilih");
         } else {
-            Stage child = new Stage();
-            FXMLLoader loader = mainApp.showDialog(stage, child, "View/Dialog/AddBahan.fxml");
-            AddBahanController controller = loader.getController();
-            controller.setMainApp(mainApp, stage, child);
-            controller.getBahan(gudangCombo.getSelectionModel().getSelectedItem());
-            controller.bahanTable.setRowFactory((param) -> {
-                TreeTableRow<StokBahan> row = new TreeTableRow<StokBahan>() {
-                };
-                row.setOnMouseClicked((MouseEvent evt) -> {
-                    if (evt.getButton().equals(MouseButton.PRIMARY) && evt.getClickCount() == 2) {
-                        if (row.getItem().getBahan().getNamaBahan() != null) {
-                            mainApp.closeDialog(stage, child);
-                            StokBahan s = row.getItem();
-                            Bahan bahan = row.getItem().getBahan();
-                            boolean statusInput = false;
-                            for (ProduksiDetailBahan temp : listBahanDiproduksi) {
-                                if (temp.getKodeBarang().equals(bahan.getKodeBahan())) {
-                                    statusInput = true;
+            if (jenisCombo.getSelectionModel().getSelectedItem().equals("Bahan - Barang")
+                    || jenisCombo.getSelectionModel().getSelectedItem().equals("Bahan - Bahan")) {
+                Stage child = new Stage();
+                FXMLLoader loader = mainApp.showDialog(stage, child, "View/Dialog/AddBahan.fxml");
+                AddBahanController controller = loader.getController();
+                controller.setMainApp(mainApp, stage, child);
+                controller.getBahan(gudangCombo.getSelectionModel().getSelectedItem());
+                controller.bahanTable.setRowFactory((param) -> {
+                    TreeTableRow<StokBahan> row = new TreeTableRow<StokBahan>() {
+                    };
+                    row.setOnMouseClicked((MouseEvent evt) -> {
+                        if (evt.getButton().equals(MouseButton.PRIMARY) && evt.getClickCount() == 2) {
+                            if (row.getItem().getBahan().getNamaBahan() != null) {
+                                mainApp.closeDialog(stage, child);
+                                StokBahan s = row.getItem();
+                                Bahan bahan = row.getItem().getBahan();
+                                boolean statusInput = false;
+                                for (ProduksiDetailBahan temp : listBahanDiproduksi) {
+                                    if (temp.getKodeBarang().equals(bahan.getKodeBahan())) {
+                                        statusInput = true;
+                                    }
                                 }
-                            }
-                            if (statusInput) {
-                                mainApp.showMessage(Modality.NONE, "Warning", "Kode bahan sudah diinput");
-                            } else {
-//                            try (Connection con = Koneksi.getConnection()) {
-//                                StokBahan s = StokBahanDAO.getStokAkhir(con,
-//                                        bahan.getKodeBahan(), gudangCombo.getSelectionModel().getSelectedItem());
-//                                if (s == null) {
-//                                    mainApp.showMessage(Modality.NONE, "Warning", "Stok bahan tidak ditemukan");
-//                                } else {
-                                if (s.getStokAkhir() <= 0) {
-                                    mainApp.showMessage(Modality.NONE, "Warning", "Stok bahan sudah habis");
+                                if (statusInput) {
+                                    mainApp.showMessage(Modality.NONE, "Warning", "Kode bahan sudah diinput");
                                 } else {
-                                    bahan.setStokBahan(s);
+                                    if (s == null) {
+                                        mainApp.showMessage(Modality.NONE, "Warning", "Stok bahan tidak ditemukan");
+                                    } else {
+                                        if (s.getStokAkhir() <= 0) {
+                                            mainApp.showMessage(Modality.NONE, "Warning", "Stok bahan sudah habis");
+                                        } else {
+                                            bahan.setStokBahan(s);
 
-                                    ProduksiDetailBahan b = new ProduksiDetailBahan();
-                                    b.setBahan(bahan);
-                                    b.setKodeBarang(bahan.getKodeBahan());
-                                    b.setQty(0);
-                                    b.setBahanHabis(false);
-                                    listBahanDiproduksi.add(b);
-                                    bahanDiproduksiTable.refresh();
-                                    hitungTotalBahan();
+                                            ProduksiDetailBahan b = new ProduksiDetailBahan();
+                                            b.setBahan(bahan);
+                                            b.setKodeBarang(bahan.getKodeBahan());
+                                            b.setQty(0);
+                                            b.setBahanHabis(false);
+                                            listBahanDiproduksi.add(b);
+                                            bahanDiproduksiTable.refresh();
+                                            hitungTotalBahan();
+                                        }
+                                    }
                                 }
-//                                }
-//                            } catch (Exception e) {
-//                                mainApp.showMessage(Modality.NONE, "Error", e.toString());
-//                            }
                             }
                         }
+                    });
+                    return row;
+                });
+            }
+            if (jenisCombo.getSelectionModel().getSelectedItem().equals("Barang - Barang")) {
+                Stage child = new Stage();
+                FXMLLoader loader = mainApp.showDialog(stage, child, "View/Dialog/AddBarangProduksi.fxml");
+                AddBarangProduksiController controller = loader.getController();
+                controller.setMainApp(mainApp, stage, child);
+                controller.addButton.setOnAction((ActionEvent event) -> {
+                    if (controller.barang == null) {
+                        mainApp.showMessage(Modality.NONE, "Warning", "Barang belum dipilih atau kode barang masih kosong");
+                    } else if (controller.qtyField.getText().equals("0") || controller.qtyField.getText().equals("")) {
+                        mainApp.showMessage(Modality.NONE, "Warning", "Qty tidak boleh kosong");
+                    } else {
+                        mainApp.closeDialog(stage, child);
+                        ProduksiDetailBahan b = null;
+                        for (ProduksiDetailBahan temp : listBahanDiproduksi) {
+                            if (temp.getKodeBarang().equals(controller.barang.getKodeBarang())) {
+                                b = temp;
+                            }
+                        }
+                        if (b == null) {
+                            b = new ProduksiDetailBahan();
+                            b.setBarang(controller.barang);
+                            b.setKodeBarang(controller.barang.getKodeBarang());
+                            b.setQty(Double.parseDouble(controller.qtyField.getText().replaceAll(",", "")));
+                            listBahanDiproduksi.add(b);
+                        } else {
+                            b.setQty(b.getQty() + Double.parseDouble(controller.qtyField.getText().replaceAll(",", "")));
+                        }
+                        bahanDiproduksiTable.refresh();
+                        hitungTotalBahan();
                     }
                 });
-                return row;
-            });
+            }
         }
     }
 
@@ -542,8 +757,14 @@ public class NewProduksiBarangController {
         double totalQty = 0;
         double totalBerat = 0;
         for (ProduksiDetailBahan d : listBahanDiproduksi) {
-            totalQty = totalQty + 1;
-            totalBerat = totalBerat + d.getQty();
+            if (jenisCombo.getSelectionModel().getSelectedItem().equals("Bahan - Barang")
+                    || jenisCombo.getSelectionModel().getSelectedItem().equals("Bahan - Bahan")) {
+                totalQty = totalQty + 1;
+                totalBerat = totalBerat + d.getQty();
+            } else if (jenisCombo.getSelectionModel().getSelectedItem().equals("Barang - Barang")) {
+                totalQty = totalQty + d.getQty();
+                totalBerat = totalBerat + (d.getQty() * d.getBarang().getBerat());
+            }
         }
         totalQtyBahanLabel.setText(df.format(totalQty));
         totalBeratBahanLabel.setText(df.format(totalBerat));
@@ -553,8 +774,14 @@ public class NewProduksiBarangController {
         double totalQty = 0;
         double totalBerat = 0;
         for (ProduksiDetailBarang d : listBarangProduksi) {
-            totalQty = totalQty + d.getQty();
-            totalBerat = totalBerat + d.getQty() * d.getBarang().getBerat();
+            if (jenisCombo.getSelectionModel().getSelectedItem().equals("Bahan - Bahan")) {
+                totalQty = totalQty + 1;
+                totalBerat = totalBerat + d.getQty();
+            } else if (jenisCombo.getSelectionModel().getSelectedItem().equals("Barang - Barang")
+                    || jenisCombo.getSelectionModel().getSelectedItem().equals("Bahan - Barang")) {
+                totalQty = totalQty + d.getQty();
+                totalBerat = totalBerat + d.getQty() * d.getBarang().getBerat();
+            }
         }
         totalQtyBarangLabel.setText(df.format(totalQty));
         totalBeratBarangLabel.setText(df.format(totalBerat));

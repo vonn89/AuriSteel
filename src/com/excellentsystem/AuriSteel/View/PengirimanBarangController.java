@@ -146,7 +146,6 @@ public class PengirimanBarangController {
             double tonase = 0;
             for (PenjualanBarangDetail d : cellData.getValue().getListPenjualanBarangDetail()) {
                 tonase = tonase + (d.getQty() * d.getBarang().getBerat());
-                System.out.println(d.getNoPenjualan() + " - " + tonase);
             }
             return new SimpleDoubleProperty(tonase);
         });

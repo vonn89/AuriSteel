@@ -113,7 +113,7 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
                   </TableView>
-                  <HBox alignment="TOP_RIGHT" minHeight="25.0" prefHeight="25.0" spacing="10.0" style="-fx-background-color: seccolor6;">
+                  <HBox alignment="CENTER_RIGHT" minHeight="25.0" prefHeight="25.0" spacing="10.0" style="-fx-background-color: seccolor6;">
                      <children>
                         <Label text="Total Qty" />
                         <Label fx:id="totalQtyField" alignment="CENTER" style="-fx-font-weight: bold;" text="0" />
@@ -135,7 +135,7 @@
                   <VBox style="-fx-background-color: seccolor6;" HBox.hgrow="ALWAYS">
                      <children>
                         <Label text="Catatan" />
-                        <TextArea fx:id="catatanField" styleClass="text-area-border" wrapText="true" />
+                        <TextArea fx:id="catatanField" editable="false" styleClass="text-area-border" wrapText="true" />
                      </children>
                      <padding>
                         <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />

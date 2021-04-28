@@ -219,7 +219,7 @@ public class NewPemesananCoilRpController {
                 mainApp.closeLoading();
                 addCustomerButton.setVisible(false);
                 paymentTermField.setDisable(true);
-                catatanField.setDisable(true);
+                catatanField.setEditable(false);
                 saveButton.setVisible(false);
                 cancelButton.setVisible(false);
                 AnchorPane.setBottomAnchor(gridPane, 0.0);
