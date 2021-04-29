@@ -409,8 +409,8 @@ public class NewPemesananController {
     @FXML
     private void editBarang(PemesananBarangDetail detail) {
         Stage child = new Stage();
-        FXMLLoader loader = mainApp.showDialog(stage, child, "View/Dialog/EditBarangPemesanan.fxml");
-        EditBarangPemesananController controller = loader.getController();
+        FXMLLoader loader = mainApp.showDialog(stage, child, "View/Dialog/EditBarang.fxml");
+        EditBarangController controller = loader.getController();
         controller.setMainApp(mainApp, stage, child);
         controller.editBarang(detail);
         controller.addButton.setOnAction((ActionEvent event) -> {

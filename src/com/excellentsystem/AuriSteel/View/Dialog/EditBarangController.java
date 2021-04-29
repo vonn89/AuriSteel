@@ -11,6 +11,7 @@ import com.excellentsystem.AuriSteel.Main;
 import static com.excellentsystem.AuriSteel.Main.df;
 import com.excellentsystem.AuriSteel.Model.Barang;
 import com.excellentsystem.AuriSteel.Model.PemesananBarangDetail;
+import com.excellentsystem.AuriSteel.Model.PenjualanBarangDetail;
 import java.sql.Connection;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -24,7 +25,7 @@ import javafx.stage.Stage;
  *
  * @author Xtreme
  */
-public class EditBarangPemesananController {
+public class EditBarangController {
 
     @FXML
     private TextField namaBarangField;
@@ -112,6 +113,35 @@ public class EditBarangPemesananController {
     }
 
     public void editBarang(PemesananBarangDetail d) {
+        Task<Barang> task = new Task<Barang>() {
+            @Override
+            public Barang call() throws Exception {
+                try (Connection con = Koneksi.getConnection()) {
+                    return BarangDAO.get(con, d.getKodeBarang());
+                }
+            }
+        };
+        task.setOnRunning((e) -> {
+            mainApp.showLoadingScreen();
+        });
+        task.setOnSucceeded((ev) -> {
+            mainApp.closeLoading();
+            barang = task.getValue();
+            namaBarangField.setText(d.getNamaBarang());
+            keteranganField.setText(d.getKeterangan());
+            catatanInternField.setText(d.getCatatanIntern());
+            qtyField.setText(df.format(d.getQty()));
+            satuanField.setText(d.getSatuan());
+            hargaJualField.setText(df.format(d.getHargaJual()));
+            totalField.setText(df.format(d.getTotal()));
+        });
+        task.setOnFailed((e) -> {
+            mainApp.showMessage(Modality.NONE, "Error", task.getException().toString());
+            mainApp.closeLoading();
+        });
+        new Thread(task).start();
+    }
+    public void editBarang(PenjualanBarangDetail d) {
         Task<Barang> task = new Task<Barang>() {
             @Override
             public Barang call() throws Exception {

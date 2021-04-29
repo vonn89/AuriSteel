@@ -244,6 +244,10 @@ public class PenjualanController {
                         pembayaran.setOnAction((ActionEvent e) -> {
                             showDetailPiutang(item);
                         });
+                        MenuItem revisi = new MenuItem("Revisi Penjualan");
+                        revisi.setOnAction((ActionEvent e) -> {
+                            revisiPenjualan(item);
+                        });
                         MenuItem invoice = new MenuItem("Print Invoice");
                         invoice.setOnAction((ActionEvent e) -> {
                             printInvoice(item);
@@ -269,6 +273,9 @@ public class PenjualanController {
                             getPenjualan();
                         });
                         for (Otoritas o : sistem.getUser().getOtoritas()) {
+                            if (o.getJenis().equals("Revisi Penjualan") && o.isStatus()) {
+                                rm.getItems().add(revisi);
+                            }
                             if (o.getJenis().equals("Detail Penjualan") && o.isStatus()) {
                                 rm.getItems().add(detail);
                             }
@@ -530,6 +537,51 @@ public class PenjualanController {
         x.setMainApp(mainApp, mainApp.MainStage, stage);
     }
 
+    private void revisiPenjualan(PenjualanBarangHead p) {
+        Stage stage = new Stage();
+        FXMLLoader loader = mainApp.showDialog(mainApp.MainStage, stage, "View/Dialog/NewPenjualan.fxml");
+        NewPenjualanController controller = loader.getController();
+        controller.setMainApp(mainApp, mainApp.MainStage, stage);
+        controller.setRevisiPenjualan(p.getNoPenjualan());
+        controller.saveButton.setOnAction((event) -> {
+            if (controller.allPenjualanDetail.isEmpty()) {
+                mainApp.showMessage(Modality.NONE, "Warning", "Barang yang dijual tidak ada");
+            } else if (Double.parseDouble(controller.grandtotalField.getText().replaceAll(",", "")) < p.getPembayaran()) {
+                mainApp.showMessage(Modality.NONE, "Warning", "Tidak dapat disimpan karena jumlah pembayaran lebih besar dari total penjualan");
+            } else {
+                Task<String> task = new Task<String>() {
+                    @Override
+                    public String call() throws Exception {
+                        try (Connection con = Koneksi.getConnection()) {
+                            p.setTotalPenjualan(Double.parseDouble(controller.grandtotalField.getText().replaceAll(",", "")));
+                            p.setSisaPembayaran(p.getTotalPenjualan()-p.getPembayaran());
+                            p.setListPenjualanBarangDetail(controller.allPenjualanDetail);
+                            return Service.editPenjualan(con, p);
+                        }
+                    }
+                };
+                task.setOnRunning((ex) -> {
+                    mainApp.showLoadingScreen();
+                });
+                task.setOnSucceeded((WorkerStateEvent ex) -> {
+                    mainApp.closeLoading();
+                    getPenjualan();
+                    if (task.getValue().equals("true")) {
+                        mainApp.closeDialog(mainApp.MainStage, stage);
+                        mainApp.showMessage(Modality.NONE, "Success", "Data penjualan berhasil disimpan");
+                    } else {
+                        mainApp.showMessage(Modality.NONE, "Error", task.getValue());
+                    }
+                });
+                task.setOnFailed((ex) -> {
+                    mainApp.showMessage(Modality.NONE, "Error", task.getException().toString());
+                    mainApp.closeLoading();
+                });
+                new Thread(task).start();
+            }
+        });
+    }
+    
     private void showDetailPiutang(PenjualanBarangHead p) {
         Stage stage = new Stage();
         FXMLLoader loader = mainApp.showDialog(mainApp.MainStage, stage, "View/Dialog/DetailPiutang.fxml");

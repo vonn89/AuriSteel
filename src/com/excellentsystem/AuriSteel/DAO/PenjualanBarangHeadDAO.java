@@ -164,7 +164,7 @@ public class PenjualanBarangHeadDAO {
         return p;
     }
     public static String getId(Connection con, Date date)throws Exception{
-        PreparedStatement ps = con.prepareStatement("select max(right(no_penjualan,3)) from tt_penjualan_head "
+        PreparedStatement ps = con.prepareStatement("select max(mid(no_penjualan,8,3)) from tt_penjualan_head "
                 + " where mid(no_penjualan,4,4) = ?");
         ps.setString(1, yymm.format(date));
         ResultSet rs = ps.executeQuery();
