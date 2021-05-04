@@ -166,7 +166,7 @@ public class PenjualanController {
         });
         tglPengirimanColumn.setCellFactory(col -> Function.getWrapTableCell(tglPengirimanColumn));
         tglPengirimanColumn.setComparator(Function.sortDate(tglLengkap));
-        
+
         tglPenjualanColumn.setCellValueFactory(cellData -> {
             try {
                 return new SimpleStringProperty(tglLengkap.format(tglSql.parse(cellData.getValue().getTglPenjualan())));
@@ -530,6 +530,7 @@ public class PenjualanController {
         controller.setMainApp(mainApp, mainApp.MainStage, child);
         controller.setDetailBebanPenjualan(p.getNoPenjualan());
     }
+
     private void fakturPajak() {
         Stage stage = new Stage();
         FXMLLoader loader = mainApp.showDialog(mainApp.MainStage, stage, "View/Dialog/LaporanFakturPajak.fxml");
@@ -553,10 +554,24 @@ public class PenjualanController {
                     @Override
                     public String call() throws Exception {
                         try (Connection con = Koneksi.getConnection()) {
-                            p.setTotalPenjualan(Double.parseDouble(controller.grandtotalField.getText().replaceAll(",", "")));
-                            p.setSisaPembayaran(p.getTotalPenjualan()-p.getPembayaran());
+                            String noPenjualan = controller.penjualan.getNoPenjualan();
+                            if (noPenjualan.length() > 10) {
+                                String no = noPenjualan.substring(0, 10);
+                                int noUrut = Integer.parseInt(noPenjualan.substring(11, 12)) + 1;
+                                noPenjualan = no + "-" + String.valueOf(noUrut);
+                            } else {
+                                noPenjualan = noPenjualan + "-1";
+                            }
+                            controller.penjualan.setNoPenjualan(noPenjualan);
+
                             p.setListPenjualanBarangDetail(controller.allPenjualanDetail);
-                            return Service.editPenjualan(con, p);
+                            double totalPenjualan = 0;
+                            for (PenjualanBarangDetail d : controller.penjualan.getListPenjualanBarangDetail()) {
+                                totalPenjualan = totalPenjualan + d.getTotal();
+                            }
+                            controller.penjualan.setTotalPenjualan(totalPenjualan);
+                            
+                            return Service.editPenjualan(con, p, controller.penjualan);
                         }
                     }
                 };
@@ -581,7 +596,7 @@ public class PenjualanController {
             }
         });
     }
-    
+
     private void showDetailPiutang(PenjualanBarangHead p) {
         Stage stage = new Stage();
         FXMLLoader loader = mainApp.showDialog(mainApp.MainStage, stage, "View/Dialog/DetailPiutang.fxml");

@@ -22,7 +22,7 @@ public class Koneksi {
 
         
         String ipServer = "34.87.153.33";
-        String DbName = "jdbc:mysql://"+ipServer+":3306/auristeelnew?"
+        String DbName = "jdbc:mysql://"+ipServer+":3306/auristeel?"
                 + "connectTimeout=10000&socketTimeout=10000&autoReconnect=true";
         Class.forName("com.mysql.jdbc.Driver");
         return DriverManager.getConnection(DbName,"root","yunaz051189");

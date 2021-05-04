@@ -105,7 +105,7 @@ public class NewPenjualanController {
     @FXML
     private Button cancelButton;
 
-    private PenjualanBarangHead penjualan;
+    public PenjualanBarangHead penjualan;
     public ObservableList<PenjualanBarangDetail> allPenjualanDetail = FXCollections.observableArrayList();
     private Main mainApp;
     private Stage stage;
