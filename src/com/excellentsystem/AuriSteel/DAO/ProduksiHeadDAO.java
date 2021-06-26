@@ -119,14 +119,14 @@ public class ProduksiHeadDAO {
         return p;
     }
     public static String getId(Connection con, Date date)throws Exception{
-        PreparedStatement ps = con.prepareStatement("select max(right(kode_produksi,3)) from tt_produksi_head "
+        PreparedStatement ps = con.prepareStatement("select max(right(kode_produksi,4)) from tt_produksi_head "
                 + " where mid(kode_produksi,4,4) = ?");
         ps.setString(1, yymm.format(date));
         ResultSet rs = ps.executeQuery();
         if(rs.next())
-            return "PR-"+yymm.format(date)+new DecimalFormat("000").format(rs.getInt(1)+1);
+            return "PR-"+yymm.format(date)+new DecimalFormat("0000").format(rs.getInt(1)+1);
         else
-            return "PR-"+yymm.format(date)+new DecimalFormat("000").format(1);
+            return "PR-"+yymm.format(date)+new DecimalFormat("0000").format(1);
     }
     public static void insert(Connection con, ProduksiHead p)throws Exception{
         PreparedStatement ps = con.prepareStatement("insert into tt_produksi_head values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");

@@ -550,49 +550,49 @@ public class PenjualanController {
             } else if (Double.parseDouble(controller.grandtotalField.getText().replaceAll(",", "")) < p.getPembayaran()) {
                 mainApp.showMessage(Modality.NONE, "Warning", "Tidak dapat disimpan karena jumlah pembayaran lebih besar dari total penjualan");
             } else {
-                Task<String> task = new Task<String>() {
-                    @Override
-                    public String call() throws Exception {
-                        try (Connection con = Koneksi.getConnection()) {
-                            String noPenjualan = controller.penjualan.getNoPenjualan();
-                            if (noPenjualan.length() > 10) {
-                                String no = noPenjualan.substring(0, 10);
-                                int noUrut = Integer.parseInt(noPenjualan.substring(11, 12)) + 1;
-                                noPenjualan = no + "-" + String.valueOf(noUrut);
-                            } else {
-                                noPenjualan = noPenjualan + "-1";
-                            }
-                            controller.penjualan.setNoPenjualan(noPenjualan);
-
-                            p.setListPenjualanBarangDetail(controller.allPenjualanDetail);
-                            double totalPenjualan = 0;
-                            for (PenjualanBarangDetail d : controller.penjualan.getListPenjualanBarangDetail()) {
-                                totalPenjualan = totalPenjualan + d.getTotal();
-                            }
-                            controller.penjualan.setTotalPenjualan(totalPenjualan);
-                            
-                            return Service.editPenjualan(con, p, controller.penjualan);
-                        }
-                    }
-                };
-                task.setOnRunning((ex) -> {
-                    mainApp.showLoadingScreen();
-                });
-                task.setOnSucceeded((WorkerStateEvent ex) -> {
-                    mainApp.closeLoading();
-                    getPenjualan();
-                    if (task.getValue().equals("true")) {
-                        mainApp.closeDialog(mainApp.MainStage, stage);
-                        mainApp.showMessage(Modality.NONE, "Success", "Data penjualan berhasil disimpan");
-                    } else {
-                        mainApp.showMessage(Modality.NONE, "Error", task.getValue());
-                    }
-                });
-                task.setOnFailed((ex) -> {
-                    mainApp.showMessage(Modality.NONE, "Error", task.getException().toString());
-                    mainApp.closeLoading();
-                });
-                new Thread(task).start();
+//                Task<String> task = new Task<String>() {
+//                    @Override
+//                    public String call() throws Exception {
+//                        try (Connection con = Koneksi.getConnection()) {
+//                            String noPenjualan = controller.penjualan.getNoPenjualan();
+//                            if (noPenjualan.length() > 10) {
+//                                String no = noPenjualan.substring(0, 10);
+//                                int noUrut = Integer.parseInt(noPenjualan.substring(11, 12)) + 1;
+//                                noPenjualan = no + "-" + String.valueOf(noUrut);
+//                            } else {
+//                                noPenjualan = noPenjualan + "-1";
+//                            }
+//                            controller.penjualan.setNoPenjualan(noPenjualan);
+//
+//                            p.setListPenjualanBarangDetail(controller.allPenjualanDetail);
+//                            double totalPenjualan = 0;
+//                            for (PenjualanBarangDetail d : controller.penjualan.getListPenjualanBarangDetail()) {
+//                                totalPenjualan = totalPenjualan + d.getTotal();
+//                            }
+//                            controller.penjualan.setTotalPenjualan(totalPenjualan);
+//                            
+//                            return Service.editPenjualan(con, p, controller.penjualan);
+//                        }
+//                    }
+//                };
+//                task.setOnRunning((ex) -> {
+//                    mainApp.showLoadingScreen();
+//                });
+//                task.setOnSucceeded((WorkerStateEvent ex) -> {
+//                    mainApp.closeLoading();
+//                    getPenjualan();
+//                    if (task.getValue().equals("true")) {
+//                        mainApp.closeDialog(mainApp.MainStage, stage);
+//                        mainApp.showMessage(Modality.NONE, "Success", "Data penjualan berhasil disimpan");
+//                    } else {
+//                        mainApp.showMessage(Modality.NONE, "Error", task.getValue());
+//                    }
+//                });
+//                task.setOnFailed((ex) -> {
+//                    mainApp.showMessage(Modality.NONE, "Error", task.getException().toString());
+//                    mainApp.closeLoading();
+//                });
+//                new Thread(task).start();
             }
         });
     }

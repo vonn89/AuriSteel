@@ -461,6 +461,7 @@ public class ProduksiBarangController {
                             con, tglMulaiPicker.getValue().toString(), tglAkhirPicker.getValue().toString(),
                             groupByCombo.getSelectionModel().getSelectedItem(), status);
                     for (ProduksiHead p : listProduksi) {
+                        System.out.println(p.getKodeProduksi());
                         List<ProduksiDetailBahan> detailBahan = new ArrayList<>();
                         for (ProduksiDetailBahan d : listProduksiBahan) {
                             if (p.getKodeProduksi().equals(d.getKodeProduksi())) {
@@ -589,8 +590,8 @@ public class ProduksiBarangController {
                 mainApp.showMessage(Modality.NONE, "Warning", "Barang jadi masih kosong");
             } else if (controller.jenisCombo.getSelectionModel().getSelectedItem().equals("Bahan - Barang") && (sisa > 10 || sisa < -10)) {
                 mainApp.showMessage(Modality.NONE, "Warning", "Selisih berat lebih dari 10 persen");
-            } else if (controller.jenisCombo.getSelectionModel().getSelectedItem().equals("Bahan - Bahan") && (sisa > 1 || sisa < -1)) {
-                mainApp.showMessage(Modality.NONE, "Warning", "Selisih berat lebih dari 1 persen");
+            } else if (controller.jenisCombo.getSelectionModel().getSelectedItem().equals("Bahan - Bahan") && (sisa > 2 || sisa < -2)) {
+                mainApp.showMessage(Modality.NONE, "Warning", "Selisih berat lebih dari 2 persen");
             } else {
                 Task<String> task = new Task<String>() {
                     @Override

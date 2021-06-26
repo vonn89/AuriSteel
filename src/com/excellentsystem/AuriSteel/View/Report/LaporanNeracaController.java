@@ -225,7 +225,7 @@ public class LaporanNeracaController {
             gridPane.getColumnConstraints().add(new ColumnConstraints(10, 100, Double.MAX_VALUE, Priority.ALWAYS, HPos.LEFT, true));
             gridPane.getColumnConstraints().add(new ColumnConstraints(200, 200, 250, Priority.ALWAYS, HPos.RIGHT, true));
 
-            int row = 15 + kategoriKeuangan.size() + kategoriPiutang.size() + kategoriAsetTetap.size();
+            int row = 15 + kategoriKeuangan.size() + kategoriPiutang.size() + kategoriAsetTetap.size() + (listGudang.size()*2);
             for (int i = 0; i < row; i++) {
                 gridPane.getRowConstraints().add(new RowConstraints(30, 30, 30));
                 if (i % 2 == 0) {

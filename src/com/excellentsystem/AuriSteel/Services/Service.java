@@ -1803,7 +1803,7 @@ public class Service {
                     if (d.getKodeBarang().equals(detail.getKodeBarang())) {
                         detail.setNilai((detail.getNilai() * detail.getQty() + d.getNilai() * d.getQty())
                                 / (detail.getQty() + d.getQty()));
-                        detail.setQty(detail.getQty() + d.getQty());
+                        detail.setQty(pembulatan(detail.getQty() + d.getQty()));
                         inStok = true;
                     }
                 }
@@ -1854,295 +1854,377 @@ public class Service {
         }
     }
 
-    public static String editPenjualan(Connection con, PenjualanBarangHead penjualanLama, PenjualanBarangHead penjualanBaru) {
-        try {
-            con.setAutoCommit(false);
-            String status = "true";
-
-            Date date = Function.getServerDate(con);
-            String noKeuangan = KeuanganDAO.getId(con, date);
-
-            penjualanLama.setListPenjualanBarangDetail(PenjualanBarangDetailDAO.getAllPenjualanDetail(con, penjualanLama.getNoPenjualan()));
-
-            PemesananBarangHead pemesanan = PemesananBarangHeadDAO.get(con, penjualanLama.getNoPemesanan());
-
-            Piutang piutangLama = PiutangDAO.getByKategoriAndKeteranganAndStatus(
-                    con, "Piutang Penjualan", penjualanLama.getNoPenjualan(), "%");
-
-            TerimaPembayaran dp = null;
-            List<TerimaPembayaran> terimaPembayaran = TerimaPembayaranDAO.getAllByNoPiutangAndStatus(
-                    con, piutangLama.getNoPiutang(), "true");
-            for (TerimaPembayaran tp : terimaPembayaran) {
-                if (tp.getTipeKeuangan().equals("Down Payment")) {
-                    dp = tp;
-                } else {
-                    status = "Tidak dapat dibatal,karena sudah ada pembayaran";
-                }
-            }
-
-            //update penjualan lama
-            penjualanLama.setTglBatal(tglSql.format(date));
-            penjualanLama.setUserBatal(sistem.getUser().getKodeUser());
-            penjualanLama.setStatus("false");
-            PenjualanBarangHeadDAO.update(con, penjualanLama);
-
-            //insert penjualan baru
-            double sisadp = pemesanan.getSisaDownPayment() + penjualanLama.getPembayaran();
-            if (penjualanBaru.getTotalPenjualan() >= sisadp) {
-                penjualanBaru.setPembayaran(sisadp);
-            } else if (penjualanBaru.getTotalPenjualan() < sisadp) {
-                penjualanBaru.setPembayaran(penjualanBaru.getTotalPenjualan());
-            }
-            penjualanBaru.setSisaPembayaran(penjualanBaru.getTotalPenjualan() - penjualanBaru.getPembayaran());
-            PenjualanBarangHeadDAO.update(con, penjualanBaru);
-
-            //delete piutang lama
-            PiutangDAO.delete(con, piutangLama);
-
-            //insert piutang baru
-            Piutang piutangBaru = new Piutang();
-            piutangBaru.setNoPiutang(PiutangDAO.getId(con, date));
-            piutangBaru.setTglPiutang(penjualanBaru.getTglPenjualan());
-            piutangBaru.setKategori("Piutang Penjualan");
-            piutangBaru.setKeterangan(penjualanBaru.getNoPenjualan());
-            piutangBaru.setTipeKeuangan("Penjualan");
-            piutangBaru.setJumlahPiutang(penjualanBaru.getTotalPenjualan());
-            piutangBaru.setPembayaran(penjualanBaru.getPembayaran());
-            piutangBaru.setSisaPiutang(penjualanBaru.getSisaPembayaran());
-            piutangBaru.setJatuhTempo("2000-01-01");
-            piutangBaru.setKodeUser(sistem.getUser().getKodeUser());
-            if (piutangBaru.getSisaPiutang() > 0) {
-                piutangBaru.setStatus("open");
-            } else {
-                piutangBaru.setStatus("close");
-            }
-            PiutangDAO.insert(con, piutangBaru);
-
-            KeuanganDAO.delete(con, "Penjualan", "Penjualan", "Penjualan - " + penjualanLama.getNoPenjualan());
-            KeuanganDAO.delete(con, "Piutang", "Piutang Penjualan", "Penjualan - " + penjualanLama.getNoPenjualan());
-
-            insertKeuangan(con, noKeuangan, penjualanBaru.getTglPenjualan(), "Penjualan", "Penjualan",
-                    "Penjualan - " + penjualanBaru.getNoPenjualan(), penjualanBaru.getTotalPenjualan(), sistem.getUser().getKodeUser());
-            insertKeuangan(con, noKeuangan, penjualanBaru.getTglPenjualan(), "Piutang", "Piutang Penjualan",
-                    "Penjualan - " + penjualanBaru.getNoPenjualan(), penjualanBaru.getSisaPembayaran(), sistem.getUser().getKodeUser());
-
-            //batal terima pembayaran dp
-            List<Hutang> listHutang = HutangDAO.getAllByKategoriAndKeteranganAndStatus(
-                    con, "Terima Pembayaran Down Payment", pemesanan.getNoPemesanan(), "%");
-            if (dp != null) {
-                dp.setTglBatal(tglSql.format(date));
-                dp.setUserBatal(sistem.getUser().getKodeUser());
-                dp.setStatus("false");
-                TerimaPembayaranDAO.update(con, dp);
-
-                for (Hutang h : listHutang) {
-                    List<Pembayaran> pembayaranLama = PembayaranDAO.getAllByNoHutang(con, h.getNoHutang(), "true");
-                    for (Pembayaran p : pembayaranLama) {
-                        if (p.getTipeKeuangan().equals("Penjualan") && p.getCatatan().equals(penjualanLama.getNoPenjualan())) {
-                            p.setTglBatal(tglSql.format(date));
-                            p.setUserBatal(sistem.getUser().getKodeUser());
-                            p.setStatus("false");
-                            PembayaranDAO.update(con, p);
-
-                            h.setPembayaran(h.getPembayaran() - p.getJumlahPembayaran());
-                            h.setSisaHutang(h.getSisaHutang() + p.getJumlahPembayaran());
-                        }
-                    }
-                }
-            }
-            if (penjualanBaru.getPembayaran() > 0) {
-                TerimaPembayaran tp = new TerimaPembayaran();
-                tp.setNoTerimaPembayaran(TerimaPembayaranDAO.getId(con, date));
-                tp.setTglTerima(penjualanBaru.getTglPenjualan());
-                tp.setNoPiutang(piutangBaru.getNoPiutang());
-                tp.setJumlahPembayaran(penjualanBaru.getPembayaran());
-                tp.setTipeKeuangan("Down Payment");
-                tp.setCatatan(penjualanBaru.getNoPemesanan());
-                tp.setKodeUser(sistem.getUser().getKodeUser());
-                tp.setTglBatal("2000-01-01 00:00:00");
-                tp.setUserBatal("");
-                tp.setStatus("true");
-                TerimaPembayaranDAO.insert(con, tp);
-
-                double bayar = penjualanBaru.getPembayaran();
-                for (Hutang h : listHutang) {
-                    if (h.getSisaHutang() > bayar) {
-                        Pembayaran pembayaran = new Pembayaran();
-                        pembayaran.setNoPembayaran(PembayaranDAO.getId(con, date));
-                        pembayaran.setTglPembayaran(penjualanBaru.getTglPenjualan());
-                        pembayaran.setNoHutang(h.getNoHutang());
-                        pembayaran.setJumlahPembayaran(bayar);
-                        pembayaran.setTipeKeuangan("Penjualan");
-                        pembayaran.setCatatan(penjualanBaru.getNoPenjualan());
-                        pembayaran.setKodeUser(sistem.getUser().getKodeUser());
-                        pembayaran.setTglBatal("2000-01-01 00:00:00");
-                        pembayaran.setUserBatal("");
-                        pembayaran.setStatus("true");
-                        PembayaranDAO.insert(con, pembayaran);
-
-                        h.setPembayaran(h.getPembayaran() + bayar);
-                        h.setSisaHutang(h.getSisaHutang() - bayar);
-
-                        bayar = 0;
-                    } else {
-                        Pembayaran pembayaran = new Pembayaran();
-                        pembayaran.setNoPembayaran(PembayaranDAO.getId(con, date));
-                        pembayaran.setTglPembayaran(penjualanBaru.getTglPenjualan());
-                        pembayaran.setNoHutang(h.getNoHutang());
-                        pembayaran.setJumlahPembayaran(h.getSisaHutang());
-                        pembayaran.setTipeKeuangan("Penjualan");
-                        pembayaran.setCatatan(penjualanBaru.getNoPenjualan());
-                        pembayaran.setKodeUser(sistem.getUser().getKodeUser());
-                        pembayaran.setTglBatal("2000-01-01 00:00:00");
-                        pembayaran.setUserBatal("");
-                        pembayaran.setStatus("true");
-                        PembayaranDAO.insert(con, pembayaran);
-
-                        h.setPembayaran(h.getPembayaran() + h.getSisaHutang());
-                        h.setSisaHutang(h.getSisaHutang() - h.getSisaHutang());
-                        h.setStatus("close");
-
-                        bayar = bayar - h.getSisaHutang();
-                    }
-                }
-            }
-            for (Hutang h : listHutang) {
-                HutangDAO.update(con, h);
-            }
-            KeuanganDAO.delete(con, "Hutang", "Terima Pembayaran Down Payment", "Penjualan - " + penjualanLama.getNoPenjualan());
-
-            insertKeuangan(con, noKeuangan, penjualanBaru.getTglPenjualan(), "Hutang", "Terima Pembayaran Down Payment",
-                    "Penjualan - " + penjualanBaru.getNoPenjualan(), -penjualanBaru.getPembayaran(), sistem.getUser().getKodeUser());
-
-            List<PenjualanBarangDetail> stokBatalKeluar = new ArrayList<>();
-            for (PenjualanBarangDetail d : penjualanLama.getListPenjualanBarangDetail()) {
-                Boolean inStok = false;
-                for (PenjualanBarangDetail detail : stokBatalKeluar) {
-                    if (d.getKodeBarang().equals(detail.getKodeBarang())) {
-                        detail.setNilai((detail.getNilai() * detail.getQty() + d.getNilai() * d.getQty())
-                                / (detail.getQty() + d.getQty()));
-                        detail.setQty(detail.getQty() + d.getQty());
-                        inStok = true;
-                    }
-                }
-                if (!inStok) {
-                    PenjualanBarangDetail temp = new PenjualanBarangDetail();
-                    temp.setNoPenjualan(d.getNoPenjualan());
-                    temp.setNoPemesanan(d.getNoPemesanan());
-                    temp.setNoUrut(d.getNoUrut());
-                    temp.setKodeBarang(d.getKodeBarang());
-                    temp.setNamaBarang(d.getNamaBarang());
-                    temp.setKeterangan(d.getKeterangan());
-                    temp.setSatuan(d.getSatuan());
-                    temp.setQty(d.getQty());
-                    temp.setNilai(d.getNilai());
-                    temp.setHargaJual(d.getHargaJual());
-                    temp.setTotal(d.getTotal());
-                    stokBatalKeluar.add(temp);
-                }
-            }
-
-            List<PenjualanBarangDetail> stokKeluar = new ArrayList<>();
-            double hpp = 0;
-            for (PenjualanBarangDetail d : penjualanBaru.getListPenjualanBarangDetail()) {
-                LogBarang log = LogBarangDAO.getLastByBarangAndGudang(con, d.getKodeBarang(), penjualanBaru.getKodeGudang());
-                if (log.getStokAkhir() != 0) {
-                    d.setNilai(log.getNilaiAkhir() / log.getStokAkhir());
-                }
-                PenjualanBarangDetailDAO.update(con, d);
-
-                hpp = hpp + d.getNilai() * d.getQty();
-
-                Boolean inStok = false;
-                for (PenjualanBarangDetail detail : stokKeluar) {
-                    if (d.getKodeBarang().equals(detail.getKodeBarang())) {
-                        detail.setNilai((detail.getNilai() * detail.getQty() + d.getNilai() * d.getQty())
-                                / (detail.getQty() + d.getQty()));
-                        detail.setQty(detail.getQty() + d.getQty());
-                        inStok = true;
-                    }
-                }
-                if (!inStok) {
-                    PenjualanBarangDetail temp = new PenjualanBarangDetail();
-                    temp.setNoPenjualan(d.getNoPenjualan());
-                    temp.setNoPemesanan(d.getNoPemesanan());
-                    temp.setNoUrut(d.getNoUrut());
-                    temp.setKodeBarang(d.getKodeBarang());
-                    temp.setNamaBarang(d.getNamaBarang());
-                    temp.setKeterangan(d.getKeterangan());
-                    temp.setSatuan(d.getSatuan());
-                    temp.setQty(d.getQty());
-                    temp.setNilai(d.getNilai());
-                    temp.setHargaJual(d.getHargaJual());
-                    temp.setTotal(d.getTotal());
-                    stokKeluar.add(temp);
-                }
-            }
-            
-            for (PenjualanBarangDetail d : stokBatalKeluar) {
-                StokBarang stok = StokBarangDAO.get(con, tglBarang.format(tglSql.parse(penjualanLama.getTglPenjualan())), d.getKodeBarang(), penjualanLama.getKodeGudang());
-                stok.setStokKeluar(stok.getStokKeluar() - d.getQty());
-                stok.setStokAkhir(stok.getStokAkhir() + d.getQty());
-                StokBarangDAO.update(con, stok);
-
-                LogBarangDAO.delete(con, d.getKodeBarang(), penjualanLama.getKodeGudang(), "Penjualan", penjualanLama.getNoPenjualan());
-
-                resetStokDanLogBarang(con, d.getKodeBarang(), penjualanLama.getKodeGudang(), penjualanLama.getTglPenjualan(), date);
-            }
-            for (PenjualanBarangDetail d : stokKeluar) {
-                status = insertStokAndLogBarang(con, date, d.getKodeBarang(), penjualanBaru.getKodeGudang(), "Penjualan", penjualanBaru.getNoPenjualan(),
-                        0, 0, d.getQty(), (d.getNilai() * d.getQty()), status);
-                
-                resetStokDanLogBarang(con, d.getKodeBarang(), penjualanLama.getKodeGudang(), penjualanLama.getTglPenjualan(), date);
-            }
-
-            KeuanganDAO.delete(con, "HPP", "Penjualan", "Penjualan - " + penjualanLama.getNoPenjualan());
-            KeuanganDAO.delete(con, "Stok Barang", penjualanLama.getKodeGudang(), "Penjualan - " + penjualanLama.getNoPenjualan());
-
-            insertKeuangan(con, noKeuangan, penjualanBaru.getTglPenjualan(), "HPP", "Penjualan",
-                    "Penjualan - " + penjualanBaru.getNoPenjualan(), hpp, sistem.getUser().getKodeUser());
-            insertKeuangan(con, noKeuangan, penjualanBaru.getTglPenjualan(), "Stok Barang", penjualanBaru.getKodeGudang(),
-                    "Penjualan - " + penjualanBaru.getNoPenjualan(), -hpp, sistem.getUser().getKodeUser());
-
-            //customer
-            Customer customer = CustomerDAO.get(con, penjualanLama.getKodeCustomer());
-            customer.setHutang(customer.getHutang() - penjualanLama.getSisaPembayaran() + penjualanBaru.getSisaPembayaran());
-            customer.setDeposit(customer.getDeposit() + penjualanLama.getPembayaran() - penjualanBaru.getPembayaran());
-            CustomerDAO.update(con, customer);
-
-            //pemesanan
-            double qtyBelumDikirim = 0;
-            List<PemesananBarangDetail> listPemesanan = PemesananBarangDetailDAO.getAllByNoPemesanan(con, pemesanan.getNoPemesanan());
-            for (PemesananBarangDetail d : listPemesanan) {
-                qtyBelumDikirim = qtyBelumDikirim + d.getQty() - d.getQtyTerkirim();
-            }
-            if (qtyBelumDikirim == 0) {
-                pemesanan.setStatus("close");
-            } else {
-                pemesanan.setStatus("open");
-            }
-            pemesanan.setSisaDownPayment(pemesanan.getSisaDownPayment() + penjualanLama.getPembayaran() - penjualanBaru.getPembayaran());
-            PemesananBarangHeadDAO.update(con, pemesanan);
-
-            if (status.equals("true")) {
-                con.commit();
-            } else {
-                con.rollback();
-            }
-            con.setAutoCommit(true);
-
-            return status;
-        } catch (Exception e) {
-            e.printStackTrace();
-            try {
-                con.rollback();
-                con.setAutoCommit(true);
-                return e.toString();
-            } catch (SQLException ex) {
-                return ex.toString();
-            }
-        }
-    }
+//    public static String editPenjualan(Connection con, PenjualanBarangHead penjualanLama, PenjualanBarangHead penjualanBaru) {
+//        try {
+//            con.setAutoCommit(false);
+//            String status = "true";
+//
+//            Date date = Function.getServerDate(con);
+//            String noKeuangan = KeuanganDAO.getId(con, date);
+//
+//            penjualanLama.setListPenjualanBarangDetail(PenjualanBarangDetailDAO.getAllPenjualanDetail(con, penjualanLama.getNoPenjualan()));
+//
+//            PemesananBarangHead pemesanan = PemesananBarangHeadDAO.get(con, penjualanLama.getNoPemesanan());
+//
+//            Piutang piutangLama = PiutangDAO.getByKategoriAndKeteranganAndStatus(
+//                    con, "Piutang Penjualan", penjualanLama.getNoPenjualan(), "%");
+//
+//            TerimaPembayaran dp = null;
+//            List<TerimaPembayaran> terimaPembayaran = TerimaPembayaranDAO.getAllByNoPiutangAndStatus(
+//                    con, piutangLama.getNoPiutang(), "true");
+//            for (TerimaPembayaran tp : terimaPembayaran) {
+//                if (tp.getTipeKeuangan().equals("Down Payment")) {
+//                    dp = tp;
+//                } else {
+//                    status = "Tidak dapat dibatal,karena sudah ada pembayaran";
+//                }
+//            }
+//
+//            //update penjualan lama
+//            penjualanLama.setTglBatal(tglSql.format(date));
+//            penjualanLama.setUserBatal(sistem.getUser().getKodeUser());
+//            penjualanLama.setStatus("false");
+//            PenjualanBarangHeadDAO.update(con, penjualanLama);
+//
+//            //insert penjualan baru
+//            double sisadp = pemesanan.getSisaDownPayment() + penjualanLama.getPembayaran();
+//            if (penjualanBaru.getTotalPenjualan() >= sisadp) {
+//                penjualanBaru.setPembayaran(sisadp);
+//            } else if (penjualanBaru.getTotalPenjualan() < sisadp) {
+//                penjualanBaru.setPembayaran(penjualanBaru.getTotalPenjualan());
+//            }
+//            penjualanBaru.setSisaPembayaran(penjualanBaru.getTotalPenjualan() - penjualanBaru.getPembayaran());
+//            PenjualanBarangHeadDAO.update(con, penjualanBaru);
+//
+//            //delete piutang lama
+//            PiutangDAO.delete(con, piutangLama);
+//
+//            //insert piutang baru
+//            Piutang piutangBaru = new Piutang();
+//            piutangBaru.setNoPiutang(PiutangDAO.getId(con, date));
+//            piutangBaru.setTglPiutang(penjualanBaru.getTglPenjualan());
+//            piutangBaru.setKategori("Piutang Penjualan");
+//            piutangBaru.setKeterangan(penjualanBaru.getNoPenjualan());
+//            piutangBaru.setTipeKeuangan("Penjualan");
+//            piutangBaru.setJumlahPiutang(penjualanBaru.getTotalPenjualan());
+//            piutangBaru.setPembayaran(penjualanBaru.getPembayaran());
+//            piutangBaru.setSisaPiutang(penjualanBaru.getSisaPembayaran());
+//            piutangBaru.setJatuhTempo("2000-01-01");
+//            piutangBaru.setKodeUser(sistem.getUser().getKodeUser());
+//            if (piutangBaru.getSisaPiutang() > 0) {
+//                piutangBaru.setStatus("open");
+//            } else {
+//                piutangBaru.setStatus("close");
+//            }
+//            PiutangDAO.insert(con, piutangBaru);
+//
+//            KeuanganDAO.delete(con, "Penjualan", "Penjualan", "Penjualan - " + penjualanLama.getNoPenjualan());
+//            KeuanganDAO.delete(con, "Piutang", "Piutang Penjualan", "Penjualan - " + penjualanLama.getNoPenjualan());
+//
+//            insertKeuangan(con, noKeuangan, penjualanBaru.getTglPenjualan(), "Penjualan", "Penjualan",
+//                    "Penjualan - " + penjualanBaru.getNoPenjualan(), penjualanBaru.getTotalPenjualan(), sistem.getUser().getKodeUser());
+//            insertKeuangan(con, noKeuangan, penjualanBaru.getTglPenjualan(), "Piutang", "Piutang Penjualan",
+//                    "Penjualan - " + penjualanBaru.getNoPenjualan(), penjualanBaru.getSisaPembayaran(), sistem.getUser().getKodeUser());
+//
+//            //batal terima pembayaran dp
+//            List<Hutang> listHutang = HutangDAO.getAllByKategoriAndKeteranganAndStatus(
+//                    con, "Terima Pembayaran Down Payment", pemesanan.getNoPemesanan(), "%");
+//            if (dp != null) {
+//                dp.setTglBatal(tglSql.format(date));
+//                dp.setUserBatal(sistem.getUser().getKodeUser());
+//                dp.setStatus("false");
+//                TerimaPembayaranDAO.update(con, dp);
+//
+//                for (Hutang h : listHutang) {
+//                    List<Pembayaran> pembayaranLama = PembayaranDAO.getAllByNoHutang(con, h.getNoHutang(), "true");
+//                    for (Pembayaran p : pembayaranLama) {
+//                        if (p.getTipeKeuangan().equals("Penjualan") && p.getCatatan().equals(penjualanLama.getNoPenjualan())) {
+//                            p.setTglBatal(tglSql.format(date));
+//                            p.setUserBatal(sistem.getUser().getKodeUser());
+//                            p.setStatus("false");
+//                            PembayaranDAO.update(con, p);
+//
+//                            h.setPembayaran(h.getPembayaran() - p.getJumlahPembayaran());
+//                            h.setSisaHutang(h.getSisaHutang() + p.getJumlahPembayaran());
+//                        }
+//                    }
+//                }
+//            }
+//            if (penjualanBaru.getPembayaran() > 0) {
+//                TerimaPembayaran tp = new TerimaPembayaran();
+//                tp.setNoTerimaPembayaran(TerimaPembayaranDAO.getId(con, date));
+//                tp.setTglTerima(penjualanBaru.getTglPenjualan());
+//                tp.setNoPiutang(piutangBaru.getNoPiutang());
+//                tp.setJumlahPembayaran(penjualanBaru.getPembayaran());
+//                tp.setTipeKeuangan("Down Payment");
+//                tp.setCatatan(penjualanBaru.getNoPemesanan());
+//                tp.setKodeUser(sistem.getUser().getKodeUser());
+//                tp.setTglBatal("2000-01-01 00:00:00");
+//                tp.setUserBatal("");
+//                tp.setStatus("true");
+//                TerimaPembayaranDAO.insert(con, tp);
+//
+//                double bayar = penjualanBaru.getPembayaran();
+//                for (Hutang h : listHutang) {
+//                    if (h.getSisaHutang() > bayar) {
+//                        Pembayaran pembayaran = new Pembayaran();
+//                        pembayaran.setNoPembayaran(PembayaranDAO.getId(con, date));
+//                        pembayaran.setTglPembayaran(penjualanBaru.getTglPenjualan());
+//                        pembayaran.setNoHutang(h.getNoHutang());
+//                        pembayaran.setJumlahPembayaran(bayar);
+//                        pembayaran.setTipeKeuangan("Penjualan");
+//                        pembayaran.setCatatan(penjualanBaru.getNoPenjualan());
+//                        pembayaran.setKodeUser(sistem.getUser().getKodeUser());
+//                        pembayaran.setTglBatal("2000-01-01 00:00:00");
+//                        pembayaran.setUserBatal("");
+//                        pembayaran.setStatus("true");
+//                        PembayaranDAO.insert(con, pembayaran);
+//
+//                        h.setPembayaran(h.getPembayaran() + bayar);
+//                        h.setSisaHutang(h.getSisaHutang() - bayar);
+//
+//                        bayar = 0;
+//                    } else {
+//                        Pembayaran pembayaran = new Pembayaran();
+//                        pembayaran.setNoPembayaran(PembayaranDAO.getId(con, date));
+//                        pembayaran.setTglPembayaran(penjualanBaru.getTglPenjualan());
+//                        pembayaran.setNoHutang(h.getNoHutang());
+//                        pembayaran.setJumlahPembayaran(h.getSisaHutang());
+//                        pembayaran.setTipeKeuangan("Penjualan");
+//                        pembayaran.setCatatan(penjualanBaru.getNoPenjualan());
+//                        pembayaran.setKodeUser(sistem.getUser().getKodeUser());
+//                        pembayaran.setTglBatal("2000-01-01 00:00:00");
+//                        pembayaran.setUserBatal("");
+//                        pembayaran.setStatus("true");
+//                        PembayaranDAO.insert(con, pembayaran);
+//
+//                        h.setPembayaran(h.getPembayaran() + h.getSisaHutang());
+//                        h.setSisaHutang(h.getSisaHutang() - h.getSisaHutang());
+//                        h.setStatus("close");
+//
+//                        bayar = bayar - h.getSisaHutang();
+//                    }
+//                }
+//            }
+//            for (Hutang h : listHutang) {
+//                HutangDAO.update(con, h);
+//            }
+//            KeuanganDAO.delete(con, "Hutang", "Terima Pembayaran Down Payment", "Penjualan - " + penjualanLama.getNoPenjualan());
+//
+//            insertKeuangan(con, noKeuangan, penjualanBaru.getTglPenjualan(), "Hutang", "Terima Pembayaran Down Payment",
+//                    "Penjualan - " + penjualanBaru.getNoPenjualan(), -penjualanBaru.getPembayaran(), sistem.getUser().getKodeUser());
+//
+////            List<StokBarang> allUpdatedStok = new ArrayList<>();
+////            for (PenjualanBarangDetail d : penjualanLama.getListPenjualanBarangDetail()) {
+////                Boolean x = true;
+////                for (StokBarang s : allUpdatedStok) {
+////                    if (s.getKodeBarang().equals(d.getKodeBarang())) {
+////                        s.setStokKeluar(s.getStokKeluar() - d.getQty());
+////                        s.setStokAkhir(s.getStokAkhir() + d.getQty());
+////                        x = false;
+////                    }
+////                }
+////                if (x) {
+////                    StokBarang stok = StokBarangDAO.get(con, tglBarang.format(tglSql.parse(penjualanLama.getTglPenjualan())), d.getKodeBarang(), penjualanLama.getKodeGudang());
+////                    stok.setStokKeluar(stok.getStokKeluar() - d.getQty());
+////                    stok.setStokAkhir(stok.getStokAkhir() + d.getQty());
+////
+////                    allUpdatedStok.add(stok);
+////                }
+////            }
+////
+////            double hpp = 0;
+////            for (PenjualanBarangDetail d : penjualanBaru.getListPenjualanBarangDetail()) {
+////                Boolean x = true;
+////                for (StokBarang s : allUpdatedStok) {
+////                    if (s.getKodeBarang().equals(d.getKodeBarang())) {
+////                        s.setStokKeluar(s.getStokKeluar() + d.getQty());
+////                        s.setStokAkhir(s.getStokAkhir() - d.getQty());
+////                        x = false;
+////                    }
+////                }
+////                if (x) {
+////                    allUpdatedStok.add(stok);
+////
+////                    StokBarang stokBarang = StokBarangDAO.get(con, tglBarang.format(tglSql.parse(penjualanLama.getTglPenjualan())), d.getKodeBarang(), penjualanBaru.getKodeGudang());
+////                    if (stokBarang == null) {
+////                        status = "Stok barang " + d.getKodeBarang() + " tidak ditemukan";
+////                    } else if (d.getQty() > 0 && stokBarang.getStokAkhir() < d.getQty()) {
+////                        status = "Stok barang " + d.getKodeBarang() + " tidak mencukupi";
+////                    } else {
+////                        if (stokBarang.getTanggal().equals(tglBarang.format(date))) {
+////                            stokBarang.setStokKeluar(stokBarang.getStokKeluar() + d.getQty());
+////                            stokBarang.setStokAkhir(stokBarang.getStokAkhir() - d.getQty());
+////                            allUpdatedStok.add(stokBarang);
+////                        } else {
+////                            StokBarang stok = new StokBarang();
+////                            stok.setTanggal(tglBarang.format(date));
+////                            stok.setKodeBarang(stokBarang.getKodeBarang());
+////                            stok.setKodeGudang(stokBarang.getKodeGudang());
+////                            stok.setStokAwal(stokBarang.getStokAkhir());
+////                            stok.setStokMasuk(0);
+////                            stok.setStokKeluar(d.getQty());
+////                            stok.setStokAkhir(stokBarang.getStokAkhir() - d.getQty());
+////                            StokBarangDAO.insert(con, stok);
+////                        }
+////                        LogBarang logUmum = LogBarangDAO.getLastByBarangAndGudang(con, d.getKodeBarang(), penjualanBaru.getKodeGudang());
+////                        LogBarang logBarang = new LogBarang();
+////                        logBarang.setTanggal(tglSql.format(date));
+////                        logBarang.setKodeBarang(logUmum.getKodeBarang());
+////                        logBarang.setKodeGudang(logUmum.getKodeGudang());
+////                        logBarang.setKategori("Penjualan");
+////                        logBarang.setKeterangan(penjualanBaru.getNoPenjualan());
+////                        logBarang.setStokAwal(logUmum.getStokAkhir());
+////                        logBarang.setNilaiAwal(logUmum.getNilaiAkhir());
+////                        logBarang.setStokMasuk(qtyIn);
+////                        logBarang.setNilaiMasuk(nilaiIn);
+////                        logBarang.setStokKeluar(d.getQty());
+////                        logBarang.setNilaiKeluar(nilaiOut);
+////                        logBarang.setStokAkhir(logUmum.getStokAkhir() + qtyIn - d.getQty());
+////                        logBarang.setNilaiAkhir(logUmum.getNilaiAkhir() + nilaiIn - nilaiOut);
+////                        LogBarangDAO.insert(con, logBarang);
+////                    }
+////                }
+////                Boolean inStok = false;
+////                for (PenjualanBarangDetail detail : stokKeluar) {
+////                    if (d.getKodeBarang().equals(detail.getKodeBarang())) {
+////                        detail.setNilai((detail.getNilai() * detail.getQty() + d.getNilai() * d.getQty())
+////                                / (detail.getQty() + d.getQty()));
+////                        detail.setQty(detail.getQty() + d.getQty());
+////                        inStok = true;
+////                    }
+////                }
+////                if (!inStok) {
+////                    PenjualanBarangDetail temp = new PenjualanBarangDetail();
+////                    temp.setNoPenjualan(d.getNoPenjualan());
+////                    temp.setNoPemesanan(d.getNoPemesanan());
+////                    temp.setNoUrut(d.getNoUrut());
+////                    temp.setKodeBarang(d.getKodeBarang());
+////                    temp.setNamaBarang(d.getNamaBarang());
+////                    temp.setKeterangan(d.getKeterangan());
+////                    temp.setSatuan(d.getSatuan());
+////                    temp.setQty(d.getQty());
+////                    temp.setNilai(d.getNilai());
+////                    temp.setHargaJual(d.getHargaJual());
+////                    temp.setTotal(d.getTotal());
+////                    stokKeluar.add(temp);
+////                }
+////
+////                LogBarang log = LogBarangDAO.getLastByBarangAndGudang(con, d.getKodeBarang(), penjualanBaru.getKodeGudang());
+////                if (log.getStokAkhir() != 0) {
+////                    d.setNilai(log.getNilaiAkhir() / log.getStokAkhir());
+////                }
+////                PenjualanBarangDetailDAO.update(con, d);
+////
+////                hpp = hpp + d.getNilai() * d.getQty();
+////
+////            }
+////            for (PenjualanBarangDetail d : stokBatalKeluar) {
+//////                StokBarang stok = StokBarangDAO.get(con, tglBarang.format(tglSql.parse(penjualanLama.getTglPenjualan())), d.getKodeBarang(), penjualanLama.getKodeGudang());
+//////                stok.setStokKeluar(stok.getStokKeluar() - d.getQty());
+//////                stok.setStokAkhir(stok.getStokAkhir() + d.getQty());
+//////
+//////                allUpdatedStok.add(stok);
+////
+////                LogBarangDAO.delete(con, d.getKodeBarang(), penjualanLama.getKodeGudang(), "Penjualan", penjualanLama.getNoPenjualan());
+////
+////                resetStokDanLogBarang(con, d.getKodeBarang(), penjualanLama.getKodeGudang(), penjualanLama.getTglPenjualan(), date);
+////
+////            }
+////            for (StokBarang s : allUpdatedStok) {
+////                StokBarangDAO.update(con, s);
+////            }
+////            for (PenjualanBarangDetail d : stokKeluar) {
+////                StokBarang stokBarang = StokBarangDAO.get(con, tglBarang.format(date), d.getKodeBarang(), penjualanBaru.getKodeGudang());
+////                if (stokBarang == null) {
+////                    status = "Stok barang " + d.getKodeBarang() + " tidak ditemukan";
+////                } else if (d.getQty() > 0 && stokBarang.getStokAkhir() < d.getQty()) {
+////                    status = "Stok barang " + d.getKodeBarang() + " tidak mencukupi";
+////                } else {
+////                    if (stokBarang.getTanggal().equals(tglBarang.format(date))) {
+////                        stokBarang.setStokMasuk(stokBarang.getStokMasuk() + qtyIn);
+////                        stokBarang.setStokKeluar(stokBarang.getStokKeluar() + d.getQty());
+////                        stokBarang.setStokAkhir(stokBarang.getStokAkhir() + qtyIn - d.getQty());
+////                        StokBarangDAO.update(con, stokBarang);
+////                    } else {
+////                        StokBarang stok = new StokBarang();
+////                        stok.setTanggal(tglBarang.format(date));
+////                        stok.setKodeBarang(stokBarang.getKodeBarang());
+////                        stok.setKodeGudang(stokBarang.getKodeGudang());
+////                        stok.setStokAwal(stokBarang.getStokAkhir());
+////                        stok.setStokMasuk(qtyIn);
+////                        stok.setStokKeluar(d.getQty());
+////                        stok.setStokAkhir(stokBarang.getStokAkhir() + qtyIn - d.getQty());
+////                        StokBarangDAO.insert(con, stok);
+////                    }
+////                    LogBarang logUmum = LogBarangDAO.getLastByBarangAndGudang(con, d.getKodeBarang(), penjualanBaru.getKodeGudang());
+////                    LogBarang logBarang = new LogBarang();
+////                    logBarang.setTanggal(tglSql.format(date));
+////                    logBarang.setKodeBarang(logUmum.getKodeBarang());
+////                    logBarang.setKodeGudang(logUmum.getKodeGudang());
+////                    logBarang.setKategori("Penjualan");
+////                    logBarang.setKeterangan(penjualanBaru.getNoPenjualan());
+////                    logBarang.setStokAwal(logUmum.getStokAkhir());
+////                    logBarang.setNilaiAwal(logUmum.getNilaiAkhir());
+////                    logBarang.setStokMasuk(qtyIn);
+////                    logBarang.setNilaiMasuk(nilaiIn);
+////                    logBarang.setStokKeluar(d.getQty());
+////                    logBarang.setNilaiKeluar(nilaiOut);
+////                    logBarang.setStokAkhir(logUmum.getStokAkhir() + qtyIn - d.getQty());
+////                    logBarang.setNilaiAkhir(logUmum.getNilaiAkhir() + nilaiIn - nilaiOut);
+////                    LogBarangDAO.insert(con, logBarang);
+////                }
+////
+////                resetStokDanLogBarang(con, d.getKodeBarang(), penjualanLama.getKodeGudang(), penjualanLama.getTglPenjualan(), date);
+////            }
+//
+////            KeuanganDAO.delete(con, "HPP", "Penjualan", "Penjualan - " + penjualanLama.getNoPenjualan());
+////            KeuanganDAO.delete(con, "Stok Barang", penjualanLama.getKodeGudang(), "Penjualan - " + penjualanLama.getNoPenjualan());
+////
+////            insertKeuangan(con, noKeuangan, penjualanBaru.getTglPenjualan(), "HPP", "Penjualan",
+////                    "Penjualan - " + penjualanBaru.getNoPenjualan(), hpp, sistem.getUser().getKodeUser());
+////            insertKeuangan(con, noKeuangan, penjualanBaru.getTglPenjualan(), "Stok Barang", penjualanBaru.getKodeGudang(),
+////                    "Penjualan - " + penjualanBaru.getNoPenjualan(), -hpp, sistem.getUser().getKodeUser());
+//
+//            //customer
+//            Customer customer = CustomerDAO.get(con, penjualanLama.getKodeCustomer());
+//            customer.setHutang(customer.getHutang() - penjualanLama.getSisaPembayaran() + penjualanBaru.getSisaPembayaran());
+//            customer.setDeposit(customer.getDeposit() + penjualanLama.getPembayaran() - penjualanBaru.getPembayaran());
+//            CustomerDAO.update(con, customer);
+//
+//            //pemesanan
+//            double qtyBelumDikirim = 0;
+//            List<PemesananBarangDetail> listPemesanan = PemesananBarangDetailDAO.getAllByNoPemesanan(con, pemesanan.getNoPemesanan());
+//            for (PemesananBarangDetail d : listPemesanan) {
+//                qtyBelumDikirim = qtyBelumDikirim + d.getQty() - d.getQtyTerkirim();
+//            }
+//            if (qtyBelumDikirim == 0) {
+//                pemesanan.setStatus("close");
+//            } else {
+//                pemesanan.setStatus("open");
+//            }
+//            pemesanan.setSisaDownPayment(pemesanan.getSisaDownPayment() + penjualanLama.getPembayaran() - penjualanBaru.getPembayaran());
+//            PemesananBarangHeadDAO.update(con, pemesanan);
+//
+//            if (status.equals("true")) {
+//                con.commit();
+//            } else {
+//                con.rollback();
+//            }
+//            con.setAutoCommit(true);
+//
+//            return status;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            try {
+//                con.rollback();
+//                con.setAutoCommit(true);
+//                return e.toString();
+//            } catch (SQLException ex) {
+//                return ex.toString();
+//            }
+//        }
+//    }
 
     public static String batalPengiriman(Connection con, PenjualanBarangHead p) {
         try {
@@ -2718,7 +2800,7 @@ public class Service {
             PemesananPembelianBahanHeadDAO.update(con, pemesanan);
 
             Piutang p = new Piutang();
-            p.setNoPiutang(HutangDAO.getId(con, date));
+            p.setNoPiutang(PiutangDAO.getId(con, date));
             p.setTglPiutang(tglSql.format(date));
             p.setKategori("Pembayaran Down Payment");
             p.setKeterangan(pemesanan.getNoPemesanan());
@@ -2732,7 +2814,7 @@ public class Service {
             PiutangDAO.insert(con, p);
 
             insertKeuangan(con, noKeuangan, tglSql.format(date), tipeKeuangan, "Pembayaran Down Payment",
-                    "Pembayaran Down Payment - " + pemesanan.getNoPemesanan() + " (" + p.getNoPiutang() + ")", jumlahBayar, sistem.getUser().getKodeUser());
+                    "Pembayaran Down Payment - " + pemesanan.getNoPemesanan() + " (" + p.getNoPiutang() + ")", -jumlahBayar, sistem.getUser().getKodeUser());
             insertKeuangan(con, noKeuangan, tglSql.format(date), "Piutang", "Pembayaran Down Payment",
                     "Pembayaran Down Payment - " + pemesanan.getNoPemesanan() + " (" + p.getNoPiutang() + ")", jumlahBayar, sistem.getUser().getKodeUser());
 
