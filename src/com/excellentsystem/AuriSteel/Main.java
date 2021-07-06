@@ -143,7 +143,7 @@ public class Main extends Application {
     public static Sistem sistem;
     private double x = 0;
     private double y = 0;
-    public final String version = "2.6.8";
+    public final String version = "2.6.9";
     public static SecretKeySpec key;
 
     @Override

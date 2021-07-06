@@ -354,10 +354,6 @@ public class ProduksiBarangController {
                         batal.setOnAction((ActionEvent e) -> {
                             batalProduksi(item);
                         });
-                        MenuItem verifikasi = new MenuItem("Verifikasi Produksi");
-                        verifikasi.setOnAction((ActionEvent e) -> {
-                            verifikasiProduksi(item);
-                        });
                         MenuItem export = new MenuItem("Export Excel");
                         export.setOnAction((ActionEvent e) -> {
                             exportExcel();
@@ -376,9 +372,6 @@ public class ProduksiBarangController {
                             }
                             if (o.getJenis().equals("Batal Produksi") && o.isStatus()) {
                                 rm.getItems().add(batal);
-                            }
-                            if (o.getJenis().equals("Verifikasi Produksi") && o.isStatus() && item.getStatus().equals("close")) {
-                                rm.getItems().add(verifikasi);
                             }
                             if (o.getJenis().equals("Export Excel") && o.isStatus()) {
                                 rm.getItems().add(export);
@@ -443,7 +436,7 @@ public class ProduksiBarangController {
                     if (statusCombo.getSelectionModel().getSelectedItem().equals("Done")) {
                         status = "true";
                     } else if (statusCombo.getSelectionModel().getSelectedItem().equals("Wait")) {
-                        status = "close";
+                        status = "open";
                     } else if (statusCombo.getSelectionModel().getSelectedItem().equals("Cancel")) {
                         status = "false";
                     }
@@ -461,7 +454,6 @@ public class ProduksiBarangController {
                             con, tglMulaiPicker.getValue().toString(), tglAkhirPicker.getValue().toString(),
                             groupByCombo.getSelectionModel().getSelectedItem(), status);
                     for (ProduksiHead p : listProduksi) {
-                        System.out.println(p.getKodeProduksi());
                         List<ProduksiDetailBahan> detailBahan = new ArrayList<>();
                         for (ProduksiDetailBahan d : listProduksiBahan) {
                             if (p.getKodeProduksi().equals(d.getKodeProduksi())) {
@@ -588,8 +580,8 @@ public class ProduksiBarangController {
                 mainApp.showMessage(Modality.NONE, "Warning", "Bahan baku masih kosong");
             } else if (controller.listBarangProduksi.isEmpty()) {
                 mainApp.showMessage(Modality.NONE, "Warning", "Barang jadi masih kosong");
-            } else if (controller.jenisCombo.getSelectionModel().getSelectedItem().equals("Bahan - Barang") && (sisa > 10 || sisa < -10)) {
-                mainApp.showMessage(Modality.NONE, "Warning", "Selisih berat lebih dari 10 persen");
+            } else if (controller.jenisCombo.getSelectionModel().getSelectedItem().equals("Bahan - Barang") && (sisa > 5 || sisa < -5)) {
+                mainApp.showMessage(Modality.NONE, "Warning", "Selisih berat lebih dari 5 persen");
             } else if (controller.jenisCombo.getSelectionModel().getSelectedItem().equals("Bahan - Bahan") && (sisa > 2 || sisa < -2)) {
                 mainApp.showMessage(Modality.NONE, "Warning", "Selisih berat lebih dari 2 persen");
             } else {
@@ -678,42 +670,6 @@ public class ProduksiBarangController {
         }
     }
 
-    private void verifikasiProduksi(ProduksiHead p) {
-        Stage stage = new Stage();
-        FXMLLoader loader = mainApp.showDialog(mainApp.MainStage, stage, "View/Dialog/NewProduksiBarang.fxml");
-        NewProduksiBarangController controller = loader.getController();
-        controller.setMainApp(mainApp, mainApp.MainStage, stage);
-        controller.setDetailProduksi(p.getKodeProduksi(), true);
-        controller.saveButton.setOnAction((event) -> {
-            Task<String> task = new Task<String>() {
-                @Override
-                public String call() throws Exception {
-                    try (Connection con = Koneksi.getConnection()) {
-                        return Service.verifikasiProduksiBarang(con, p);
-                    }
-                }
-            };
-            task.setOnRunning((ex) -> {
-                mainApp.showLoadingScreen();
-            });
-            task.setOnSucceeded((WorkerStateEvent ex) -> {
-                mainApp.closeLoading();
-                getProduksi();
-                if (task.getValue().equals("true")) {
-                    mainApp.closeDialog(mainApp.MainStage, stage);
-                    mainApp.showMessage(Modality.NONE, "Success", "Data produksi barang berhasil diverifikasi");
-                } else {
-                    mainApp.showMessage(Modality.NONE, "Error", task.getValue());
-                }
-            });
-            task.setOnFailed((ex) -> {
-                mainApp.showMessage(Modality.NONE, "Error", task.getException().toString());
-                mainApp.closeLoading();
-            });
-            new Thread(task).start();
-        });
-    }
-
     private void batalProduksi(ProduksiHead produksi) {
         MessageController controller = mainApp.showMessage(Modality.WINDOW_MODAL, "Confirmation",
                 "Batal produksi barang " + produksi.getKodeProduksi() + " ?");
@@ -724,6 +680,8 @@ public class ProduksiBarangController {
                     try (Connection con = Koneksi.getConnection()) {
                         if (produksi.getStatus().equals("true")) {
                             return Service.batalProduksiBarang(con, produksi);
+                        } else if (produksi.getStatus().equals("open")) {
+                            return Service.batalProduksiBarangApp(con, produksi);
                         } else if (produksi.getStatus().equals("close")) {
                             return Service.batalProduksiBarangApp(con, produksi);
                         } else {
