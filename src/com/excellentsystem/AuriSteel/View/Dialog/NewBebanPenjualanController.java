@@ -19,6 +19,8 @@ import com.excellentsystem.AuriSteel.Model.BebanPenjualanHead;
 import com.excellentsystem.AuriSteel.Model.KategoriKeuangan;
 import com.excellentsystem.AuriSteel.Model.PenjualanBarangHead;
 import java.sql.Connection;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.collections.FXCollections;
@@ -30,6 +32,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TextArea;
@@ -51,7 +54,7 @@ public class NewBebanPenjualanController {
     @FXML
     private TextField noBebanPenjualanField;
     @FXML
-    private TextField tglBebanPenjualanField;
+    public DatePicker tglTransaksiPicker;
     @FXML
     private TextArea penjualanField;
     @FXML
@@ -85,11 +88,14 @@ public class NewBebanPenjualanController {
         stage.setOnCloseRequest((event) -> {
             mainApp.closeDialog(owner, stage);
         });
+        tglTransaksiPicker.setConverter(Function.getTglConverter());
+        tglTransaksiPicker.setValue(LocalDate.now());
+        tglTransaksiPicker.setDayCellFactory((final DatePicker datePicker) -> Function.getDateCell(
+                LocalDate.now().minusMonths(1), LocalDate.now()));
     }
 
     public void setNewBebanPenjualan() {
         noBebanPenjualanField.setText("");
-        tglBebanPenjualanField.setText("");
         ObservableList<String> listKeuangan = FXCollections.observableArrayList();
         for (KategoriKeuangan kk : sistem.getListKategoriKeuangan()) {
             listKeuangan.add(kk.getKodeKeuangan());
@@ -116,6 +122,7 @@ public class NewBebanPenjualanController {
                 mainApp.closeLoading();
                 BebanPenjualanHead b = task.getValue();
                 AnchorPane.setBottomAnchor(gridPane, 0.0);
+                tglTransaksiPicker.setDisable(true);
                 addPenjualanButton.setVisible(false);
                 resetPenjualanButton.setVisible(false);
                 saveButton.setVisible(false);
@@ -125,7 +132,7 @@ public class NewBebanPenjualanController {
                 tipeKeuanganCombo.setDisable(true);
 
                 noBebanPenjualanField.setText(b.getNoBebanPenjualan());
-                tglBebanPenjualanField.setText(tglLengkap.format(tglSql.parse(b.getTglBebanPenjualan())));
+                tglTransaksiPicker.setValue(LocalDate.parse(b.getTglBebanPenjualan(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
                 String penjualan = "";
                 for (BebanPenjualanDetail d : b.getListBebanPenjualanDetail()) {
                     penjualan = penjualan + d.getNoPenjualan();

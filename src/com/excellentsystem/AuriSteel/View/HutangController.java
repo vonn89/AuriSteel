@@ -34,6 +34,8 @@ import com.excellentsystem.AuriSteel.View.Dialog.NewPemesananController;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.sql.Connection;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -86,8 +88,6 @@ public class HutangController {
     private TableColumn<Hutang, Number> pembayaranColumn;
     @FXML
     private TableColumn<Hutang, Number> sisaHutangColumn;
-    @FXML
-    private TableColumn<Hutang, String> jatuhTempoColumn;
 
     @FXML
     private TextField searchField;
@@ -120,20 +120,6 @@ public class HutangController {
         });
         tglHutangColumn.setCellFactory(col -> Function.getWrapTableCell(tglHutangColumn));
         tglHutangColumn.setComparator(Function.sortDate(tglLengkap));
-
-        jatuhTempoColumn.setCellValueFactory(cellData -> {
-            try {
-                if (cellData.getValue().getJatuhTempo().equals("2000-01-01")) {
-                    return null;
-                } else {
-                    return new SimpleStringProperty(tgl.format(tglBarang.parse(cellData.getValue().getJatuhTempo())));
-                }
-            } catch (Exception ex) {
-                return null;
-            }
-        });
-        jatuhTempoColumn.setCellFactory(col -> Function.getWrapTableCell(jatuhTempoColumn));
-        jatuhTempoColumn.setComparator(Function.sortDate(tgl));
 
         jumlahHutangColumn.setCellValueFactory(cellData -> cellData.getValue().jumlahHutangProperty());
         jumlahHutangColumn.setCellFactory(col -> Function.getTableCell());
@@ -506,7 +492,7 @@ public class HutangController {
                     @Override
                     public String call() throws Exception {
                         try (Connection con = Koneksi.getConnection()) {
-                            String jatuhTempo = "2000-01-01";
+                            Date tglTransaksi = tglSql.parse(x.tglTransaksiPicker.getValue().toString() + " " + new SimpleDateFormat("HH:mm:ss").format(new Date()));
                             Hutang h = new Hutang();
                             h.setKategori(x.kategoriCombo.getSelectionModel().getSelectedItem());
                             h.setKeterangan(x.keteranganField.getText());
@@ -514,10 +500,10 @@ public class HutangController {
                             h.setJumlahHutang(Double.parseDouble(x.jumlahRpField.getText().replaceAll(",", "")));
                             h.setPembayaran(0);
                             h.setSisaHutang(Double.parseDouble(x.jumlahRpField.getText().replaceAll(",", "")));
-                            h.setJatuhTempo(jatuhTempo);
+                            h.setJatuhTempo("2000-01-01");
                             h.setKodeUser(sistem.getUser().getKodeUser());
                             h.setStatus("open");
-                            return Service.newHutang(con, h);
+                            return Service.newHutang(con, h, tglTransaksi);
                         }
                     }
                 };
@@ -566,6 +552,7 @@ public class HutangController {
                     @Override
                     public String call() throws Exception {
                         try (Connection con = Koneksi.getConnection()) {
+                            Date tglTransaksi = tglSql.parse(controller.tglTransaksiPicker.getValue().toString() + " " + new SimpleDateFormat("HH:mm:ss").format(new Date()));
                             Pembayaran pembayaran = new Pembayaran();
                             pembayaran.setNoHutang(h.getNoHutang());
                             pembayaran.setJumlahPembayaran(Double.parseDouble(controller.jumlahPembayaranField.getText().replaceAll(",", "")));
@@ -576,7 +563,7 @@ public class HutangController {
                             pembayaran.setUserBatal("");
                             pembayaran.setStatus("true");
                             pembayaran.setHutang(h);
-                            return Service.newPembayaranHutang(con, pembayaran);
+                            return Service.newPembayaranHutang(con, pembayaran, tglTransaksi);
                         }
                     }
                 };
@@ -637,7 +624,6 @@ public class HutangController {
                 sheet.getRow(rc).getCell(4).setCellValue("Total Hutang");
                 sheet.getRow(rc).getCell(5).setCellValue("Pembayaran");
                 sheet.getRow(rc).getCell(6).setCellValue("Sisa Hutang");
-                sheet.getRow(rc).getCell(7).setCellValue("Jatuh Tempo");
                 rc++;
                 double hutang = 0;
                 double pembayaran = 0;
@@ -651,9 +637,6 @@ public class HutangController {
                     sheet.getRow(rc).getCell(4).setCellValue(b.getJumlahHutang());
                     sheet.getRow(rc).getCell(5).setCellValue(b.getPembayaran());
                     sheet.getRow(rc).getCell(6).setCellValue(b.getSisaHutang());
-                    if (!"2000-01-01".equals(b.getJatuhTempo())) {
-                        sheet.getRow(rc).getCell(7).setCellValue(tgl.format(tglBarang.parse(b.getJatuhTempo())));
-                    }
                     rc++;
                     hutang = hutang + b.getJumlahHutang();
                     pembayaran = pembayaran + b.getPembayaran();

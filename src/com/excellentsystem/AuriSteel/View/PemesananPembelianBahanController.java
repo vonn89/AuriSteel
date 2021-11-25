@@ -31,8 +31,10 @@ import com.excellentsystem.AuriSteel.View.Dialog.NewPemesananPembelianBahanContr
 import java.io.File;
 import java.io.FileOutputStream;
 import java.sql.Connection;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -500,6 +502,7 @@ public class PemesananPembelianBahanController {
         controller.setMainApp(mainApp, mainApp.MainStage, stage);
         controller.setDetailPemesanan(p.getNoPemesanan());
     }
+
     private void batalPemesanan(PemesananPembelianBahanHead p) {
         boolean statusBarang = false;
         for (PemesananPembelianBahanDetail d : p.getListPemesananPembelianBahanDetail()) {
@@ -589,6 +592,7 @@ public class PemesananPembelianBahanController {
                     @Override
                     public String call() throws Exception {
                         try (Connection con = Koneksi.getConnection()) {
+                            Date tglTransaksi = tglSql.parse(controller.tglTransaksiPicker.getValue().toString() + " " + new SimpleDateFormat("HH:mm:ss").format(new Date()));
                             p.setListPemesananPembelianBahanDetail(PemesananPembelianBahanDetailDAO.getAllByNoPemesanan(con, p.getNoPemesanan()));
                             double totalDikirim = 0;
                             for (PemesananPembelianBahanDetail d : p.getListPemesananPembelianBahanDetail()) {
@@ -599,9 +603,7 @@ public class PemesananPembelianBahanController {
                             if (jumlahBayar > sisaPembayaran) {
                                 return "Jumlah yang dibayar melebihi dari sisa pembayaran";
                             } else {
-                                p.setDownPayment(p.getDownPayment() + jumlahBayar);
-                                p.setSisaDownPayment(p.getSisaDownPayment() + jumlahBayar);
-                                return Service.newPembayaranDownPayment(con, p, jumlahBayar,
+                                return Service.newPembayaranDownPayment(con, p, tglTransaksi, jumlahBayar,
                                         controller.tipeKeuanganCombo.getSelectionModel().getSelectedItem());
                             }
                         }

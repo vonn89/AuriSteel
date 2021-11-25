@@ -9,11 +9,13 @@ import com.excellentsystem.AuriSteel.Function;
 import com.excellentsystem.AuriSteel.Main;
 import static com.excellentsystem.AuriSteel.Main.sistem;
 import com.excellentsystem.AuriSteel.Model.KategoriKeuangan;
+import java.time.LocalDate;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -27,6 +29,8 @@ public class NewModalController {
 
     @FXML
     public Label title;
+    @FXML
+    public DatePicker tglTransaksiPicker;
     @FXML
     public TextField keteranganField;
     @FXML
@@ -52,6 +56,10 @@ public class NewModalController {
         stage.setOnCloseRequest((event) -> {
             mainApp.closeDialog(owner, stage);
         });
+        tglTransaksiPicker.setConverter(Function.getTglConverter());
+        tglTransaksiPicker.setValue(LocalDate.now());
+        tglTransaksiPicker.setDayCellFactory((final DatePicker datePicker) -> Function.getDateCell(
+                LocalDate.now().minusMonths(1), LocalDate.now()));
     }
 
     public void setTitle(String temp) {

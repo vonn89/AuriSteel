@@ -39,8 +39,10 @@ import com.excellentsystem.AuriSteel.View.Dialog.NewPenjualanCoilRpController;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.sql.Connection;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -438,6 +440,7 @@ public class PenjualanCoilController {
                     @Override
                     public String call() throws Exception {
                         try (Connection con = Koneksi.getConnection()) {
+                            Date tglTransaksi = tglSql.parse(controller.tglTransaksiPicker.getValue().toString() + " " + new SimpleDateFormat("HH:mm:ss").format(new Date()));
                             Piutang pt = PiutangDAO.getByKategoriAndKeteranganAndStatus(
                                     con, "Piutang Penjualan", p.getNoPenjualan(), "%");
                             pt.setPenjualanBahanHead(p);
@@ -451,7 +454,7 @@ public class PenjualanCoilController {
                             t.setUserBatal("");
                             t.setStatus("true");
                             t.setPiutang(pt);
-                            return Service.newTerimaPembayaranPiutang(con, t);
+                            return Service.newTerimaPembayaranPiutang(con, t, tglTransaksi);
                         }
                     }
                 };

@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isFloatColumnFooter="true" uuid="71ff77e0-d0c6-4d70-afca-1987dcfcd565">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="582"/>
+	<property name="ireport.y" value="77"/>
 	<style name="detail">
 		<box topPadding="2" leftPadding="5" bottomPadding="2" rightPadding="5">
 			<topPen lineWidth="0.0" lineColor="#0099FF"/>
@@ -127,11 +127,11 @@
 	<background>
 		<band height="842" splitType="Stretch">
 			<image onErrorType="Blank">
-				<reportElement x="20" y="0" width="575" height="150" uuid="8c2cb869-fee2-4e15-92c9-9e62fe7e00b8"/>
+				<reportElement x="20" y="0" width="575" height="190" uuid="8c2cb869-fee2-4e15-92c9-9e62fe7e00b8"/>
 				<imageExpression><![CDATA[$P{top}]]></imageExpression>
 			</image>
 			<image onErrorType="Blank">
-				<reportElement x="0" y="642" width="595" height="200" uuid="161cc688-28cf-4681-8387-b720f9ee6432"/>
+				<reportElement x="0" y="583" width="274" height="258" uuid="161cc688-28cf-4681-8387-b720f9ee6432"/>
 				<imageExpression><![CDATA[$P{bottom}]]></imageExpression>
 			</image>
 			<textField pattern="dd MMMMM yyyy hh:mm">

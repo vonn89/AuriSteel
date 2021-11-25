@@ -52,6 +52,7 @@
                   <TableColumn fx:id="mesinColumn" maxWidth="2000.0" prefWidth="75.0" text="Mesin" />
                   <TableColumn fx:id="bebanMaterialColumn" maxWidth="2000.0" prefWidth="75.0" text="Beban Material" visible="false" />
                   <TableColumn fx:id="bebanProduksiColumn" maxWidth="2000.0" prefWidth="75.0" text="Beban Produksi" visible="false" />
+                  <TableColumn fx:id="kategoriBahanColumn" maxWidth="3000.0" prefWidth="75.0" text="Kategori Bahan" />
                 <TableColumn fx:id="listBahanColumn" maxWidth="3000.0" prefWidth="75.0" text="List Bahan" />
                   <TableColumn fx:id="totalBeratBahanColumn" maxWidth="3000.0" prefWidth="75.0" text="Total Berat Bahan" />
                 <TableColumn fx:id="listBarangColumn" maxWidth="3000.0" prefWidth="75.0" text="List Barang" />

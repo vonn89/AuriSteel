@@ -38,6 +38,7 @@ import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -81,9 +82,13 @@ public class KeuanganController {
     @FXML
     private TreeTableColumn<Keuangan, String> tglKeuanganColumn;
     @FXML
+    private TreeTableColumn<Keuangan, String> tglInputColumn;
+    @FXML
     private TreeTableColumn<Keuangan, String> tipeKeuanganColumn;
     @FXML
     private TreeTableColumn<Keuangan, String> kategoriColumn;
+    @FXML
+    private TreeTableColumn<Keuangan, String> noTransaksiColumn;
     @FXML
     private TreeTableColumn<Keuangan, String> deskripsiColumn;
     @FXML
@@ -114,6 +119,9 @@ public class KeuanganController {
         tipeKeuanganColumn.setCellValueFactory(param -> param.getValue().getValue().tipeKeuanganProperty());
         tipeKeuanganColumn.setCellFactory(col -> Function.getWrapTreeTableCell(tipeKeuanganColumn));
 
+        noTransaksiColumn.setCellValueFactory(param -> param.getValue().getValue().noTransaksiProperty());
+        noTransaksiColumn.setCellFactory(col -> Function.getWrapTreeTableCell(noTransaksiColumn));
+
         kategoriColumn.setCellValueFactory(param -> param.getValue().getValue().kategoriProperty());
         kategoriColumn.setCellFactory(col -> Function.getWrapTreeTableCell(kategoriColumn));
 
@@ -125,13 +133,23 @@ public class KeuanganController {
 
         tglKeuanganColumn.setCellValueFactory(cellData -> {
             try {
-                return new SimpleStringProperty(new SimpleDateFormat("HH:mm").format(tglSql.parse(cellData.getValue().getValue().getTglKeuangan())));
+                return new SimpleStringProperty(tglLengkap.format(tglSql.parse(cellData.getValue().getValue().getTglKeuangan())));
             } catch (Exception ex) {
                 return null;
             }
         });
         tglKeuanganColumn.setCellFactory(col -> Function.getWrapTreeTableCell(tglKeuanganColumn));
-        tglKeuanganColumn.setComparator(Function.sortDate(new SimpleDateFormat("HH:mm")));
+        tglKeuanganColumn.setComparator(Function.sortDate(tglLengkap));
+
+        tglInputColumn.setCellValueFactory(cellData -> {
+            try {
+                return new SimpleStringProperty(tglLengkap.format(tglSql.parse(cellData.getValue().getValue().getTglTransaksi())));
+            } catch (Exception ex) {
+                return null;
+            }
+        });
+        tglInputColumn.setCellFactory(col -> Function.getWrapTreeTableCell(tglInputColumn));
+        tglInputColumn.setComparator(Function.sortDate(tglLengkap));
 
         jumlahRpColumn.setCellValueFactory(param -> param.getValue().getValue().jumlahRpProperty());
         jumlahRpColumn.setCellFactory(col -> Function.getTreeTableCell());
@@ -322,10 +340,11 @@ public class KeuanganController {
                 try (Connection con = Koneksi.getConnection()) {
                     saldoAwal = KeuanganDAO.getSaldoAwal(con, tglMulaiPicker.getValue().toString(), TipeKeuanganCombo.getSelectionModel().getSelectedItem());
                     saldoAkhir = KeuanganDAO.getSaldoAkhir(con, tglAkhirPicker.getValue().toString(), TipeKeuanganCombo.getSelectionModel().getSelectedItem());
-                    return KeuanganDAO.getAllByTipeKeuanganAndTanggal(con,
+                    List<Keuangan> listKeuangan = KeuanganDAO.getAllByTipeKeuanganAndTanggal(con,
                             TipeKeuanganCombo.getSelectionModel().getSelectedItem(),
                             tglMulaiPicker.getValue().toString(),
                             tglAkhirPicker.getValue().toString());
+                    return listKeuangan;
                 }
             }
         };
@@ -424,6 +443,7 @@ public class KeuanganController {
                     @Override
                     public String call() throws Exception {
                         try (Connection con = Koneksi.getConnection()) {
+                            Date tglTransaksi = tglSql.parse(x.tglTransaksiPicker.getValue().toString() + " " + new SimpleDateFormat("HH:mm:ss").format(new Date()));
                             Double jumlahRp = Double.parseDouble(x.jumlahRpField.getText().replaceAll(",", ""));
                             for (KategoriTransaksi k : sistem.getListKategoriTransaksi()) {
                                 if (k.getKodeKategori().equals(x.kategoriCombo.getSelectionModel().getSelectedItem())) {
@@ -441,7 +461,7 @@ public class KeuanganController {
                             k.setDeskripsi(x.keteranganField.getText());
                             k.setJumlahRp(jumlahRp);
                             k.setKodeUser(sistem.getUser().getKodeUser());
-                            return Service.newKeuangan(con, k);
+                            return Service.newKeuangan(con, k, tglTransaksi);
                         }
                     }
                 };
@@ -488,6 +508,7 @@ public class KeuanganController {
                     @Override
                     public String call() throws Exception {
                         try (Connection con = Koneksi.getConnection()) {
+                            Date tglTransaksi = tglSql.parse(x.tglTransaksiPicker.getValue().toString() + " " + new SimpleDateFormat("HH:mm:ss").format(new Date()));
                             BebanPenjualanHead b = new BebanPenjualanHead();
                             b.setKeterangan(x.keteranganField.getText());
                             b.setTotalBebanPenjualan(Double.parseDouble(x.jumlahRpField.getText().replaceAll(",", "")));
@@ -497,7 +518,7 @@ public class KeuanganController {
                             b.setUserBatal("");
                             b.setStatus("true");
                             b.setListBebanPenjualanDetail(x.listDetail);
-                            return Service.newBebanPenjualan(con, b);
+                            return Service.newBebanPenjualan(con, b, tglTransaksi);
                         }
                     }
                 };
@@ -528,7 +549,7 @@ public class KeuanganController {
         FXMLLoader loader = mainApp.showDialog(mainApp.MainStage, child, "View/Dialog/NewBebanPenjualan.fxml");
         NewBebanPenjualanController controller = loader.getController();
         controller.setMainApp(mainApp, mainApp.MainStage, child);
-        controller.setDetailBebanPenjualan(k.getDeskripsi());
+        controller.setDetailBebanPenjualan(k.getNoTransaksi());
     }
 
     private void batalBebanPenjualan(Keuangan keu) {
@@ -539,8 +560,8 @@ public class KeuanganController {
                 @Override
                 public String call() throws Exception {
                     try (Connection con = Koneksi.getConnection()) {
-                        BebanPenjualanHead b = BebanPenjualanHeadDAO.get(con, keu.getDeskripsi());
-                        b.setListBebanPenjualanDetail(BebanPenjualanDetailDAO.getAllByNoBeban(con, keu.getDeskripsi()));
+                        BebanPenjualanHead b = BebanPenjualanHeadDAO.get(con, keu.getNoTransaksi());
+                        b.setListBebanPenjualanDetail(BebanPenjualanDetailDAO.getAllByNoBeban(con, keu.getNoTransaksi()));
                         return Service.batalBebanPenjualan(con, b);
                     }
                 }
@@ -587,6 +608,7 @@ public class KeuanganController {
                     @Override
                     public String call() throws Exception {
                         try (Connection con = Koneksi.getConnection()) {
+                            Date tglTransaksi = tglSql.parse(x.tglTransaksiPicker.getValue().toString() + " " + new SimpleDateFormat("HH:mm:ss").format(new Date()));
                             BebanProduksiHead b = new BebanProduksiHead();
                             b.setKeterangan(x.keteranganField.getText());
                             b.setTotalBebanProduksi(Double.parseDouble(x.jumlahRpField.getText().replaceAll(",", "")));
@@ -596,7 +618,7 @@ public class KeuanganController {
                             b.setUserBatal("");
                             b.setStatus("true");
                             b.setListBebanProduksiDetail(x.listDetail);
-                            return Service.newBebanProduksi(con, b);
+                            return Service.newBebanProduksi(con, b, tglTransaksi);
                         }
                     }
                 };
@@ -627,7 +649,7 @@ public class KeuanganController {
         FXMLLoader loader = mainApp.showDialog(mainApp.MainStage, child, "View/Dialog/NewBebanProduksi.fxml");
         NewBebanProduksiController controller = loader.getController();
         controller.setMainApp(mainApp, mainApp.MainStage, child);
-        controller.setDetailBebanProduksi(k.getDeskripsi());
+        controller.setDetailBebanProduksi(k.getNoTransaksi());
     }
 
     private void batalBebanProduksi(Keuangan keu) {
@@ -638,8 +660,8 @@ public class KeuanganController {
                 @Override
                 public String call() throws Exception {
                     try (Connection con = Koneksi.getConnection()) {
-                        BebanProduksiHead b = BebanProduksiHeadDAO.get(con, keu.getDeskripsi());
-                        b.setListBebanProduksiDetail(BebanProduksiDetailDAO.getAllByNoBeban(con, keu.getDeskripsi()));
+                        BebanProduksiHead b = BebanProduksiHeadDAO.get(con, keu.getNoTransaksi());
+                        b.setListBebanProduksiDetail(BebanProduksiDetailDAO.getAllByNoBeban(con, keu.getNoTransaksi()));
                         return Service.batalBebanProduksi(con, b);
                     }
                 }
@@ -692,8 +714,10 @@ public class KeuanganController {
                     @Override
                     public String call() throws Exception {
                         try (Connection con = Koneksi.getConnection()) {
+                            Date tglTransaksi = tglSql.parse(x.tglTransaksiPicker.getValue().toString() + " " + new SimpleDateFormat("HH:mm:ss").format(new Date()));
+
                             return Service.transferKeuangan(
-                                    con, x.dariCombo.getSelectionModel().getSelectedItem(),
+                                    con, tglTransaksi, x.dariCombo.getSelectionModel().getSelectedItem(),
                                     x.keCombo.getSelectionModel().getSelectedItem(), x.keteranganField.getText(),
                                     Double.parseDouble(x.jumlahRpField.getText().replaceAll(",", "")));
                         }

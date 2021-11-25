@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -10,10 +11,10 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="800.0" styleClass="dialog" stylesheets="@../../Resource/MyTheme.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.60" fx:controller="com.excellentsystem.AuriSteel.View.Dialog.DetailRencanaProduksiMesinController">
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="800.0" styleClass="dialog" stylesheets="@../../Resource/MyTheme.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.excellentsystem.AuriSteel.View.Dialog.DetailRencanaProduksiMesinController">
    <children>
       <GridPane hgap="7.0" layoutX="143.0" layoutY="110.0" vgap="7.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
@@ -23,6 +24,7 @@
           <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
           <RowConstraints maxHeight="5.0" minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <padding>
             <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
@@ -30,6 +32,11 @@
          <children>
             <TableView fx:id="rencanaProduksiTable" prefHeight="200.0" prefWidth="200.0" tableMenuButtonVisible="true" GridPane.rowIndex="2">
               <columns>
+                  <TableColumn fx:id="checkColumn" maxWidth="40.0" minWidth="40.0" prefWidth="40.0">
+                     <graphic>
+                        <CheckBox fx:id="checkAll" mnemonicParsing="false" onAction="#checkAllHandle" />
+                     </graphic>
+                  </TableColumn>
                 <TableColumn fx:id="tujuanKirimColumn" prefWidth="75.0" text="Tujuan Kirim" />
                 <TableColumn fx:id="noPemesananColumn" prefWidth="75.0" text="No Pemesanan" />
                   <TableColumn fx:id="customerColumn" prefWidth="75.0" text="Customer" />
@@ -54,6 +61,14 @@
                   </ImageView>
                </graphic>
             </Button>
+            <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.rowIndex="3">
+               <children>
+                  <Label text="Total Qty" />
+                  <Label fx:id="totalQtyLabel" layoutX="10.0" layoutY="10.0" style="-fx-font-weight: bold;" text="0" />
+                  <Label layoutX="10.0" layoutY="10.0" text="Total Tonase" />
+                  <Label fx:id="totalTonaseLabel" layoutX="41.0" layoutY="10.0" style="-fx-font-weight: bold;" text="0" />
+               </children>
+            </HBox>
          </children>
       </GridPane>
    </children>

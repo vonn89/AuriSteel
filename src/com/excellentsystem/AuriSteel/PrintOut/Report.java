@@ -151,13 +151,24 @@ public class Report {
         JRViewerFx jrViewerFx = new JRViewerFx(jasperPrint);
     }
 
-    public void printProformaInvoiceSoftcopy(List<PemesananBarangDetail> pemesanan, double jumlahRp) throws Exception {
-        JasperDesign jasperDesign = JRXmlLoader.load(getClass().getResourceAsStream("ProformaInvoiceSoftcopy.jrxml"));
+    public void printProformaInvoiceSoftcopyKendal(List<PemesananBarangDetail> pemesanan, double jumlahRp) throws Exception {
+        JasperDesign jasperDesign = JRXmlLoader.load(getClass().getResourceAsStream("ProformaInvoiceSoftcopyKendal.jrxml"));
         JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(pemesanan);
         Map hash = new HashMap();
         hash.put("terbilang", angka(jumlahRp));
-        hash.put("top", ImageIO.read(getClass().getResource("atas.jpg")));
-        hash.put("bottom", ImageIO.read(getClass().getResource("bawah.jpg")));
+        hash.put("top", ImageIO.read(getClass().getResource("atasKendal.png")));
+        hash.put("bottom", ImageIO.read(getClass().getResource("bawahKendal.png")));
+        JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hash, beanColDataSource);
+        JRViewerFx jrViewerFx = new JRViewerFx(jasperPrint);
+    }
+    public void printProformaInvoiceSoftcopyTerboyo(List<PemesananBarangDetail> pemesanan, double jumlahRp) throws Exception {
+        JasperDesign jasperDesign = JRXmlLoader.load(getClass().getResourceAsStream("ProformaInvoiceSoftcopyTerboyo.jrxml"));
+        JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(pemesanan);
+        Map hash = new HashMap();
+        hash.put("terbilang", angka(jumlahRp));
+        hash.put("top", ImageIO.read(getClass().getResource("atasTerboyo.png")));
+        hash.put("bottom", ImageIO.read(getClass().getResource("bawahTerboyo.png")));
         JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hash, beanColDataSource);
         JRViewerFx jrViewerFx = new JRViewerFx(jasperPrint);
@@ -208,14 +219,26 @@ public class Report {
         JRViewerFx jrViewerFx = new JRViewerFx(jasperPrint);
     }
 
-    public void printInvoiceSoftcopy(List<PenjualanBarangDetail> penjualan, double jumlahRp) throws Exception {
-        JasperDesign jasperDesign = JRXmlLoader.load(getClass().getResourceAsStream("InvoiceSoftcopy.jrxml"));
+    public void printInvoiceSoftcopyKendal(List<PenjualanBarangDetail> penjualan, double jumlahRp) throws Exception {
+        JasperDesign jasperDesign = JRXmlLoader.load(getClass().getResourceAsStream("InvoiceSoftcopyKendal.jrxml"));
         JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(penjualan);
         Map hash = new HashMap();
         hash.put("terbilang", angka(jumlahRp));
-        hash.put("top", ImageIO.read(getClass().getResource("atas.jpg")));
-        hash.put("bottom", ImageIO.read(getClass().getResource("bawah.png")));
-        hash.put("watermark", ImageIO.read(getClass().getResource("watermark.jpg")));
+        hash.put("top", ImageIO.read(getClass().getResource("atasKendal.png")));
+        hash.put("bottom", ImageIO.read(getClass().getResource("bawahKendal.png")));
+        hash.put("watermark", ImageIO.read(getClass().getResource("watermark.png")));
+        JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hash, beanColDataSource);
+        JRViewerFx jrViewerFx = new JRViewerFx(jasperPrint);
+    }
+    public void printInvoiceSoftcopyTerboyo(List<PenjualanBarangDetail> penjualan, double jumlahRp) throws Exception {
+        JasperDesign jasperDesign = JRXmlLoader.load(getClass().getResourceAsStream("InvoiceSoftcopyTerboyo.jrxml"));
+        JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(penjualan);
+        Map hash = new HashMap();
+        hash.put("terbilang", angka(jumlahRp));
+        hash.put("top", ImageIO.read(getClass().getResource("atasTerboyo.png")));
+        hash.put("bottom", ImageIO.read(getClass().getResource("bawahTerboyo.png")));
+        hash.put("watermark", ImageIO.read(getClass().getResource("watermark.png")));
         JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hash, beanColDataSource);
         JRViewerFx jrViewerFx = new JRViewerFx(jasperPrint);

@@ -29,6 +29,8 @@ import javafx.stage.Stage;
 public class NewPiutangController {
 
     @FXML
+    public DatePicker tglTransaksiPicker;
+    @FXML
     public ComboBox<String> kategoriCombo;
     @FXML
     public TextField keteranganField;
@@ -38,16 +40,16 @@ public class NewPiutangController {
     public ComboBox<String> tipeKeuanganCombo;
     @FXML
     public Button saveButton;
-    @FXML
-    public DatePicker jatuhTempoField;
     private Main mainApp;
     private Stage stage;
     private Stage owner;
 
     public void initialize() {
         Function.setNumberField(jumlahRpField);
-        jatuhTempoField.setConverter(Function.getTglConverter());
-        jatuhTempoField.setDayCellFactory((final DatePicker datePicker) -> Function.getDateCellDisableBefore(LocalDate.now()));
+        tglTransaksiPicker.setConverter(Function.getTglConverter());
+        tglTransaksiPicker.setValue(LocalDate.now());
+        tglTransaksiPicker.setDayCellFactory((final DatePicker datePicker) -> Function.getDateCell(
+                LocalDate.now().minusMonths(1), LocalDate.now()));
     }
 
     public void setMainApp(Main mainApp, Stage owner, Stage stage) {

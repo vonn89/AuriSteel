@@ -34,8 +34,10 @@ import com.excellentsystem.AuriSteel.View.Dialog.NewPemesananController;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.sql.Connection;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -268,9 +270,13 @@ public class PemesananController {
                         invoice.setOnAction((ActionEvent e) -> {
                             printProformaInvoice(item);
                         });
-                        MenuItem invoiceSoftcopy = new MenuItem("Print Order Confirmation Copy");
-                        invoiceSoftcopy.setOnAction((ActionEvent e) -> {
-                            printProformaInvoiceSoftcopy(item);
+                        MenuItem invoiceSoftcopyKendal = new MenuItem("Print Order Confirmation Copy Kendal");
+                        invoiceSoftcopyKendal.setOnAction((ActionEvent e) -> {
+                            printProformaInvoiceSoftcopyKendal(item);
+                        });
+                        MenuItem invoiceSoftcopyTerboyo = new MenuItem("Print Order Confirmation Copy Terboyo");
+                        invoiceSoftcopyTerboyo.setOnAction((ActionEvent e) -> {
+                            printProformaInvoiceSoftcopyTerboyo(item);
                         });
                         MenuItem export = new MenuItem("Export Excel");
                         export.setOnAction((ActionEvent e) -> {
@@ -311,7 +317,7 @@ public class PemesananController {
                             }
                             if (o.getJenis().equals("Print Order Confirmation") && o.isStatus()
                                     && item.getStatus().equals("open")) {
-                                rm.getItems().addAll(invoice, invoiceSoftcopy);
+                                rm.getItems().addAll(invoice, invoiceSoftcopyKendal, invoiceSoftcopyTerboyo);
                             }
                             if (o.getJenis().equals("Export Excel") && o.isStatus()) {
                                 rm.getItems().add(export);
@@ -535,7 +541,7 @@ public class PemesananController {
                             pemesanan.setKodeUser(sistem.getUser().getKodeUser());
                             pemesanan.setTglBatal("2000-01-01 00:00:00");
                             pemesanan.setUserBatal("");
-                            pemesanan.setStatus("open");
+                            pemesanan.setStatus("wait");
                             pemesanan.setListPemesananBarangDetail(controller.allPemesananDetail);
                             return Service.newPemesanan(con, pemesanan);
                         }
@@ -600,7 +606,6 @@ public class PemesananController {
                             p.setKodeUser(sistem.getUser().getKodeUser());
                             p.setTglBatal("2000-01-01 00:00:00");
                             p.setUserBatal("");
-                            p.setStatus("open");
                             int noUrut = 1;
                             for (PemesananBarangDetail temp : controller.allPemesananDetail) {
                                 temp.setNoPemesanan(p.getNoPemesanan());
@@ -756,6 +761,7 @@ public class PemesananController {
                     @Override
                     public String call() throws Exception {
                         try (Connection con = Koneksi.getConnection()) {
+                            Date tglTransaksi = tglSql.parse(controller.tglTransaksiPicker.getValue().toString() + " " + new SimpleDateFormat("HH:mm:ss").format(new Date()));
                             p.setListPemesananBarangDetail(PemesananBarangDetailDAO.getAllByNoPemesanan(con, p.getNoPemesanan()));
                             double totalDikirim = 0;
                             for (PemesananBarangDetail d : p.getListPemesananBarangDetail()) {
@@ -766,9 +772,7 @@ public class PemesananController {
                             if (jumlahBayar > sisaPembayaran) {
                                 return "Jumlah yang dibayar melebihi dari sisa pembayaran";
                             } else {
-                                p.setDownPayment(p.getDownPayment() + jumlahBayar);
-                                p.setSisaDownPayment(p.getSisaDownPayment() + jumlahBayar);
-                                return Service.newTerimaDownPayment(con, p, jumlahBayar,
+                                return Service.newTerimaDownPayment(con, p, tglTransaksi, jumlahBayar,
                                         controller.tipeKeuanganCombo.getSelectionModel().getSelectedItem());
                             }
                         }
@@ -876,14 +880,27 @@ public class PemesananController {
         }
     }
 
-    private void printProformaInvoiceSoftcopy(PemesananBarangHead p) {
+    private void printProformaInvoiceSoftcopyKendal(PemesananBarangHead p) {
         try {
             List<PemesananBarangDetail> listPemesanan = p.getListPemesananBarangDetail();
             for (PemesananBarangDetail d : listPemesanan) {
                 d.setPemesananBarangHead(p);
             }
             Report report = new Report();
-            report.printProformaInvoiceSoftcopy(listPemesanan, p.getTotalPemesanan());
+            report.printProformaInvoiceSoftcopyKendal(listPemesanan, p.getTotalPemesanan());
+        } catch (Exception e) {
+            mainApp.showMessage(Modality.NONE, "Error", e.toString());
+        }
+    }
+
+    private void printProformaInvoiceSoftcopyTerboyo(PemesananBarangHead p) {
+        try {
+            List<PemesananBarangDetail> listPemesanan = p.getListPemesananBarangDetail();
+            for (PemesananBarangDetail d : listPemesanan) {
+                d.setPemesananBarangHead(p);
+            }
+            Report report = new Report();
+            report.printProformaInvoiceSoftcopyTerboyo(listPemesanan, p.getTotalPemesanan());
         } catch (Exception e) {
             mainApp.showMessage(Modality.NONE, "Error", e.toString());
         }

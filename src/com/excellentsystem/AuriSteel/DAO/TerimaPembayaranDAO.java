@@ -138,4 +138,9 @@ public class TerimaPembayaranDAO {
         ps.setString(10, t.getNoTerimaPembayaran());
         ps.executeUpdate();
     }
+    public static void delete(Connection con, TerimaPembayaran t) throws Exception {
+        PreparedStatement ps = con.prepareStatement("delete from tt_terima_pembayaran where no_terima_pembayaran = ?");
+        ps.setString(1, t.getNoTerimaPembayaran());
+        ps.executeUpdate();
+    }
 }

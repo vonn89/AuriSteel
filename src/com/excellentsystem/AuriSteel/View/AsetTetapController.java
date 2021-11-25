@@ -22,6 +22,8 @@ import com.excellentsystem.AuriSteel.View.Dialog.NewAsetTetapController;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.sql.Connection;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -370,6 +372,7 @@ public class AsetTetapController {
                     public String call() throws Exception {
                         try (Connection con = Koneksi.getConnection()) {
                             int masaPakai = (Integer.parseInt(controller.tahunField.getText()) * 12) + Integer.parseInt(controller.bulanField.getText());
+                            Date tglTransaksi = tglSql.parse(controller.tglTransaksiPicker.getValue().toString() + " " + new SimpleDateFormat("HH:mm:ss").format(new Date()));
                             AsetTetap asetTetap = new AsetTetap();
                             asetTetap.setNama(controller.namaField.getText());
                             asetTetap.setKategori(controller.kategoriCombo.getSelectionModel().getSelectedItem());
@@ -384,7 +387,7 @@ public class AsetTetapController {
                             asetTetap.setUserJual("");
                             asetTetap.setUserBeli(sistem.getUser().getKodeUser());
                             return Service.pembelianAsetTetap(con, asetTetap,
-                                    controller.tipeKeuanganCombo.getSelectionModel().getSelectedItem());
+                                    controller.tipeKeuanganCombo.getSelectionModel().getSelectedItem(),tglTransaksi);
                         }
                     }
                 };
@@ -431,11 +434,12 @@ public class AsetTetapController {
                     @Override
                     public String call() throws Exception {
                         try (Connection con = Koneksi.getConnection()) {
+                            Date tglTransaksi = tglSql.parse(controller.tglTransaksiPicker.getValue().toString() + " " + new SimpleDateFormat("HH:mm:ss").format(new Date()));
                             aset.setHargaJual(Double.parseDouble(controller.hargaField.getText().replaceAll(",", "")));
                             aset.setStatus("close");
                             aset.setUserJual(sistem.getUser().getKodeUser());
                             return Service.penjualanAsetTetap(con, aset,
-                                    controller.tipeKeuanganCombo.getSelectionModel().getSelectedItem());
+                                    controller.tipeKeuanganCombo.getSelectionModel().getSelectedItem(), tglTransaksi);
                         }
                     }
                 };

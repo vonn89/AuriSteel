@@ -10,11 +10,13 @@ import com.excellentsystem.AuriSteel.Main;
 import static com.excellentsystem.AuriSteel.Main.sistem;
 import com.excellentsystem.AuriSteel.Model.AsetTetap;
 import com.excellentsystem.AuriSteel.Model.KategoriKeuangan;
+import java.time.LocalDate;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -36,6 +38,8 @@ public class NewAsetTetapController {
     private Label harga;
     @FXML
     public TextField namaField;
+    @FXML
+    public DatePicker tglTransaksiPicker;
     @FXML
     public ComboBox<String> kategoriCombo;
     @FXML
@@ -78,6 +82,10 @@ public class NewAsetTetapController {
         stage.setOnCloseRequest((event) -> {
             mainApp.closeDialog(owner, stage);
         });
+        tglTransaksiPicker.setConverter(Function.getTglConverter());
+        tglTransaksiPicker.setValue(LocalDate.now());
+        tglTransaksiPicker.setDayCellFactory((final DatePicker datePicker) -> Function.getDateCell(
+                LocalDate.now().minusMonths(1), LocalDate.now()));
     }
 
     public void setPenjualanAset(AsetTetap aset) {
@@ -90,7 +98,7 @@ public class NewAsetTetapController {
             namaField.setDisable(true);
             kategoriCombo.setDisable(true);
             keteranganField.setDisable(true);
-            stage.setHeight(340);
+            stage.setHeight(370);
             penyusutanPane.setVisible(false);
         } else {
             close();

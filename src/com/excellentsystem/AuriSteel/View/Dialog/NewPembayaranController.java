@@ -9,6 +9,7 @@ import com.excellentsystem.AuriSteel.DAO.PembelianBahanHeadDAO;
 import com.excellentsystem.AuriSteel.DAO.PembelianBarangHeadDAO;
 import com.excellentsystem.AuriSteel.DAO.PenjualanBahanHeadDAO;
 import com.excellentsystem.AuriSteel.DAO.PenjualanBarangHeadDAO;
+import com.excellentsystem.AuriSteel.Function;
 import com.excellentsystem.AuriSteel.Koneksi;
 import com.excellentsystem.AuriSteel.Main;
 import static com.excellentsystem.AuriSteel.Main.df;
@@ -24,12 +25,15 @@ import com.excellentsystem.AuriSteel.Model.PenjualanBahanHead;
 import com.excellentsystem.AuriSteel.Model.PenjualanBarangHead;
 import com.excellentsystem.AuriSteel.Model.Piutang;
 import java.sql.Connection;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
@@ -59,6 +63,8 @@ public class NewPembayaranController {
     public TextField sudahTerbayarField;
     @FXML
     public TextField sisaPembayaranField;
+    @FXML
+    public DatePicker tglTransaksiPicker;
     @FXML
     public TextField jumlahPembayaranField;
     @FXML
@@ -110,6 +116,11 @@ public class NewPembayaranController {
         totalTransaksiField.setText(df.format(p.getTotalPemesanan()));
         sudahTerbayarField.setText(df.format(p.getDownPayment()));
         sisaPembayaranField.setText(df.format(p.getTotalPemesanan() - p.getDownPayment()));
+
+        tglTransaksiPicker.setConverter(Function.getTglConverter());
+        tglTransaksiPicker.setValue(LocalDate.now());
+        tglTransaksiPicker.setDayCellFactory((final DatePicker datePicker) -> Function.getDateCell(
+                LocalDate.now().minusMonths(1), LocalDate.now()));
     }
 
     public void setTerimaPembayaranDownPaymentCoil(PemesananBahanHead p) {
@@ -121,6 +132,11 @@ public class NewPembayaranController {
         totalTransaksiField.setText(df.format(p.getTotalPemesanan()));
         sudahTerbayarField.setText(df.format(p.getDownPayment()));
         sisaPembayaranField.setText(df.format(p.getTotalPemesanan() - p.getDownPayment()));
+
+        tglTransaksiPicker.setConverter(Function.getTglConverter());
+        tglTransaksiPicker.setValue(LocalDate.now());
+        tglTransaksiPicker.setDayCellFactory((final DatePicker datePicker) -> Function.getDateCell(
+                LocalDate.now().minusMonths(1), LocalDate.now()));
     }
 
     public void setPembayaranDownPayment(PemesananPembelianBahanHead p) {
@@ -132,6 +148,11 @@ public class NewPembayaranController {
         totalTransaksiField.setText(df.format(p.getTotalPemesanan()));
         sudahTerbayarField.setText(df.format(p.getDownPayment()));
         sisaPembayaranField.setText(df.format(p.getTotalPemesanan() - p.getDownPayment()));
+
+        tglTransaksiPicker.setConverter(Function.getTglConverter());
+        tglTransaksiPicker.setValue(LocalDate.now());
+        tglTransaksiPicker.setDayCellFactory((final DatePicker datePicker) -> Function.getDateCell(
+                LocalDate.now().minusMonths(1), LocalDate.now()));
     }
 
     public void setPembayaranPenjualanCoil(String noPenjualan) {
@@ -157,6 +178,12 @@ public class NewPembayaranController {
                 totalTransaksiField.setText(df.format(p.getTotalPenjualan()));
                 sudahTerbayarField.setText(df.format(p.getPembayaran()));
                 sisaPembayaranField.setText(df.format(p.getSisaPembayaran()));
+
+                tglTransaksiPicker.setConverter(Function.getTglConverter());
+                tglTransaksiPicker.setValue(LocalDate.now());
+                tglTransaksiPicker.setDayCellFactory((final DatePicker datePicker) -> Function.getDateCell(
+                        LocalDate.parse(p.getTglPenjualan(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), LocalDate.now()));
+
             } catch (Exception ex) {
                 mainApp.showMessage(Modality.NONE, "Error", ex.toString());
             }
@@ -191,6 +218,11 @@ public class NewPembayaranController {
                 totalTransaksiField.setText(df.format(p.getTotalPenjualan()));
                 sudahTerbayarField.setText(df.format(p.getPembayaran()));
                 sisaPembayaranField.setText(df.format(p.getSisaPembayaran()));
+
+                tglTransaksiPicker.setConverter(Function.getTglConverter());
+                tglTransaksiPicker.setValue(LocalDate.now());
+                tglTransaksiPicker.setDayCellFactory((final DatePicker datePicker) -> Function.getDateCell(
+                        LocalDate.parse(p.getTglPenjualan(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), LocalDate.now()));
             } catch (Exception ex) {
                 mainApp.showMessage(Modality.NONE, "Error", ex.toString());
             }
@@ -225,6 +257,12 @@ public class NewPembayaranController {
                 totalTransaksiField.setText(df.format(p.getGrandtotal()));
                 sudahTerbayarField.setText(df.format(p.getPembayaran()));
                 sisaPembayaranField.setText(df.format(p.getSisaPembayaran()));
+
+                tglTransaksiPicker.setConverter(Function.getTglConverter());
+                tglTransaksiPicker.setValue(LocalDate.now());
+                tglTransaksiPicker.setDayCellFactory((final DatePicker datePicker) -> Function.getDateCell(
+                        LocalDate.parse(p.getTglPembelian(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), LocalDate.now()));
+
             } catch (Exception ex) {
                 mainApp.showMessage(Modality.NONE, "Error", ex.toString());
             }
@@ -259,6 +297,12 @@ public class NewPembayaranController {
                 totalTransaksiField.setText(df.format(p.getGrandtotal()));
                 sudahTerbayarField.setText(df.format(p.getPembayaran()));
                 sisaPembayaranField.setText(df.format(p.getSisaPembayaran()));
+
+                tglTransaksiPicker.setConverter(Function.getTglConverter());
+                tglTransaksiPicker.setValue(LocalDate.now());
+                tglTransaksiPicker.setDayCellFactory((final DatePicker datePicker) -> Function.getDateCell(
+                        LocalDate.parse(p.getTglPembelian(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), LocalDate.now()));
+
             } catch (Exception ex) {
                 mainApp.showMessage(Modality.NONE, "Error", ex.toString());
             }
@@ -278,6 +322,12 @@ public class NewPembayaranController {
         totalTransaksiField.setText(df.format(h.getJumlahHutang()));
         sudahTerbayarField.setText(df.format(h.getPembayaran()));
         sisaPembayaranField.setText(df.format(h.getSisaHutang()));
+
+        tglTransaksiPicker.setConverter(Function.getTglConverter());
+        tglTransaksiPicker.setValue(LocalDate.now());
+        tglTransaksiPicker.setDayCellFactory((final DatePicker datePicker) -> Function.getDateCell(
+                LocalDate.parse(h.getTglHutang(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), LocalDate.now()));
+
     }
 
     public void setPembayaranPiutang(Piutang p) {
@@ -288,6 +338,12 @@ public class NewPembayaranController {
         totalTransaksiField.setText(df.format(p.getJumlahPiutang()));
         sudahTerbayarField.setText(df.format(p.getPembayaran()));
         sisaPembayaranField.setText(df.format(p.getSisaPiutang()));
+
+        tglTransaksiPicker.setConverter(Function.getTglConverter());
+        tglTransaksiPicker.setValue(LocalDate.now());
+        tglTransaksiPicker.setDayCellFactory((final DatePicker datePicker) -> Function.getDateCell(
+                LocalDate.parse(p.getTglPiutang(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), LocalDate.now()));
+
     }
 
     public void close() {

@@ -5,6 +5,7 @@
  */
 package com.excellentsystem.AuriSteel.View;
 
+import com.excellentsystem.AuriSteel.DAO.BahanDAO;
 import com.excellentsystem.AuriSteel.DAO.BarangDAO;
 import com.excellentsystem.AuriSteel.DAO.ImageDatabaseDAO;
 import com.excellentsystem.AuriSteel.DAO.ProduksiDetailBahanDAO;
@@ -97,6 +98,8 @@ public class ProduksiBarangController {
     @FXML
     private TableColumn<ProduksiHead, String> listOperatorColumn;
     @FXML
+    private TableColumn<ProduksiHead, String> kategoriBahanColumn;
+    @FXML
     private TableColumn<ProduksiHead, String> listBahanColumn;
     @FXML
     private TableColumn<ProduksiHead, Number> totalBeratBahanColumn;
@@ -187,6 +190,18 @@ public class ProduksiBarangController {
         });
         listOperatorColumn.setCellFactory(col -> Function.getWrapTableCell(listOperatorColumn));
 
+        kategoriBahanColumn.setCellValueFactory(cellData -> {
+            String x = "";
+//            for (ProduksiDetailBahan d : cellData.getValue().getListProduksiDetailBahan()) {
+//                x = x + d.getBahan().getKodeKategori();
+//                if (cellData.getValue().getListProduksiDetailBahan().indexOf(d)
+//                        < cellData.getValue().getListProduksiDetailBahan().size() - 1) {
+//                    x = x + "\n";
+//                }
+//            }
+            return new SimpleStringProperty(x);
+        });
+        kategoriBahanColumn.setCellFactory(col -> Function.getWrapTableCell(kategoriBahanColumn));
         listBahanColumn.setCellValueFactory(cellData -> {
             String x = "";
             for (ProduksiDetailBahan d : cellData.getValue().getListProduksiDetailBahan()) {
@@ -457,6 +472,10 @@ public class ProduksiBarangController {
                         List<ProduksiDetailBahan> detailBahan = new ArrayList<>();
                         for (ProduksiDetailBahan d : listProduksiBahan) {
                             if (p.getKodeProduksi().equals(d.getKodeProduksi())) {
+//                                if(p.getJenisProduksi().equals("Bahan - Barang")){
+//                                    d.setBahan(BahanDAO.get(con, d.getKodeBarang()));
+//                                }
+                                
                                 if (p.getJenisProduksi().equals("Barang - Barang")) {
                                     for (Barang x : listBarang) {
                                         if (d.getKodeBarang().equals(x.getKodeBarang())) {

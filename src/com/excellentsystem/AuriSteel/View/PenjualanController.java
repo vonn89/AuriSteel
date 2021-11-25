@@ -39,8 +39,10 @@ import com.excellentsystem.AuriSteel.View.Dialog.NewPenjualanController;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.sql.Connection;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -252,9 +254,13 @@ public class PenjualanController {
                         invoice.setOnAction((ActionEvent e) -> {
                             printInvoice(item);
                         });
-                        MenuItem invoiceSoftcopy = new MenuItem("Print Invoice Softcopy");
-                        invoiceSoftcopy.setOnAction((ActionEvent e) -> {
-                            printInvoiceSoftCopy(item);
+                        MenuItem invoiceSoftcopyKendal = new MenuItem("Print Invoice Softcopy Kendal");
+                        invoiceSoftcopyKendal.setOnAction((ActionEvent e) -> {
+                            printInvoiceSoftCopyKendal(item);
+                        });
+                        MenuItem invoiceSoftcopyTerboyo = new MenuItem("Print Invoice Softcopy Terboyo");
+                        invoiceSoftcopyTerboyo.setOnAction((ActionEvent e) -> {
+                            printInvoiceSoftCopyTerboyo(item);
                         });
                         MenuItem bayar = new MenuItem("Terima Pembayaran");
                         bayar.setOnAction((ActionEvent e) -> {
@@ -293,7 +299,7 @@ public class PenjualanController {
                                 rm.getItems().add(bayar);
                             }
                             if (o.getJenis().equals("Print Invoice") && o.isStatus()) {
-                                rm.getItems().addAll(invoice, invoiceSoftcopy);
+                                rm.getItems().addAll(invoice, invoiceSoftcopyKendal, invoiceSoftcopyTerboyo);
                             }
                             if (o.getJenis().equals("Export Faktur Pajak") && o.isStatus()) {
                                 rm.getItems().add(faktur);
@@ -468,6 +474,7 @@ public class PenjualanController {
                     @Override
                     public String call() throws Exception {
                         try (Connection con = Koneksi.getConnection()) {
+                            Date tglTransaksi = tglSql.parse(controller.tglTransaksiPicker.getValue().toString() + " " + new SimpleDateFormat("HH:mm:ss").format(new Date()));
                             Piutang pt = PiutangDAO.getByKategoriAndKeteranganAndStatus(
                                     con, "Piutang Penjualan", p.getNoPenjualan(), "%");
                             pt.setPenjualanHead(p);
@@ -481,7 +488,7 @@ public class PenjualanController {
                             t.setUserBatal("");
                             t.setStatus("true");
                             t.setPiutang(pt);
-                            return Service.newTerimaPembayaranPiutang(con, t);
+                            return Service.newTerimaPembayaranPiutang(con, t, tglTransaksi);
                         }
                     }
                 };
@@ -550,49 +557,49 @@ public class PenjualanController {
             } else if (Double.parseDouble(controller.grandtotalField.getText().replaceAll(",", "")) < p.getPembayaran()) {
                 mainApp.showMessage(Modality.NONE, "Warning", "Tidak dapat disimpan karena jumlah pembayaran lebih besar dari total penjualan");
             } else {
-//                Task<String> task = new Task<String>() {
-//                    @Override
-//                    public String call() throws Exception {
-//                        try (Connection con = Koneksi.getConnection()) {
-//                            String noPenjualan = controller.penjualan.getNoPenjualan();
-//                            if (noPenjualan.length() > 10) {
-//                                String no = noPenjualan.substring(0, 10);
-//                                int noUrut = Integer.parseInt(noPenjualan.substring(11, 12)) + 1;
-//                                noPenjualan = no + "-" + String.valueOf(noUrut);
-//                            } else {
-//                                noPenjualan = noPenjualan + "-1";
-//                            }
-//                            controller.penjualan.setNoPenjualan(noPenjualan);
-//
-//                            p.setListPenjualanBarangDetail(controller.allPenjualanDetail);
-//                            double totalPenjualan = 0;
-//                            for (PenjualanBarangDetail d : controller.penjualan.getListPenjualanBarangDetail()) {
-//                                totalPenjualan = totalPenjualan + d.getTotal();
-//                            }
-//                            controller.penjualan.setTotalPenjualan(totalPenjualan);
-//                            
-//                            return Service.editPenjualan(con, p, controller.penjualan);
-//                        }
-//                    }
-//                };
-//                task.setOnRunning((ex) -> {
-//                    mainApp.showLoadingScreen();
-//                });
-//                task.setOnSucceeded((WorkerStateEvent ex) -> {
-//                    mainApp.closeLoading();
-//                    getPenjualan();
-//                    if (task.getValue().equals("true")) {
-//                        mainApp.closeDialog(mainApp.MainStage, stage);
-//                        mainApp.showMessage(Modality.NONE, "Success", "Data penjualan berhasil disimpan");
-//                    } else {
-//                        mainApp.showMessage(Modality.NONE, "Error", task.getValue());
-//                    }
-//                });
-//                task.setOnFailed((ex) -> {
-//                    mainApp.showMessage(Modality.NONE, "Error", task.getException().toString());
-//                    mainApp.closeLoading();
-//                });
-//                new Thread(task).start();
+                Task<String> task = new Task<String>() {
+                    @Override
+                    public String call() throws Exception {
+                        try (Connection con = Koneksi.getConnection()) {
+                            String noPenjualan = controller.penjualan.getNoPenjualan();
+                            if (noPenjualan.length() > 10) {
+                                String no = noPenjualan.substring(0, 10);
+                                int noUrut = Integer.parseInt(noPenjualan.substring(11, 12)) + 1;
+                                noPenjualan = no + "-" + String.valueOf(noUrut);
+                            } else {
+                                noPenjualan = noPenjualan + "-1";
+                            }
+                            controller.penjualan.setNoPenjualan(noPenjualan);
+
+                            p.setListPenjualanBarangDetail(controller.allPenjualanDetail);
+                            double totalPenjualan = 0;
+                            for (PenjualanBarangDetail d : controller.penjualan.getListPenjualanBarangDetail()) {
+                                totalPenjualan = totalPenjualan + d.getTotal();
+                            }
+                            controller.penjualan.setTotalPenjualan(totalPenjualan);
+                            
+                            return Service.editPenjualan(con, p, controller.penjualan);
+                        }
+                    }
+                };
+                task.setOnRunning((ex) -> {
+                    mainApp.showLoadingScreen();
+                });
+                task.setOnSucceeded((WorkerStateEvent ex) -> {
+                    mainApp.closeLoading();
+                    getPenjualan();
+                    if (task.getValue().equals("true")) {
+                        mainApp.closeDialog(mainApp.MainStage, stage);
+                        mainApp.showMessage(Modality.NONE, "Success", "Data penjualan berhasil disimpan");
+                    } else {
+                        mainApp.showMessage(Modality.NONE, "Error", task.getValue());
+                    }
+                });
+                task.setOnFailed((ex) -> {
+                    mainApp.showMessage(Modality.NONE, "Error", task.getException().toString());
+                    mainApp.closeLoading();
+                });
+                new Thread(task).start();
             }
         });
     }
@@ -677,14 +684,27 @@ public class PenjualanController {
         }
     }
 
-    private void printInvoiceSoftCopy(PenjualanBarangHead p) {
+    private void printInvoiceSoftCopyKendal(PenjualanBarangHead p) {
         try (Connection con = Koneksi.getConnection()) {
             List<PenjualanBarangDetail> listPenjualan = PenjualanBarangDetailDAO.getAllPenjualanDetail(con, p.getNoPenjualan());
             for (PenjualanBarangDetail d : listPenjualan) {
                 d.setPenjualanBarangHead(p);
             }
             Report report = new Report();
-            report.printInvoiceSoftcopy(listPenjualan, p.getTotalPenjualan());
+            report.printInvoiceSoftcopyKendal(listPenjualan, p.getTotalPenjualan());
+        } catch (Exception e) {
+            e.printStackTrace();
+            mainApp.showMessage(Modality.NONE, "Error", e.toString());
+        }
+    }
+    private void printInvoiceSoftCopyTerboyo(PenjualanBarangHead p) {
+        try (Connection con = Koneksi.getConnection()) {
+            List<PenjualanBarangDetail> listPenjualan = PenjualanBarangDetailDAO.getAllPenjualanDetail(con, p.getNoPenjualan());
+            for (PenjualanBarangDetail d : listPenjualan) {
+                d.setPenjualanBarangHead(p);
+            }
+            Report report = new Report();
+            report.printInvoiceSoftcopyTerboyo(listPenjualan, p.getTotalPenjualan());
         } catch (Exception e) {
             e.printStackTrace();
             mainApp.showMessage(Modality.NONE, "Error", e.toString());

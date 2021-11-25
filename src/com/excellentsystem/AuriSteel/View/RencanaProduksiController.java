@@ -95,6 +95,8 @@ public class RencanaProduksiController {
     private ToggleButton jumatButton;
     @FXML
     private ToggleButton sabtuButton;
+    @FXML
+    private ToggleButton sementaraButton;
 
     @FXML
     private Label totalKirimLabel;
@@ -315,11 +317,14 @@ public class RencanaProduksiController {
                     filterData.add(rp);
                 } else if (sabtuButton.isSelected() && rp.getHari().equalsIgnoreCase("sabtu")) {
                     filterData.add(rp);
+                }else if (sementaraButton.isSelected() && rp.getHari().equalsIgnoreCase("sementara")) {
+                    filterData.add(rp);
                 }
             }
             setTable();
             setGridPane();
         } catch (Exception e) {
+            e.printStackTrace();
             mainApp.showMessage(Modality.NONE, "Error", e.toString());
         }
     }
@@ -382,7 +387,7 @@ public class RencanaProduksiController {
             for (int i = 1; i <= listMesin.size() + 3; i++) {
                 gridPane.getRowConstraints().add(new RowConstraints(30, 30, 30));
             }
-            for (int i = 1; i <= 8; i++) {
+            for (int i = 1; i <= 9; i++) {
                 gridPane.getColumnConstraints().add(new ColumnConstraints(80, 120, Double.MAX_VALUE, Priority.ALWAYS, HPos.CENTER, true));
             }
             addTopHeaderText(gridPane, "Mesin", 0, 0);
@@ -393,6 +398,7 @@ public class RencanaProduksiController {
             addTopHeaderText(gridPane, "Kamis", 5, 0);
             addTopHeaderText(gridPane, "Jumat", 6, 0);
             addTopHeaderText(gridPane, "Sabtu", 7, 0);
+            addTopHeaderText(gridPane, "Sementara", 8, 0);
 
             int i = 1;
             double totalKapasitas = 0;
@@ -433,12 +439,14 @@ public class RencanaProduksiController {
             double jumlahProduksiKamis = 0;
             double jumlahProduksiJumat = 0;
             double jumlahProduksiSabtu = 0;
+            double jumlahProduksiSementara = 0;
             List<RencanaProduksi> listRencanaSenin = new ArrayList<>();
             List<RencanaProduksi> listRencanaSelasa = new ArrayList<>();
             List<RencanaProduksi> listRencanaRabu = new ArrayList<>();
             List<RencanaProduksi> listRencanaKamis = new ArrayList<>();
             List<RencanaProduksi> listRencanaJumat = new ArrayList<>();
             List<RencanaProduksi> listRencanaSabtu = new ArrayList<>();
+            List<RencanaProduksi> listRencanaSementara = new ArrayList<>();
             for (RencanaProduksi rp : allRencanaProduksi) {
                 if (rp.getHari().equalsIgnoreCase("senin")) {
                     for (MesinDetailBarang d : m.getListDetailBarang()) {
@@ -506,6 +514,17 @@ public class RencanaProduksiController {
                         }
                     }
                 }
+                if (rp.getHari().equalsIgnoreCase("sementara")) {
+                    for (MesinDetailBarang d : m.getListDetailBarang()) {
+                        if (d.getKodeBarang().equals(rp.getBarang()) && d.isStatus() && rp.getQty() > rp.getProduksi()) {
+                            if (jumlahProduksiSementara + rp.getQty() < m.getKapasitas()) {
+                                rp.setProduksi(rp.getProduksi() + rp.getQty());
+                                jumlahProduksiSementara = jumlahProduksiSementara + rp.getQty();
+                                listRencanaSementara.add(rp);
+                            }
+                        }
+                    }
+                }
             }
             addHyperLinkText(gridPane, df.format(jumlahProduksiSenin), 2, noMesin, listRencanaSenin);
             addHyperLinkText(gridPane, df.format(jumlahProduksiSelasa), 3, noMesin, listRencanaSelasa);
@@ -513,6 +532,7 @@ public class RencanaProduksiController {
             addHyperLinkText(gridPane, df.format(jumlahProduksiKamis), 5, noMesin, listRencanaKamis);
             addHyperLinkText(gridPane, df.format(jumlahProduksiJumat), 6, noMesin, listRencanaJumat);
             addHyperLinkText(gridPane, df.format(jumlahProduksiSabtu), 7, noMesin, listRencanaSabtu);
+            addHyperLinkText(gridPane, df.format(jumlahProduksiSementara), 8, noMesin, listRencanaSementara);
             noMesin++;
         }
         double totalSenin = 0;
@@ -521,18 +541,21 @@ public class RencanaProduksiController {
         double totalKamis = 0;
         double totalJumat = 0;
         double totalSabtu = 0;
+        double totalSementara = 0;
         double sisaSenin = 0;
         double sisaSelasa = 0;
         double sisaRabu = 0;
         double sisaKamis = 0;
         double sisaJumat = 0;
         double sisaSabtu = 0;
+        double sisaSementara = 0;
         List<RencanaProduksi> listRencanaSisaSenin = new ArrayList<>();
         List<RencanaProduksi> listRencanaSisaSelasa = new ArrayList<>();
         List<RencanaProduksi> listRencanaSisaRabu = new ArrayList<>();
         List<RencanaProduksi> listRencanaSisaKamis = new ArrayList<>();
         List<RencanaProduksi> listRencanaSisaJumat = new ArrayList<>();
         List<RencanaProduksi> listRencanaSisaSabtu = new ArrayList<>();
+        List<RencanaProduksi> listRencanaSisaSementara = new ArrayList<>();
         for (RencanaProduksi rp : allRencanaProduksi) {
             if (rp.getHari().equalsIgnoreCase("senin")) {
                 if (rp.getQty() > rp.getProduksi()) {
@@ -582,6 +605,14 @@ public class RencanaProduksiController {
                 }
                 totalSabtu = totalSabtu + rp.getQty();
             }
+            if (rp.getHari().equalsIgnoreCase("sementara")) {
+                if (rp.getQty() > rp.getProduksi()) {
+                    sisaSementara = sisaSementara + rp.getQty();
+                    rp.setProduksi(rp.getProduksi() + rp.getQty());
+                    listRencanaSisaSementara.add(rp);
+                }
+                totalSementara = totalSementara + rp.getQty();
+            }
         }
         addHyperLinkText(gridPane, df.format(sisaSenin), 2, noMesin, listRencanaSisaSenin);
         addHyperLinkText(gridPane, df.format(sisaSelasa), 3, noMesin, listRencanaSisaSelasa);
@@ -589,6 +620,7 @@ public class RencanaProduksiController {
         addHyperLinkText(gridPane, df.format(sisaKamis), 5, noMesin, listRencanaSisaKamis);
         addHyperLinkText(gridPane, df.format(sisaJumat), 6, noMesin, listRencanaSisaJumat);
         addHyperLinkText(gridPane, df.format(sisaSabtu), 7, noMesin, listRencanaSisaSabtu);
+        addHyperLinkText(gridPane, df.format(sisaSementara), 8, noMesin, listRencanaSisaSementara);
         noMesin++;
         addLeftHeaderText(gridPane, df.format(totalSenin), 2, noMesin);
         addLeftHeaderText(gridPane, df.format(totalSelasa), 3, noMesin);
@@ -596,6 +628,7 @@ public class RencanaProduksiController {
         addLeftHeaderText(gridPane, df.format(totalKamis), 5, noMesin);
         addLeftHeaderText(gridPane, df.format(totalJumat), 6, noMesin);
         addLeftHeaderText(gridPane, df.format(totalSabtu), 7, noMesin);
+        addLeftHeaderText(gridPane, df.format(totalSementara), 8, noMesin);
         noMesin++;
 
     }

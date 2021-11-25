@@ -32,6 +32,8 @@ import com.excellentsystem.AuriSteel.View.Dialog.NewPiutangController;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.sql.Connection;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -84,8 +86,6 @@ public class PiutangController {
     private TableColumn<Piutang, Number> pembayaranColumn;
     @FXML
     private TableColumn<Piutang, Number> sisaPiutangColumn;
-    @FXML
-    private TableColumn<Piutang, String> jatuhTempoColumn;
 
     @FXML
     private TextField searchField;
@@ -119,20 +119,6 @@ public class PiutangController {
         });
         tglPiutangColumn.setCellFactory(col -> Function.getWrapTableCell(tglPiutangColumn));
         tglPiutangColumn.setComparator(Function.sortDate(tglLengkap));
-
-        jatuhTempoColumn.setCellValueFactory(cellData -> {
-            try {
-                if (cellData.getValue().getJatuhTempo().equals("2000-01-01")) {
-                    return null;
-                } else {
-                    return new SimpleStringProperty(tgl.format(tglBarang.parse(cellData.getValue().getJatuhTempo())));
-                }
-            } catch (Exception ex) {
-                return null;
-            }
-        });
-        jatuhTempoColumn.setCellFactory(col -> Function.getWrapTableCell(jatuhTempoColumn));
-        jatuhTempoColumn.setComparator(Function.sortDate(tgl));
 
         jumlahPiutangColumn.setCellValueFactory(cellData -> cellData.getValue().jumlahPiutangProperty());
         jumlahPiutangColumn.setCellFactory(col -> Function.getTableCell());
@@ -453,10 +439,7 @@ public class PiutangController {
                     @Override
                     public String call() throws Exception {
                         try (Connection con = Koneksi.getConnection()) {
-                            String jatuhTempo = "2000-01-01";
-                            if (x.jatuhTempoField.getValue() != null) {
-                                jatuhTempo = x.jatuhTempoField.getValue().toString();
-                            }
+                            Date tglTransaksi = tglSql.parse(x.tglTransaksiPicker.getValue().toString() + " " + new SimpleDateFormat("HH:mm:ss").format(new Date()));
                             Piutang h = new Piutang();
                             h.setKategori(x.kategoriCombo.getSelectionModel().getSelectedItem());
                             h.setKeterangan(x.keteranganField.getText());
@@ -464,10 +447,10 @@ public class PiutangController {
                             h.setJumlahPiutang(Double.parseDouble(x.jumlahRpField.getText().replaceAll(",", "")));
                             h.setPembayaran(0);
                             h.setSisaPiutang(Double.parseDouble(x.jumlahRpField.getText().replaceAll(",", "")));
-                            h.setJatuhTempo(jatuhTempo);
+                            h.setJatuhTempo("2000-01-01");
                             h.setKodeUser(sistem.getUser().getKodeUser());
                             h.setStatus("open");
-                            return Service.newPiutang(con, h);
+                            return Service.newPiutang(con, h, tglTransaksi);
                         }
                     }
                 };
@@ -518,6 +501,7 @@ public class PiutangController {
                     @Override
                     public String call() throws Exception {
                         try (Connection con = Koneksi.getConnection()) {
+                            Date tglTransaksi = tglSql.parse(controller.tglTransaksiPicker.getValue().toString() + " " + new SimpleDateFormat("HH:mm:ss").format(new Date()));
                             TerimaPembayaran t = new TerimaPembayaran();
                             t.setNoPiutang(p.getNoPiutang());
                             t.setJumlahPembayaran(Double.parseDouble(controller.jumlahPembayaranField.getText().replaceAll(",", "")));
@@ -528,7 +512,7 @@ public class PiutangController {
                             t.setUserBatal("");
                             t.setStatus("true");
                             t.setPiutang(p);
-                            return Service.newTerimaPembayaranPiutang(con, t);
+                            return Service.newTerimaPembayaranPiutang(con, t, tglTransaksi);
                         }
                     }
                 };
@@ -589,7 +573,6 @@ public class PiutangController {
                 sheet.getRow(rc).getCell(4).setCellValue("Total Piutang");
                 sheet.getRow(rc).getCell(5).setCellValue("Pembayaran");
                 sheet.getRow(rc).getCell(6).setCellValue("Sisa Piutang");
-                sheet.getRow(rc).getCell(7).setCellValue("Jatuh Tempo");
                 rc++;
                 double piutang = 0;
                 double pembayaran = 0;
@@ -603,9 +586,6 @@ public class PiutangController {
                     sheet.getRow(rc).getCell(4).setCellValue(b.getJumlahPiutang());
                     sheet.getRow(rc).getCell(5).setCellValue(b.getPembayaran());
                     sheet.getRow(rc).getCell(6).setCellValue(b.getSisaPiutang());
-                    if (!"2000-01-01".equals(b.getJatuhTempo())) {
-                        sheet.getRow(rc).getCell(7).setCellValue(tgl.format(tglBarang.parse(b.getJatuhTempo())));
-                    }
                     rc++;
                     piutang = piutang + b.getJumlahPiutang();
                     pembayaran = pembayaran + b.getPembayaran();

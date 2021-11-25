@@ -5,7 +5,9 @@
  */
 package com.excellentsystem.AuriSteel.Model;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -16,6 +18,7 @@ import javafx.beans.property.StringProperty;
  */
 public class RencanaProduksi {
 
+    private final BooleanProperty status = new SimpleBooleanProperty();
     private final StringProperty noRencana = new SimpleStringProperty();
     private final StringProperty hari = new SimpleStringProperty();
     private final StringProperty tujuanKirim = new SimpleStringProperty();
@@ -28,6 +31,18 @@ public class RencanaProduksi {
     private final DoubleProperty qty = new SimpleDoubleProperty();
     private final DoubleProperty tonase = new SimpleDoubleProperty();
     private final DoubleProperty produksi = new SimpleDoubleProperty();
+
+    public boolean isStatus() {
+        return status.get();
+    }
+
+    public void setStatus(boolean value) {
+        status.set(value);
+    }
+
+    public BooleanProperty statusProperty() {
+        return status;
+    }
 
     public double getProduksi() {
         return produksi.get();

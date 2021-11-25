@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
@@ -13,16 +14,17 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane id="AnchorPane" prefHeight="460.0" prefWidth="400.0" styleClass="dialog" stylesheets="@../../Resource/MyTheme.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.excellentsystem.AuriSteel.View.Dialog.NewAsetTetapController">
+<AnchorPane id="AnchorPane" prefHeight="490.0" prefWidth="400.0" styleClass="dialog" stylesheets="@../../Resource/MyTheme.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.excellentsystem.AuriSteel.View.Dialog.NewAsetTetapController">
     <children>
         <GridPane hgap="7.0" prefWidth="430.0" vgap="7.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <columnConstraints>
                 <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" />
-                <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" />
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints fillHeight="false" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints fillHeight="false" maxHeight="5.0" minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
+            <RowConstraints fillHeight="false" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints fillHeight="false" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints fillHeight="false" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints fillHeight="false" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -31,15 +33,15 @@
                 <RowConstraints fillHeight="false" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <Label text="Nama" GridPane.rowIndex="2" />
-                <Label text="Kategori" GridPane.rowIndex="3" />
-                <TextField fx:id="namaField" prefHeight="30.0" prefWidth="1000.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                <ComboBox fx:id="kategoriCombo" prefWidth="1000.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                <Label text="Keterangan" GridPane.rowIndex="4" />
-                <Label text="Tipe Keuangan" GridPane.rowIndex="7" />
-                <ComboBox fx:id="tipeKeuanganCombo" prefWidth="1000.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-                <Label fx:id="harga" text="Harga Beli" GridPane.rowIndex="6" />
-                <TextField fx:id="hargaField" prefHeight="30.0" prefWidth="380.0" text="0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                <Label text="Nama" GridPane.rowIndex="3" />
+                <Label text="Kategori" GridPane.rowIndex="4" />
+                <TextField fx:id="namaField" prefHeight="30.0" prefWidth="1000.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                <ComboBox fx:id="kategoriCombo" prefWidth="1000.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                <Label text="Keterangan" GridPane.rowIndex="5" />
+                <Label text="Tipe Keuangan" GridPane.rowIndex="8" />
+                <ComboBox fx:id="tipeKeuanganCombo" prefWidth="1000.0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                <Label fx:id="harga" text="Harga Beli" GridPane.rowIndex="7" />
+                <TextField fx:id="hargaField" prefHeight="30.0" prefWidth="380.0" text="0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                 <Label fx:id="title" styleClass="label-header" text="Pembelian Aset" GridPane.columnSpan="2" />
                 <Button mnemonicParsing="false" onAction="#close" prefHeight="30.0" prefWidth="30.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT">
                     <graphic>
@@ -50,7 +52,9 @@
                         </ImageView>
                     </graphic>
                 </Button>
-                <TextArea fx:id="keteranganField" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.rowSpan="2" />
+                <TextArea fx:id="keteranganField" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.rowSpan="2" />
+            <Label text="Tgl Transaksi" GridPane.rowIndex="2" />
+            <DatePicker fx:id="tglTransaksiPicker" maxWidth="1.7976931348623157E308" prefHeight="30.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             </children>
             <padding>
                 <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />

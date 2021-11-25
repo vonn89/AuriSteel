@@ -29,8 +29,10 @@
               <columns>
                 <TreeTableColumn fx:id="noKeuanganColumn" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" text="No Keuangan" />
                 <TreeTableColumn fx:id="tglKeuanganColumn" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Tgl Keuangan" visible="false" />
+                  <TreeTableColumn fx:id="tglInputColumn" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Tgl Input" visible="false" />
                   <TreeTableColumn fx:id="tipeKeuanganColumn" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Tipe Keuangan" visible="false" />
                   <TreeTableColumn fx:id="kategoriColumn" maxWidth="1000.0" prefWidth="75.0" text="Kategori" />
+                  <TreeTableColumn fx:id="noTransaksiColumn" maxWidth="1000.0" prefWidth="75.0" text="No Transaksi" visible="false" />
                   <TreeTableColumn fx:id="deskripsiColumn" maxWidth="2000.0" prefWidth="75.0" text="Deskripsi" />
                   <TreeTableColumn fx:id="jumlahRpColumn" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" text="Jumlah Rp" />
                   <TreeTableColumn fx:id="kodeUserColumn" maxWidth="120.0" minWidth="120.0" prefWidth="120.0" text="Kode User" visible="false" />

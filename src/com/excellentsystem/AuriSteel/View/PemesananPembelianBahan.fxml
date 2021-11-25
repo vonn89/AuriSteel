@@ -30,7 +30,7 @@
                 <TableColumn fx:id="noPemesananColumn" prefWidth="75.0" text="No Pemesanan" />
                 <TableColumn fx:id="tglPemesananColumn" prefWidth="75.0" text="Tgl Pemesanan" />
                   <TableColumn fx:id="namaSupplierColumn" prefWidth="75.0" text="Nama Supplier" />
-                  <TableColumn fx:id="noKontrakColumn" prefWidth="75.0" text="No Kontrak" visible="false" />
+                  <TableColumn fx:id="noKontrakColumn" prefWidth="75.0" text="No Kontrak" />
                   <TableColumn fx:id="paymentTermColumn" prefWidth="75.0" text="Payment Term" />
                   <TableColumn fx:id="deliveryTermColumn" prefWidth="75.0" text="Delivery Term" />
                   <TableColumn fx:id="totalPemesananColumn" prefWidth="75.0" text="Total Pemesanan" />

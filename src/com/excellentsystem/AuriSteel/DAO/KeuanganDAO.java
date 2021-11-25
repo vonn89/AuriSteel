@@ -23,7 +23,7 @@ import java.util.List;
 public class KeuanganDAO {
     public static List<Keuangan> getAllByTanggal(Connection con, String tglMulai,String tglAkhir)throws Exception{
         PreparedStatement ps = con.prepareStatement("select * from tt_keuangan "
-                + " where left(tgl_keuangan,10) between ? and ? ");
+                + " where left(tgl_keuangan,10) between ? and ? and status = 'true'");
         ps.setString(1, tglMulai);
         ps.setString(2, tglAkhir);
         ResultSet rs = ps.executeQuery();
@@ -32,18 +32,23 @@ public class KeuanganDAO {
             Keuangan k = new Keuangan();
             k.setNoKeuangan(rs.getString(1));
             k.setTglKeuangan(rs.getDate(2).toString()+" "+rs.getTime(2).toString());
-            k.setTipeKeuangan(rs.getString(3));
-            k.setKategori(rs.getString(4));
-            k.setDeskripsi(rs.getString(5));
-            k.setJumlahRp(rs.getDouble(6));
-            k.setKodeUser(rs.getString(7));
+            k.setTglTransaksi(rs.getDate(3).toString()+" "+rs.getTime(3).toString());
+            k.setTipeKeuangan(rs.getString(4));
+            k.setKategori(rs.getString(5));
+            k.setNoTransaksi(rs.getString(6));
+            k.setDeskripsi(rs.getString(7));
+            k.setJumlahRp(rs.getDouble(8));
+            k.setKodeUser(rs.getString(9));
+            k.setStatus(rs.getString(10));
+            k.setTglBatal(rs.getString(11));
+            k.setUserBatal(rs.getString(12));
             allKeuangan.add(k);
         }
         return allKeuangan;
     }
     public static List<Keuangan> getAllByTipeKeuanganAndTanggal(
             Connection con, String tipeKeuangan,String tglMulai,String tglAkhir)throws Exception{
-        String sql = "select * from tt_keuangan where left(tgl_keuangan,10) between ? and ? ";
+        String sql = "select * from tt_keuangan where left(tgl_keuangan,10) between ? and ? and status = 'true' ";
         if(!tipeKeuangan.equals("%"))
             sql = sql + " and tipe_keuangan = '"+tipeKeuangan+"' ";
         sql = sql + " order by tgl_keuangan ";
@@ -56,19 +61,24 @@ public class KeuanganDAO {
             Keuangan k = new Keuangan();
             k.setNoKeuangan(rs.getString(1));
             k.setTglKeuangan(rs.getDate(2).toString()+" "+rs.getTime(2).toString());
-            k.setTipeKeuangan(rs.getString(3));
-            k.setKategori(rs.getString(4));
-            k.setDeskripsi(rs.getString(5));
-            k.setJumlahRp(rs.getDouble(6));
-            k.setKodeUser(rs.getString(7));
+            k.setTglTransaksi(rs.getDate(3).toString()+" "+rs.getTime(3).toString());
+            k.setTipeKeuangan(rs.getString(4));
+            k.setKategori(rs.getString(5));
+            k.setNoTransaksi(rs.getString(6));
+            k.setDeskripsi(rs.getString(7));
+            k.setJumlahRp(rs.getDouble(8));
+            k.setKodeUser(rs.getString(9));
+            k.setStatus(rs.getString(10));
+            k.setTglBatal(rs.getString(11));
+            k.setUserBatal(rs.getString(12));
             allKeuangan.add(k);
         }
         return allKeuangan;
     }
     public static List<Keuangan> getAllByTipeKeuangan(Connection con, String tipeKeuangan)throws Exception{
-        String sql = "select * from tt_keuangan ";
+        String sql = "select * from tt_keuangan where status = 'true' ";
         if(!tipeKeuangan.equals("%"))
-            sql = sql + " where tipe_keuangan = '"+tipeKeuangan+"' ";
+            sql = sql + " and tipe_keuangan = '"+tipeKeuangan+"' ";
         sql = sql + " order by tgl_keuangan ";
         PreparedStatement ps = con.prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
@@ -77,18 +87,23 @@ public class KeuanganDAO {
             Keuangan k = new Keuangan();
             k.setNoKeuangan(rs.getString(1));
             k.setTglKeuangan(rs.getDate(2).toString()+" "+rs.getTime(2).toString());
-            k.setTipeKeuangan(rs.getString(3));
-            k.setKategori(rs.getString(4));
-            k.setDeskripsi(rs.getString(5));
-            k.setJumlahRp(rs.getDouble(6));
-            k.setKodeUser(rs.getString(7));
+            k.setTglTransaksi(rs.getDate(3).toString()+" "+rs.getTime(3).toString());
+            k.setTipeKeuangan(rs.getString(4));
+            k.setKategori(rs.getString(5));
+            k.setNoTransaksi(rs.getString(6));
+            k.setDeskripsi(rs.getString(7));
+            k.setJumlahRp(rs.getDouble(8));
+            k.setKodeUser(rs.getString(9));
+            k.setStatus(rs.getString(10));
+            k.setTglBatal(rs.getString(11));
+            k.setUserBatal(rs.getString(12));
             allKeuangan.add(k);
         }
         return allKeuangan;
     }
     public static Double getSaldoAkhir(Connection con, String tanggal,String tipeKeuangan)throws Exception{
         String sql = "select sum(jumlah_rp) from tt_keuangan "
-                + " where left(tgl_keuangan,10) <= ? ";
+                + " where left(tgl_keuangan,10) <= ? and status = 'true' ";
         if(!tipeKeuangan.equals("%"))
             sql = sql + " and tipe_keuangan = '"+tipeKeuangan+"' ";
         PreparedStatement ps = con.prepareStatement(sql);
@@ -101,7 +116,7 @@ public class KeuanganDAO {
     }
     public static Double getSaldoAwal(Connection con, String tanggal,String tipeKeuangan)throws Exception{
         String sql = "select sum(jumlah_rp) from tt_keuangan "
-                + " where left(tgl_keuangan,10) < ? ";
+                + " where left(tgl_keuangan,10) < ? and status = 'true' ";
         if(!tipeKeuangan.equals("%"))
             sql = sql + " and tipe_keuangan = '"+tipeKeuangan+"' ";
         PreparedStatement ps = con.prepareStatement(sql);
@@ -123,38 +138,58 @@ public class KeuanganDAO {
             return "KK-"+yymmdd.format(date)+"-"+new DecimalFormat("0000").format(1);
     }
     public static void insert(Connection con, Keuangan k)throws Exception{
-        PreparedStatement ps = con.prepareStatement("insert into tt_keuangan values (?,?,?,?,?,?,?)");
+        PreparedStatement ps = con.prepareStatement("insert into tt_keuangan values (?,?,?,?,?,?,?,?,?,?,?,?)");
         ps.setString(1, k.getNoKeuangan());
         ps.setString(2, k.getTglKeuangan());
-        ps.setString(3, k.getTipeKeuangan());
-        ps.setString(4, k.getKategori());
-        ps.setString(5, k.getDeskripsi());
-        ps.setDouble(6, k.getJumlahRp());
-        ps.setString(7, k.getKodeUser());
+        ps.setString(3, k.getTglTransaksi());
+        ps.setString(4, k.getTipeKeuangan());
+        ps.setString(5, k.getKategori());
+        ps.setString(6, k.getNoTransaksi());
+        ps.setString(7, k.getDeskripsi());
+        ps.setDouble(8, k.getJumlahRp());
+        ps.setString(9, k.getKodeUser());
+        ps.setString(10, k.getStatus());
+        ps.setString(11, k.getTglBatal());
+        ps.setString(12, k.getUserBatal());
         ps.executeUpdate();
     }
     public static void update(Connection con, Keuangan k)throws Exception{
         PreparedStatement ps = con.prepareStatement("update tt_keuangan set "
-                + " tgl_keuangan=?, deskripsi=?, jumlah_rp=?, kode_user=?  "
-                + " where no_keuangan=? and tipe_keuangan=? and kategori=?");
+                + " tgl_keuangan = ?, tgl_transaksi = ?, tipe_keuangan = ?, kategori = ?, "
+                + " no_transaksi = ?, deskripsi = ?, jumlah_rp = ?, kode_user = ?, "
+                + " status = ?, tgl_batal = ?, user_batal = ? "
+                + " where no_keuangan = ?");
         ps.setString(1, k.getTglKeuangan());
-        ps.setString(2, k.getDeskripsi());
-        ps.setDouble(3, k.getJumlahRp());
-        ps.setString(4, k.getKodeUser());
-        ps.setString(5, k.getNoKeuangan());
-        ps.setString(6, k.getTipeKeuangan());
-        ps.setString(7, k.getKategori());
+        ps.setString(2, k.getTglTransaksi());
+        ps.setString(3, k.getTipeKeuangan());
+        ps.setString(4, k.getKategori());
+        ps.setString(5, k.getNoTransaksi());
+        ps.setString(6, k.getDeskripsi());
+        ps.setDouble(7, k.getJumlahRp());
+        ps.setString(8, k.getKodeUser());
+        ps.setString(9, k.getStatus());
+        ps.setString(10, k.getTglBatal());
+        ps.setString(11, k.getUserBatal());
+        ps.setString(12, k.getNoKeuangan());
         ps.executeUpdate();
     }
-    public static void delete(Connection con, String tipeKeuangan, String kategori, String keterangan)throws Exception{
+    public static void deleteByDeskripsi(Connection con, String tipeKeuangan, String kategori, String deskripsi)throws Exception{
         PreparedStatement ps = con.prepareStatement("delete from tt_keuangan "
-                + " where tipe_keuangan=? and kategori=? and deskripsi=?");
+                + " where tipe_keuangan = ? and kategori = ? and deskripsi = ? ");
         ps.setString(1, tipeKeuangan);
         ps.setString(2, kategori);
-        ps.setString(3, keterangan);
+        ps.setString(3, deskripsi);
         ps.executeUpdate();
     }
-    public static void deleteByNoKeuangan(Connection con, String noKeuangan)throws Exception{
+    public static void deleteByNoTransaksi(Connection con, String tipeKeuangan, String kategori, String noTransaksi)throws Exception{
+        PreparedStatement ps = con.prepareStatement("delete from tt_keuangan "
+                + " where tipe_keuangan = ? and kategori = ? and no_transaksi = ? ");
+        ps.setString(1, tipeKeuangan);
+        ps.setString(2, kategori);
+        ps.setString(3, noTransaksi);
+        ps.executeUpdate();
+    }
+    public static void deleteByNoKeuangan1(Connection con, String noKeuangan)throws Exception{
         PreparedStatement ps = con.prepareStatement("delete from tt_keuangan "
                 + " where no_keuangan=?");
         ps.setString(1, noKeuangan);

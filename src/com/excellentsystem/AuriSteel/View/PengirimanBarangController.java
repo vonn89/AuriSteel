@@ -209,9 +209,13 @@ public class PengirimanBarangController {
                         suratJalan.setOnAction((ActionEvent e) -> {
                             printSuratJalan(item);
                         });
-                        MenuItem invoice = new MenuItem("Print Invoice");
-                        invoice.setOnAction((ActionEvent e) -> {
-                            printInvoice(item);
+                        MenuItem invoiceKendal = new MenuItem("Print Invoice Kendal");
+                        invoiceKendal.setOnAction((ActionEvent e) -> {
+                            printInvoiceKendal(item);
+                        });
+                        MenuItem invoiceTerboyo = new MenuItem("Print Invoice Terboyo");
+                        invoiceTerboyo.setOnAction((ActionEvent e) -> {
+                            printInvoiceTerboyo(item);
                         });
                         MenuItem export = new MenuItem("Export Excel");
                         export.setOnAction((ActionEvent e) -> {
@@ -238,7 +242,7 @@ public class PengirimanBarangController {
                                 rm.getItems().add(suratJalan);
                             }
                             if (o.getJenis().equals("Print Invoice") && o.isStatus() && !item.getStatus().equals("false")) {
-                                rm.getItems().add(invoice);
+                                rm.getItems().addAll(invoiceKendal,invoiceTerboyo);
                             }
                             if (o.getJenis().equals("Export Excel") && o.isStatus()) {
                                 rm.getItems().add(export);
@@ -547,14 +551,27 @@ public class PengirimanBarangController {
         controller.setDetailPengiriman(p.getNoPenjualan(), false);
     }
 
-    private void printInvoice(PenjualanBarangHead p) {
+    private void printInvoiceKendal(PenjualanBarangHead p) {
         try (Connection con = Koneksi.getConnection()) {
             List<PenjualanBarangDetail> listPenjualan = PenjualanBarangDetailDAO.getAllPenjualanDetail(con, p.getNoPenjualan());
             for (PenjualanBarangDetail d : listPenjualan) {
                 d.setPenjualanBarangHead(p);
             }
             Report report = new Report();
-            report.printInvoiceSoftcopy(listPenjualan, p.getTotalPenjualan());
+            report.printInvoiceSoftcopyKendal(listPenjualan, p.getTotalPenjualan());
+        } catch (Exception e) {
+            e.printStackTrace();
+            mainApp.showMessage(Modality.NONE, "Error", e.toString());
+        }
+    }
+    private void printInvoiceTerboyo(PenjualanBarangHead p) {
+        try (Connection con = Koneksi.getConnection()) {
+            List<PenjualanBarangDetail> listPenjualan = PenjualanBarangDetailDAO.getAllPenjualanDetail(con, p.getNoPenjualan());
+            for (PenjualanBarangDetail d : listPenjualan) {
+                d.setPenjualanBarangHead(p);
+            }
+            Report report = new Report();
+            report.printInvoiceSoftcopyTerboyo(listPenjualan, p.getTotalPenjualan());
         } catch (Exception e) {
             e.printStackTrace();
             mainApp.showMessage(Modality.NONE, "Error", e.toString());

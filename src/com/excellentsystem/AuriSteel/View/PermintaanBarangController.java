@@ -417,6 +417,7 @@ public class PermintaanBarangController {
             mainApp.showMessage(Modality.NONE, "Error", e.toString());
             e.printStackTrace();
         }
+        hitungTotal();
     }
 
     private void printSPK() {

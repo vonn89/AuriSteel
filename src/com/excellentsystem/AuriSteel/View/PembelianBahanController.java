@@ -32,8 +32,10 @@ import com.excellentsystem.AuriSteel.View.Dialog.NewPemesananPembelianBahanContr
 import java.io.File;
 import java.io.FileOutputStream;
 import java.sql.Connection;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -171,7 +173,7 @@ public class PembelianBahanController {
         tglAkhirPicker.setConverter(Function.getTglConverter());
         tglAkhirPicker.setValue(LocalDate.now());
         tglAkhirPicker.setDayCellFactory((final DatePicker datePicker) -> Function.getDateCellAkhir(tglMulaiPicker));
-        
+
         final ContextMenu rm = new ContextMenu();
         MenuItem addNew = new MenuItem("Add New Pembelian");
         addNew.setOnAction((ActionEvent e) -> {
@@ -589,6 +591,7 @@ public class PembelianBahanController {
                     @Override
                     public String call() throws Exception {
                         try (Connection con = Koneksi.getConnection()) {
+                            Date tglTransaksi = tglSql.parse(controller.tglTransaksiPicker.getValue().toString() + " " + new SimpleDateFormat("HH:mm:ss").format(new Date()));
                             Hutang h = HutangDAO.getByKategoriAndKeteranganAndStatus(
                                     con, "Hutang Pembelian", p.getNoPembelian(), "open");
                             h.setPembelianBahanHead(p);
@@ -602,7 +605,7 @@ public class PembelianBahanController {
                             pembayaran.setUserBatal("");
                             pembayaran.setStatus("true");
                             pembayaran.setHutang(h);
-                            return Service.newPembayaranHutang(con, pembayaran);
+                            return Service.newPembayaranHutang(con, pembayaran, tglTransaksi);
                         }
                     }
                 };

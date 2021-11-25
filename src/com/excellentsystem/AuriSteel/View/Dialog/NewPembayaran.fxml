@@ -3,7 +3,9 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -18,7 +20,7 @@
       <GridPane hgap="7.0" layoutX="20.0" layoutY="20.0" vgap="7.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="130.0" minWidth="130.0" prefWidth="130.0" />
-            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" />
+            <ColumnConstraints hgrow="SOMETIMES" />
          </columnConstraints>
          <rowConstraints>
             <RowConstraints fillHeight="false" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -27,6 +29,8 @@
             <RowConstraints fillHeight="false" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints fillHeight="false" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints fillHeight="false" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints fillHeight="false" maxHeight="10.0" minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
+            <RowConstraints fillHeight="false" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints fillHeight="false" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints fillHeight="false" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints fillHeight="false" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -34,15 +38,15 @@
          <children>
             <Label fx:id="noTransaksiLabel" text="No Transaksi" GridPane.rowIndex="2" />
             <Label fx:id="totalTransaksiLabel" text="Total Transaksi" GridPane.rowIndex="3" />
-            <Label text="Jumlah Pembayaran" GridPane.rowIndex="6" />
+            <Label text="Jumlah Pembayaran" GridPane.rowIndex="8" />
             <TextField fx:id="noTransaksiField" disable="true" editable="false" prefHeight="35.0" prefWidth="1000.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <TextField fx:id="totalTransaksiField" disable="true" editable="false" prefHeight="35.0" prefWidth="316.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <TextField fx:id="sudahTerbayarField" disable="true" editable="false" prefHeight="35.0" prefWidth="1000.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <TextField fx:id="sisaPembayaranField" disable="true" editable="false" prefHeight="35.0" prefWidth="406.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <TextField fx:id="jumlahPembayaranField" prefHeight="35.0" prefWidth="1000.0" text="0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <TextField fx:id="jumlahPembayaranField" prefHeight="35.0" prefWidth="1000.0" text="0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
             <Label fx:id="sudahTerbayarLabel" text="Sudah Terbayar" GridPane.rowIndex="4" />
-            <Label text="Tipe Keuangan" GridPane.rowIndex="7" />
-            <ComboBox fx:id="tipeKeuanganCombo" prefHeight="35.0" prefWidth="1000.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            <Label text="Tipe Keuangan" GridPane.rowIndex="9" />
+            <ComboBox fx:id="tipeKeuanganCombo" prefHeight="35.0" prefWidth="1000.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />
             <Label text="Sisa Pembayaran" GridPane.rowIndex="5" />
             <Label fx:id="title" styleClass="label-header" text="Pembayaran" GridPane.columnSpan="2" />
             <Button mnemonicParsing="false" onAction="#close" prefHeight="30.0" prefWidth="30.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT">
@@ -53,12 +57,15 @@
                      </image>
                   </ImageView>
                </graphic></Button>
-            <HBox alignment="CENTER_RIGHT" prefHeight="100.0" spacing="1.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="8">
+            <HBox alignment="CENTER_RIGHT" prefHeight="100.0" spacing="1.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="10">
                <children>
                   <Button fx:id="saveButton" mnemonicParsing="false" prefHeight="35.0" prefWidth="100.0" styleClass="button2" text="Save" />
                   <Button mnemonicParsing="false" onAction="#close" prefHeight="35.0" prefWidth="100.0" styleClass="button2" text="Cancel" />
                </children>
             </HBox>
+            <Label text="Tgl Transaksi" GridPane.rowIndex="7" />
+            <DatePicker fx:id="tglTransaksiPicker" maxWidth="1.7976931348623157E308" prefHeight="30.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="6" />
          </children>
          <padding>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />

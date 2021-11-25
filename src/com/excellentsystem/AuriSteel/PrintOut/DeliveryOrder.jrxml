@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="612" pageHeight="396" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="3c97d51a-e6b3-4142-85c8-87cdee42aad2">
 	<property name="ireport.zoom" value="1.3310000000000046"/>
-	<property name="ireport.x" value="80"/>
+	<property name="ireport.x" value="216"/>
 	<property name="ireport.y" value="0"/>
 	<style name="detail" mode="Opaque">
 		<box leftPadding="3" rightPadding="3">
@@ -61,7 +61,7 @@
 	<group name="noPemesanan">
 		<groupExpression><![CDATA[$F{noPemesanan}]]></groupExpression>
 		<groupHeader>
-			<band height="36">
+			<band height="35">
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="noBorder" stretchType="RelativeToBandHeight" mode="Opaque" x="0" y="0" width="572" height="20" uuid="a94f957b-da02-4420-ad70-db9ba7d6ac68"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -84,7 +84,7 @@
 					<text><![CDATA[Keterangan]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="detail" x="320" y="19" width="252" height="15" uuid="ca0f1e71-f186-45b4-b7c1-e531ffcce8a8"/>
+					<reportElement style="detail" x="320" y="19" width="202" height="15" uuid="ca0f1e71-f186-45b4-b7c1-e531ffcce8a8"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="SansSerif" isBold="false"/>
 					</textElement>
@@ -96,6 +96,13 @@
 						<font fontName="SansSerif" isBold="false"/>
 					</textElement>
 					<text><![CDATA[Qty]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="detail" x="522" y="19" width="50" height="15" uuid="9925fcad-4e4c-45a2-90a8-9500ad5af5f2"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Tonase]]></text>
 				</staticText>
 			</band>
 		</groupHeader>
@@ -212,7 +219,7 @@
 				<textFieldExpression><![CDATA[$F{keterangan}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="noBorder" stretchType="RelativeToBandHeight" x="320" y="0" width="252" height="15" uuid="9dd91dd7-a6b6-4d24-a41e-b32388a86b5b"/>
+				<reportElement style="noBorder" stretchType="RelativeToBandHeight" x="320" y="0" width="202" height="15" uuid="9dd91dd7-a6b6-4d24-a41e-b32388a86b5b"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif"/>
 				</textElement>
@@ -224,6 +231,10 @@
 					<font fontName="SansSerif"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{qty}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement style="noBorder" x="522" y="0" width="50" height="15" uuid="4c1eb121-197c-4c33-88b6-3ac449aa8741"/>
+				<textFieldExpression><![CDATA[$F{tonase}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

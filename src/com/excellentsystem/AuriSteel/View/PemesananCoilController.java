@@ -38,8 +38,10 @@ import com.excellentsystem.AuriSteel.View.Dialog.NewPemesananCoilRpController;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.sql.Connection;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -660,15 +662,14 @@ public class PemesananCoilController {
                     @Override
                     public String call() throws Exception {
                         try (Connection con = Koneksi.getConnection()) {
+                            Date tglTransaksi = tglSql.parse(controller.tglTransaksiPicker.getValue().toString() + " " + new SimpleDateFormat("HH:mm:ss").format(new Date()));
                             p.setListPemesananBahanDetail(PemesananBahanDetailDAO.getAllByNoPemesanan(con, p.getNoPemesanan()));
                             double jumlahBayar = Double.parseDouble(controller.jumlahPembayaranField.getText().replaceAll(",", ""));
                             double sisaPembayaran = p.getTotalPemesanan() - p.getSisaDownPayment();
                             if (jumlahBayar > sisaPembayaran) {
                                 return "Jumlah yang dibayar melebihi dari sisa pembayaran";
                             } else {
-                                p.setDownPayment(p.getDownPayment() + jumlahBayar);
-                                p.setSisaDownPayment(p.getSisaDownPayment() + jumlahBayar);
-                                return Service.newTerimaDownPaymentCoil(con, p, jumlahBayar,
+                                return Service.newTerimaDownPaymentCoil(con, p, tglTransaksi, jumlahBayar,
                                         controller.tipeKeuanganCombo.getSelectionModel().getSelectedItem());
                             }
                         }

@@ -12,12 +12,15 @@ import static com.excellentsystem.AuriSteel.Main.sistem;
 import com.excellentsystem.AuriSteel.Model.KategoriKeuangan;
 import com.excellentsystem.AuriSteel.Model.KategoriTransaksi;
 import com.excellentsystem.AuriSteel.Model.Keuangan;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -32,9 +35,11 @@ import javafx.stage.Stage;
 public class NewKeuanganController {
 
     @FXML
+    public TextArea keteranganField;
+    @FXML
     public ComboBox<String> kategoriCombo;
     @FXML
-    public TextArea keteranganField;
+    public DatePicker tglTransaksiPicker;
     @FXML
     public TextField jumlahRpField;
     @FXML
@@ -64,6 +69,10 @@ public class NewKeuanganController {
             listKeuangan.add(kk.getKodeKeuangan());
         }
         tipeKeuanganCombo.setItems(listKeuangan);
+        tglTransaksiPicker.setConverter(Function.getTglConverter());
+        tglTransaksiPicker.setValue(LocalDate.now());
+        tglTransaksiPicker.setDayCellFactory((final DatePicker datePicker) -> Function.getDateCell(
+                LocalDate.now().minusMonths(1), LocalDate.now()));
     }
 
     public void setKategoriTransaksi(List<KategoriTransaksi> listKategori) {
@@ -77,11 +86,13 @@ public class NewKeuanganController {
         AnchorPane.setBottomAnchor(gridPane, 0.0);
         saveButton.setVisible(false);
         cancelButton.setVisible(false);
+        tglTransaksiPicker.setDisable(true);
         kategoriCombo.setDisable(true);
         keteranganField.setEditable(false);
         jumlahRpField.setDisable(true);
         tipeKeuanganCombo.setDisable(true);
 
+        tglTransaksiPicker.setValue(LocalDate.parse(k.getTglKeuangan(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         kategoriCombo.getSelectionModel().select(k.getKategori());
         keteranganField.setText(k.getDeskripsi());
         jumlahRpField.setText(df.format(k.getJumlahRp()));
